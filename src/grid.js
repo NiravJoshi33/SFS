@@ -16,10 +16,10 @@ const swapTriggerDistance = tileSpacing * 0.5;
  * Create a Grid of Tokens/Gems with All Functions
  * @param {Scene} game scene context
  */
-export function initiateGrid(scene) {
+export function initiateGrid(scene, swipe_music) {
   let grid = createGrid(scene); // Create Grid without Pre-existing matches
 
-  enableSwap(scene, grid); // Enable Swapping Function for the Tiles
+  enableSwap(scene, grid, swipe_music); // Enable Swapping Function for the Tiles
 }
 
 function createGrid(scene) {
@@ -120,7 +120,7 @@ function checkAndReplaceMatch(grid) {
   return matchExists;
 }
 
-function enableSwap(scene, grid) {
+function enableSwap(scene, grid, swipe_music) {
   // Add Drag Events to scene
   scene.input.on("drag", function (pointer, gameObject, dragX, dragY) {
     const startDrag = gameObject.getData("startDrag");
@@ -151,7 +151,18 @@ function enableSwap(scene, grid) {
         );
         if (swapTarget) {
           swapTiles(gameObject, swapTarget, scene, grid);
+          swipe_music.play();
           gameObject.setData("swapTriggered", true); // Set swap as triggered
+
+          // Check for the matches
+          let matches;
+          matches = checkForMatches(grid);
+          if (matches && matches.length > 0) {
+            console.log(`Found ${matches.length} matches in grid`);
+          }
+        } else {
+          console.log(`Matches: ${matches.length}`);
+          console.log(`No matches found, reverting the swap`);
         }
       }
     }
@@ -228,6 +239,7 @@ function findSwapTarget(gameObject, grid, movementAxis, movementDirection) {
 }
 
 function swapTiles(tile1, tile2, scene, grid) {
+  console.log(`Swapping ${tile1.texture.key} with ${tile2.texture.key}`);
   // Calculate grid positions from pixels
   const pos1 = getGridPos(tile1.x, tile1.y);
   const pos2 = getGridPos(tile2.x, tile2.y);
@@ -261,4 +273,43 @@ function getGridPos(x, y) {
     x: Math.floor((x - horizontalMargin) / tileSpacing),
     y: Math.floor((y - verticalMargin) / tileSpacing),
   };
+}
+
+function checkForMatches(grid) {
+  const matches = [];
+  let matchData;
+
+  // Check horizontal matches
+  for (let y = 0; y < numOfRows; y++) {
+    for (let x = 0; x < numOfCols - 2; x++) {
+      if (
+        grid[y][x].texture.key === grid[y][x + 1].texture.key &&
+        grid[y][x].texture.key === grid[y][x + 2].texture.key
+      ) {
+        matchData = {
+          matchedTiles: [grid[y][x], grid[y][x + 1], grid[y][x + 2]],
+          direction: "horizontal",
+        };
+        matches.push(matchData);
+      }
+    }
+  }
+
+  // Check vertical matches
+  for (let x = 0; x < numOfCols; x++) {
+    for (let y = 0; y < numOfRows - 2; y++) {
+      if (
+        grid[y][x].texture.key === grid[y + 1][x].texture.key &&
+        grid[y][x].texture.key === grid[y + 2][x].texture.key
+      ) {
+        matchData = {
+          matchedTiles: [grid[y][x], grid[y + 1][x], grid[y + 2][x]],
+          direction: "vertical",
+        };
+        matches.push(matchData);
+      }
+    }
+  }
+  console.log(matches);
+  return matches;
 }
