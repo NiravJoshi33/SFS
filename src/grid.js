@@ -128,16 +128,29 @@ function enableSwap(scene) {
     const movedX = Math.abs(dragX - startDrag.x); // Travelled Distance in x direction
     const movedY = Math.abs(dragY - startDrag.y); // Travelled Distance in y direction
 
+    let axisOfMovement, directionOfMovementInX, directionOfMovementInY;
+    movedX > movedY
+      ? (axisOfMovement = "horizontal")
+      : (axisOfMovement = "verticle");
+
+    dragX - startDrag.x > 0
+      ? (directionOfMovementInX = "right")
+      : (directionOfMovementInX = "left");
+
+    dragY - startDrag.y > 0
+      ? (directionOfMovementInY = "downward")
+      : (directionOfMovementInY = "upward");
+
     // If Tile has moved more in x direction, Snap it to X axis
-    if (movedX > movedY) {
+    if (axisOfMovement == "horizontal") {
       // Horizontal movement
       if (movedX <= maxTileTravelDistance) {
         gameObject.x = dragX; // Let tile move within allowed distance
       } else {
-        if (dragX - startDrag.x > 0) {
+        if (directionOfMovementInX == "right") {
           // Tile is moving in right direction
           gameObject.x = startDrag.x + maxTileTravelDistance;
-        } else if (dragX - startDrag.x < 0) {
+        } else if (directionOfMovementInX == "left") {
           // Tile is moving in left direction
           gameObject.x = startDrag.x - maxTileTravelDistance;
         } else {
@@ -151,10 +164,10 @@ function enableSwap(scene) {
       if (movedY <= maxTileTravelDistance) {
         gameObject.y = dragY; // Let tile move within allowed distance
       } else {
-        if (dragY - startDrag.y > 0) {
+        if (directionOfMovementInY == "downward") {
           // Tile is moving in downward direction
           gameObject.y = startDrag.y + maxTileTravelDistance;
-        } else if (dragY - startDrag.y < 0) {
+        } else if (directionOfMovementInY == "upward") {
           // Tile is moving in upward direction
           gameObject.y = startDrag.y - maxTileTravelDistance;
         } else {
