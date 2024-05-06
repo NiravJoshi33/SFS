@@ -1,5 +1,5 @@
-const { Scene } = require("phaser");
-const { ALL_TOKENS, canvasSize } = require("./utils.js");
+import { Scene } from "phaser";
+import { ALL_TOKENS, canvasSize } from "./utils.js";
 
 // Grid Configurations
 const numOfRows = 10;
@@ -10,15 +10,16 @@ const gridWidth = numOfCols * tileSpacing;
 const gridHeight = numOfRows * tileSpacing;
 const horizontalMargin = (canvasSize.width - gridWidth) / 2; //Centering Grid Horizontally
 const verticalMargin = (canvasSize.height - gridHeight) / 2 + 100; // 100px offset from center
+const swapTriggerDistance = tileSpacing * 0.5;
 
 /**
  * Create a Grid of Tokens/Gems with All Functions
  * @param {Scene} game scene context
  */
-function initiateGrid(scene) {
-  createGrid(scene); // Create Grid without Pre-existing matches
+export function initiateGrid(scene) {
+  let grid = createGrid(scene); // Create Grid without Pre-existing matches
 
-  enableSwap(scene); // Enable Swapping Function for the Tiles
+  enableSwap(scene, grid); // Enable Swapping Function for the Tiles
 }
 
 function createGrid(scene) {
@@ -42,6 +43,7 @@ function createGrid(scene) {
     grid.push(row); // Add new row array to grid 2 dimensional array
   }
   resolveMatches(grid);
+  return grid;
 }
 
 function resolveMatches(grid) {
@@ -118,63 +120,40 @@ function checkAndReplaceMatch(grid) {
   return matchExists;
 }
 
-function enableSwap(scene) {
+function enableSwap(scene, grid) {
   // Add Drag Events to scene
   scene.input.on("drag", function (pointer, gameObject, dragX, dragY) {
     const startDrag = gameObject.getData("startDrag");
+    const movedX = Math.abs(dragX - startDrag.x);
+    const movedY = Math.abs(dragY - startDrag.y);
+    let axisOfMovement = movedX > movedY ? "horizontal" : "vertical";
 
-    const maxTileTravelDistance = tileSpacing;
-
-    const movedX = Math.abs(dragX - startDrag.x); // Travelled Distance in x direction
-    const movedY = Math.abs(dragY - startDrag.y); // Travelled Distance in y direction
-
-    let axisOfMovement, directionOfMovementInX, directionOfMovementInY;
-    movedX > movedY
-      ? (axisOfMovement = "horizontal")
-      : (axisOfMovement = "verticle");
-
-    dragX - startDrag.x > 0
-      ? (directionOfMovementInX = "right")
-      : (directionOfMovementInX = "left");
-
-    dragY - startDrag.y > 0
-      ? (directionOfMovementInY = "downward")
-      : (directionOfMovementInY = "upward");
-
-    // If Tile has moved more in x direction, Snap it to X axis
-    if (axisOfMovement == "horizontal") {
-      // Horizontal movement
-      if (movedX <= maxTileTravelDistance) {
-        gameObject.x = dragX; // Let tile move within allowed distance
-      } else {
-        if (directionOfMovementInX == "right") {
-          // Tile is moving in right direction
-          gameObject.x = startDrag.x + maxTileTravelDistance;
-        } else if (directionOfMovementInX == "left") {
-          // Tile is moving in left direction
-          gameObject.x = startDrag.x - maxTileTravelDistance;
-        } else {
-          // Tile is not moving
-          gameObject.x = startDrag.x;
+    if (!gameObject.getData("swapTriggered")) {
+      // Check if swap wasn't already triggered
+      if (
+        (axisOfMovement === "horizontal" && movedX >= swapTriggerDistance) ||
+        (axisOfMovement === "vertical" && movedY >= swapTriggerDistance)
+      ) {
+        const direction =
+          axisOfMovement === "horizontal"
+            ? dragX - startDrag.x > 0
+              ? "right"
+              : "left"
+            : dragY - startDrag.y > 0
+            ? "downward"
+            : "upward";
+        console.log(`Swap attempted in ${axisOfMovement} direction`);
+        let swapTarget = findSwapTarget(
+          gameObject,
+          grid,
+          axisOfMovement,
+          direction
+        );
+        if (swapTarget) {
+          swapTiles(gameObject, swapTarget, scene, grid);
+          gameObject.setData("swapTriggered", true); // Set swap as triggered
         }
       }
-      gameObject.y = startDrag.y; // Lock y pos
-    } else {
-      // Vertical movement
-      if (movedY <= maxTileTravelDistance) {
-        gameObject.y = dragY; // Let tile move within allowed distance
-      } else {
-        if (directionOfMovementInY == "downward") {
-          // Tile is moving in downward direction
-          gameObject.y = startDrag.y + maxTileTravelDistance;
-        } else if (directionOfMovementInY == "upward") {
-          // Tile is moving in upward direction
-          gameObject.y = startDrag.y - maxTileTravelDistance;
-        } else {
-          gameObject.y = startDrag.y;
-        }
-      }
-      gameObject.x = startDrag.x; // Lock the x position
     }
   });
 
@@ -184,13 +163,10 @@ function enableSwap(scene) {
     gameObject.setTint(0x999999); // Highlight the tile being dragged
   });
 
-  scene.input.on("dragend", function (pointer, gameObject, dropped) {
+  scene.input.on("dragend", function (pointer, gameObject) {
     gameObject.clearTint(); // Remove tint on drop
     gameObject.setDepth(0); // Return the tile back to its original level
-    if (!dropped) {
-      gameObject.x = gameObject.input.dragStartX; // Reset Position if not dropped on valid target
-      gameObject.y = gameObject.input.dragStartY;
-    }
+    gameObject.setData("swapTriggered", false); // Reset swap triggered status
   });
 
   scene.input.on("drop", function (pointer, gameObject, dropZone) {
@@ -204,4 +180,85 @@ function enableSwap(scene) {
   });
 }
 
-module.exports = { initiateGrid };
+function findSwapTarget(gameObject, grid, movementAxis, movementDirection) {
+  // Calculate end position based on where the drag ended
+  let targetTile, originalPixelPosX, originalPixelPosY;
+
+  originalPixelPosX = gameObject.getData("startDrag").x;
+  originalPixelPosY = gameObject.getData("startDrag").y;
+
+  const originalGridPosX = Math.floor(
+    (originalPixelPosX - horizontalMargin) / tileSpacing
+  );
+  const originalGridPosY = Math.floor(
+    (originalPixelPosY - verticalMargin) / tileSpacing
+  );
+
+  if (movementAxis === "horizontal") {
+    if (
+      movementDirection === "right" //&&
+      // originalGridPosX >= 0 &&
+      // originalPixelPosX < numOfCols - 1
+    ) {
+      targetTile = grid[originalGridPosY][originalGridPosX + 1];
+    } else if (
+      movementDirection === "left" //&&
+      // originalGridPosX > 0 &&
+      // originalGridPosX <= numOfCols - 1
+    ) {
+      targetTile = grid[originalGridPosY][originalGridPosX - 1];
+    }
+  } else if (movementAxis === "vertical") {
+    if (
+      movementDirection === "downward" //&&
+      // originalGridPosY >= 0 &&
+      // originalGridPosY < numOfRows - 1
+    ) {
+      targetTile = grid[originalGridPosY + 1][originalGridPosX];
+    } else if (
+      movementDirection === "upward" //&&
+      // originalGridPosY > 0 &&
+      // originalGridPosY <= numOfRows - 1
+    ) {
+      targetTile = grid[originalGridPosY - 1][originalGridPosX];
+    }
+  }
+
+  return targetTile;
+}
+
+function swapTiles(tile1, tile2, scene, grid) {
+  // Calculate grid positions from pixels
+  const pos1 = getGridPos(tile1.x, tile1.y);
+  const pos2 = getGridPos(tile2.x, tile2.y);
+
+  // Swap positions in the grid data structure
+
+  let tempTile = grid[pos1.y][pos1.x];
+  grid[pos1.y][pos1.x] = grid[pos2.y][pos2.x];
+  grid[pos2.y][pos2.x] = tempTile;
+
+  // Animate tile movement
+  scene.tweens.add({
+    targets: tile1,
+    x: tile2.x,
+    y: tile2.y,
+    duration: 300,
+    ease: "Power2",
+  });
+
+  scene.tweens.add({
+    targets: tile2,
+    x: tile1.x,
+    y: tile1.y,
+    duration: 300,
+    ease: "Power2",
+  });
+}
+
+function getGridPos(x, y) {
+  return {
+    x: Math.floor((x - horizontalMargin) / tileSpacing),
+    y: Math.floor((y - verticalMargin) / tileSpacing),
+  };
+}

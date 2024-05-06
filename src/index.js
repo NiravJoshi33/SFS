@@ -5,7 +5,7 @@ import { initiateGrid } from "./grid.js";
 // Configuration
 
 const config = {
-  type: Phaser.AUTO,
+  type: Phaser.CANVAS,
   width: canvasSize.width,
   height: canvasSize.height,
   parent: "game",
