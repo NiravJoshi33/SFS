@@ -166,12 +166,14 @@ function enableSwap(scene) {
   });
 
   scene.input.on("dragstart", function (pointer, gameObject) {
+    gameObject.setDepth(1); // Bring the tile to front to stay over other tiles
     gameObject.setData("startDrag", { x: gameObject.x, y: gameObject.y });
     gameObject.setTint(0x999999); // Highlight the tile being dragged
   });
 
   scene.input.on("dragend", function (pointer, gameObject, dropped) {
     gameObject.clearTint(); // Remove tint on drop
+    gameObject.setDepth(0); // Return the tile back to its original level
     if (!dropped) {
       gameObject.x = gameObject.input.dragStartX; // Reset Position if not dropped on valid target
       gameObject.y = gameObject.input.dragStartY;
