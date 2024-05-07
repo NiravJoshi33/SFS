@@ -6,6 +6,8 @@ import {
   tileSpacing,
   numOfRows,
   numOfCols,
+  ALL_TOKENS,
+  tileScale,
 } from "./utils";
 import { userState } from "./utils";
 
@@ -238,11 +240,15 @@ function checkForMatches(grid) {
  * @param {Array<Array<GameObject>>} grid - The grid containing the tiles.
  */
 function removeMatchedTiles(matches, scene, grid) {
+  let fadeOutCount = 0;
+
   matches.forEach((match) => {
     match.matchedTiles.forEach((tile) => {
       let tileGridPos = getGridPosition(tile.x, tile.y);
 
       scene.time.delayedCall(400, () => {
+        fadeOutCount++;
+
         scene.tweens.add({
           targets: tile,
           alpha: 0, // Fades out the tile
@@ -251,10 +257,71 @@ function removeMatchedTiles(matches, scene, grid) {
           onComplete: () => {
             tile.destroy(); // Destroy the tile after fading out
             grid[tileGridPos.y][tileGridPos.x] = null; // Remove the tile from grid data structure
-            userState.canSwap = false;
+
+            fadeOutCount--;
+            // userState.canSwap = false;
+
+            if (fadeOutCount === 0) {
+              dropTiles(grid, scene);
+            }
           },
         });
       });
     });
   });
+}
+
+/**
+ * Drop tiles in the grid to fill empty spaces.
+ *
+ * @param {Array<Array<GameObject>>} grid - The grid containing the tiles.
+ * @param {Scene} scene - The game scene.
+ */
+function dropTiles(grid, scene) {
+  console.log(`Dropping tiles!`);
+  // Loop through each column
+  for (let x = 0; x < numOfCols; x++) {
+    let emptySpaces = 0;
+
+    // Loop through each cell in column from bottom to top
+    for (let y = numOfRows - 1; y >= 0; y--) {
+      if (grid[y][x] == null) {
+        console.log(`Found empty space at y: ${y}, x: ${x}`);
+        emptySpaces++;
+      } else if (emptySpaces > 0) {
+        let tile = grid[y][x];
+        grid[y][x] = null;
+        grid[y + emptySpaces][x] = tile;
+
+        // Animate the tile falling
+        scene.tweens.add({
+          targets: tile,
+          y: tile.y + emptySpaces * tileSpacing,
+          duration: 100 * emptySpaces,
+          ease: "Power2",
+        });
+      }
+    }
+
+    // Refill the empty spaces at the top
+    for (let i = 0; i < emptySpaces; i++) {
+      let tile = scene.add.sprite(
+        horizontalMargin + x * tileSpacing,
+        verticalMargin - tileSpacing * (i + 1),
+        ALL_TOKENS[Phaser.Math.Between(0, ALL_TOKENS.length - 1)]
+      );
+      console.log(`New tile created: ${tile.texture.key}`);
+      tile.setOrigin(0).setScale(tileScale).setInteractive();
+      scene.input.setDraggable(tile);
+      grid[i][x] = tile;
+
+      // Animate the tile falling
+      scene.tweens.add({
+        targets: tile,
+        y: verticalMargin + i * tileSpacing,
+        duration: 100 * emptySpaces,
+        ease: "Power2",
+      });
+    }
+  }
 }
