@@ -10,7 +10,7 @@ const gridWidth = numOfCols * tileSpacing;
 const gridHeight = numOfRows * tileSpacing;
 const horizontalMargin = (canvasSize.width - gridWidth) / 2; //Centering Grid Horizontally
 const verticalMargin = (canvasSize.height - gridHeight) / 2 + 100; // 100px offset from center
-const swapTriggerDistance = tileSpacing * 0.5;
+const swapTriggerDistance = tileSpacing * 0.5; // After the cursor travels this distance, swap is triggered
 
 /**
  * Create a Grid of Tokens/Gems with All Functions
@@ -159,6 +159,13 @@ function enableSwap(scene, grid, swipe_music) {
           matches = checkForMatches(grid);
           if (matches && matches.length > 0) {
             console.log(`Found ${matches.length} matches in grid`);
+            if (matches.length > 0) {
+              matches.forEach((match) => {
+                match.matchedTiles.forEach((tile) => {
+                  removeTile(tile, scene);
+                });
+              });
+            }
           }
         } else {
           console.log(`Matches: ${matches.length}`);
@@ -312,4 +319,19 @@ function checkForMatches(grid) {
   }
   console.log(matches);
   return matches;
+}
+
+function removeTile(tile, scene) {
+  // Create a fade out tween for the tile
+  scene.time.delayedCall(400, () => {
+    scene.tweens.add({
+      targets: tile,
+      alpha: 0, // Fades out the tile
+      duration: 500,
+      ease: "Power2",
+      onComplete: () => {
+        tile.destroy(); // Destroys the tile object entirely
+      },
+    });
+  });
 }
