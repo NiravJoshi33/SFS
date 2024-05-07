@@ -42,6 +42,7 @@ function preload() {
   // Loading audio
   this.load.audio("main_music", "assets/audio/main_music.mp3");
   this.load.audio("swipe", "assets/audio/swipe.mp3");
+  this.load.audio("tap", "assets/audio/ball_tap.wav");
 }
 
 // Initializing Instances of Objects
@@ -71,6 +72,8 @@ function create() {
   // Add audio
   let mainMusic = this.sound.add("main_music", { loop: true });
   let swipe = this.sound.add("swipe", { loop: false });
+  let tap = this.sound.add("tap", { loop: false });
+  this.data.set("tap", this.sound.get("tap"));
 
   // mainMusic.play();
 

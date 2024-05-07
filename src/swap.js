@@ -279,6 +279,10 @@ function removeMatchedTiles(matches, scene, grid) {
  */
 function dropTiles(grid, scene) {
   console.log(`Dropping tiles!`);
+
+  // Retrieving the sound effect
+  let tap = scene.data.get("tap");
+
   // Loop through each column
   for (let x = 0; x < numOfCols; x++) {
     let emptySpaces = 0;
@@ -299,6 +303,9 @@ function dropTiles(grid, scene) {
           y: tile.y + emptySpaces * tileSpacing,
           duration: 100 * emptySpaces,
           ease: "Power2",
+          onComplete: () => {
+            tap.play();
+          },
         });
       }
     }
@@ -321,6 +328,9 @@ function dropTiles(grid, scene) {
         y: verticalMargin + i * tileSpacing,
         duration: 100 * emptySpaces,
         ease: "Power2",
+        onComplete: () => {
+          tap.play();
+        },
       });
     }
   }
