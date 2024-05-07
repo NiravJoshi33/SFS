@@ -33,3 +33,10 @@ export const gridHeight = numOfRows * tileSpacing;
 export const horizontalMargin = (canvasSize.width - gridWidth) / 2; //Centering Grid Horizontally
 export const verticalMargin = (canvasSize.height - gridHeight) / 2 + 100; // 100px offset from center
 export const swapTriggerDistance = tileSpacing * 0.5; // After the cursor travels this distance, swap is triggered
+
+export const userState = {
+  canSwap: true,
+  score: 0,
+  highScore: 0,
+  isGameOver: false,
+};

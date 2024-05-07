@@ -7,6 +7,7 @@ import {
   numOfRows,
   numOfCols,
 } from "./utils";
+import { userState } from "./utils";
 
 /**
  * Enable swapping of tiles
@@ -41,18 +42,21 @@ export function enableSwap(scene, grid, swap_music) {
         console.log(
           `Attempting swap in ${direction} direction on ${axisOfMovement} axis`
         );
+        if (userState.canSwap == true) {
+          let swapTarget = getSwapTarget(
+            gameObject,
+            grid,
+            axisOfMovement,
+            direction
+          );
 
-        let swapTarget = getSwapTarget(
-          gameObject,
-          grid,
-          axisOfMovement,
-          direction
-        );
-
-        if (swapTarget) {
-          swapTiles(gameObject, swapTarget, scene, grid);
-          swap_music.play();
-          gameObject.setData("swapTriggered", true); // Set swap as triggered to avoid rechecking
+          if (swapTarget) {
+            swapTiles(gameObject, swapTarget, scene, grid);
+            swap_music.play();
+            gameObject.setData("swapTriggered", true); // Set swap as triggered to avoid rechecking
+          }
+        } else if (userState.canSwap == false) {
+          alert(`Your turn is over. Allow other player to finish their turn.`);
         }
       }
     }
@@ -247,6 +251,7 @@ function removeMatchedTiles(matches, scene, grid) {
           onComplete: () => {
             tile.destroy(); // Destroy the tile after fading out
             grid[tileGridPos.y][tileGridPos.x] = null; // Remove the tile from grid data structure
+            userState.canSwap = false;
           },
         });
       });
