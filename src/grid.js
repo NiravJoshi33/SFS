@@ -159,13 +159,15 @@ function enableSwap(scene, grid, swipe_music) {
           matches = checkForMatches(grid);
           if (matches && matches.length > 0) {
             console.log(`Found ${matches.length} matches in grid`);
-            if (matches.length > 0) {
-              matches.forEach((match) => {
-                match.matchedTiles.forEach((tile) => {
-                  removeTile(tile, scene);
-                });
+
+            matches.forEach((match) => {
+              match.matchedTiles.forEach((tile) => {
+                removeTile(tile, scene, grid);
+                refillGrid(grid, scene);
               });
-            }
+            });
+
+            matches = [];
           }
         } else {
           console.log(`Matches: ${matches.length}`);
@@ -321,8 +323,10 @@ function checkForMatches(grid) {
   return matches;
 }
 
-function removeTile(tile, scene) {
+function removeTile(tile, scene, grid) {
   // Create a fade out tween for the tile
+  let tileGridPos = getGridPos(tile.x, tile.y);
+
   scene.time.delayedCall(400, () => {
     scene.tweens.add({
       targets: tile,
@@ -331,7 +335,74 @@ function removeTile(tile, scene) {
       ease: "Power2",
       onComplete: () => {
         tile.destroy(); // Destroys the tile object entirely
+        grid[tileGridPos.y][tileGridPos.x] = null;
+        console.log(
+          `Tile at position (${tileGridPos.x}, ${tileGridPos.y}) set to null`
+        );
+        console.log(grid);
+        refillGrid(grid, scene);
       },
     });
   });
+}
+
+function refillGrid(grid, scene) {
+  // Loop through each column
+  console.log(`Attempting to refill grid`);
+  console.log(`Grid: ${grid}`);
+  console.log(`Grid size: ${grid.length} x ${grid[0].length}`);
+  for (let x = 0; x < numOfCols; x++) {
+    let emptySpaces = 0; // We will check and fill columns one by one
+    for (let y = numOfRows - 1; y >= 0; y--) {
+      // Check from the bottom row
+      if (grid[y][x] === null) {
+        // If the grid position is empty
+        console.log(
+          `Found empty tile at x: ${x}, y: ${y}, replacing it with tiles above`
+        );
+        emptySpaces++;
+      } else if (emptySpaces > 0) {
+        // If the grid position has tile and there are empty positions below it
+        // Move the tile down
+        const tile = grid[y][x];
+        grid[y + emptySpaces][x] = tile; // Move the tile by the number of empty spaces
+        grid[y][x] = null;
+
+        // Animate tile falling
+        scene.tweens.add({
+          targets: tile,
+          y: tile.y + emptySpaces * tileSpacing,
+          duration: 300,
+          ease: "Power2",
+        });
+      } else {
+        console.log(`Found no empty tiles to fill`);
+      }
+    }
+
+    // Generate new tiles at the top where there are empty spaces
+    for (let i = 0; i < emptySpaces; i++) {
+      // We need as many new tiles as empty spaces
+      let index = Phaser.Math.Between(0, ALL_TOKENS.length - 1);
+      let newTile = scene.add
+        .sprite(
+          horizontalMargin + x * tileSpacing,
+          verticalMargin - (i + 1) * tileSpacing,
+          ALL_TOKENS[index]
+        )
+        .setOrigin(0)
+        .setScale(tileScale)
+        .setInteractive();
+
+      grid[i][x] = newTile;
+
+      // Animate the new tiles falling into place
+      scene.tweens.add({
+        targets: newTile,
+        y: verticalMargin + (emptySpaces + i) * tileSpacing,
+        duration: 300,
+        ease: "Power2",
+      });
+    }
+  }
 }

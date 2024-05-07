@@ -22,3 +22,14 @@ export const canvasSize = {
   width: 720,
   height: 1280,
 };
+
+// Grid parameters/configuration
+export const numOfRows = 10;
+export const numOfCols = 8;
+export const tileSpacing = 72;
+export const tileScale = 0.25; // Scale down from 256px to 64px
+export const gridWidth = numOfCols * tileSpacing;
+export const gridHeight = numOfRows * tileSpacing;
+export const horizontalMargin = (canvasSize.width - gridWidth) / 2; //Centering Grid Horizontally
+export const verticalMargin = (canvasSize.height - gridHeight) / 2 + 100; // 100px offset from center
+export const swapTriggerDistance = tileSpacing * 0.5; // After the cursor travels this distance, swap is triggered
