@@ -163,6 +163,33 @@ function swapTiles(tile1, tile2, scene, grid) {
       if (matches && matches.length > 0) {
         console.log(`Found ${matches.length} matches in grid`);
         removeMatchedTiles(matches, scene, grid);
+      } else {
+        // If no matches, swap the tiles back
+        scene.tweens.add({
+          targets: tile1,
+          x: tile2.x,
+          y: tile2.y,
+          duration: 300,
+          ease: "Power2",
+          onComplete: function () {
+            // Swap the tiles back in the grid data structure
+            grid[tile1GridPos.y][tile1GridPos.x] = tile1;
+            grid[tile2GridPos.y][tile2GridPos.x] = tile2;
+          },
+        });
+
+        scene.tweens.add({
+          targets: tile2,
+          x: tile1.x,
+          y: tile1.y,
+          duration: 300,
+          ease: "Power2",
+          onComplete: function () {
+            // Swap the tiles back in the grid data structure
+            grid[tile1GridPos.y][tile1GridPos.x] = tile1;
+            grid[tile2GridPos.y][tile2GridPos.x] = tile2;
+          },
+        });
       }
     },
   });
