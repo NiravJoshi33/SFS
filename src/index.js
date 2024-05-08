@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { ALL_TOKENS, canvasSize } from "./utils.js";
 import { initiateGrid } from "./grid_management.js";
+import { imageAssets, audioAssets } from "./assets.js";
 
 // Configuration
 
@@ -19,16 +20,10 @@ function preload() {
   // contains functions and properties
   // can be viewed by typing "this" and pressing "enter" on console when game is loaded
 
-  // Loading UI Elements
-  this.load.image("bg", "assets/bg_720x1280.png");
-  this.load.image("title", "assets/title_720x200_new.png");
-  this.load.image("left_user_bubble", "assets/ui/left_user_bubble_300x100.png");
-  this.load.image(
-    "right_user_bubble",
-    "assets/ui/right_user_bubble_300x100.png"
-  );
-  this.load.image("dp1", "assets/sample_user_data/sample_dp1.png");
-  this.load.image("dp2", "assets/sample_user_data/sample_dp2.png");
+  // Loading Images
+  for (const assetKey in imageAssets) {
+    this.load.image(assetKey, imageAssets[assetKey]);
+  }
 
   // Loop Through All Tokens from "ALL_TOKEN" array and Load Assets
   // Take care of naming convention for the following loop to work
@@ -40,9 +35,13 @@ function preload() {
   }
 
   // Loading audio
-  this.load.audio("main_music", "assets/audio/main_music.mp3");
-  this.load.audio("swipe", "assets/audio/swipe.mp3");
-  this.load.audio("tap", "assets/audio/ball_tap.wav");
+  for (const assetKey in audioAssets) {
+    this.load.audio(assetKey, audioAssets[assetKey]);
+  }
+
+  // Error handling
+  this.load.on("complete", () => console.log(`All assets loaded successfully`));
+  this.load.on("loaderror", () => console.log(`Error loading assets`));
 }
 
 // Initializing Instances of Objects
