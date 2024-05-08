@@ -1,5 +1,5 @@
-import { Scene, Loader, GameObjects } from "phaser";
-import { ALL_TOKENS, canvasSize } from "./utils";
+import { Scene } from "phaser";
+import { ALL_TOKENS } from "./utils";
 import {
   numOfCols,
   numOfRows,
@@ -20,6 +20,7 @@ export function createGrid(scene) {
     for (let x = 0; x < numOfCols; x++) {
       // Fill each row array with number of tiles equal to columns
       let index = Phaser.Math.Between(0, ALL_TOKENS.length - 1);
+      /** @type {Phaser.GameObjects.Sprite} */
       let tile = scene.add.sprite(
         horizontalMargin + x * tileSpacing,
         verticalMargin + y * tileSpacing,
@@ -49,6 +50,13 @@ function resolveMatches(grid) {
   } while (preexistingMatchExists === true);
 }
 
+/**
+ * This function checks for any matches in the grid and replaces them.
+ * It returns a boolean indicating whether a match was found and replaced.
+ *
+ * @param {Array<Array<Phaser.GameObjects.Sprite>>} grid - The grid where matches need to be checked and replaced.
+ * @returns {boolean} - Returns true if a match is found and replaced, false otherwise.
+ */
 function checkAndReplaceMatch(grid) {
   let matchExists = false;
 

@@ -15,8 +15,8 @@ import { createGrid } from "./grid_utils";
 /**
  * Enable swapping of tiles
  * @param {Scene} scene Game scene
- * @param {Array<Array>} grid 2D Array of grid
- * @param {audio object} swap_music Swap sound effect
+ * @param {Array<Array<Phaser.GameObjects.Sprite>>} grid 2D Array of grid
+ * @param {Phaser.Sound.WebAudioSound} swap_music Swap sound effect
  */
 export function enableSwap(scene, grid, swap_music) {
   scene.input.on("drag", function (pointer, gameObject, dragX, dragY) {
@@ -91,11 +91,11 @@ export function enableSwap(scene, grid, swap_music) {
 /**
  * Returns the swap target for the given game object, grid, axis of movement, and direction.
  *
- * @param {GameObject} gameObject - The game object to find the swap target for.
- * @param {Array<Array>} grid - The grid containing the game objects.
+ * @param {Phaser.GameObjects.Sprite} gameObject - The game object to find the swap target for.
+ * @param {Array<Array<Phaser.GameObjects.Sprite>>} grid - The grid containing the game objects.
  * @param {string} axisOfMovement - The axis of movement ('x' or 'y').
  * @param {string} direction - The direction of movement ('up', 'down', 'left', or 'right').
- * @returns {GameObject|null} - The swap target game object, or null if no swap target is found.
+ * @returns {Phaser.GameObjects.Sprite|null} - The swap target game object, or null if no swap target is found.
  */
 function getSwapTarget(gameObject, grid, axisOfMovement, direction) {
   // Calculate the end position based on where the drag ended
@@ -126,10 +126,10 @@ function getSwapTarget(gameObject, grid, axisOfMovement, direction) {
 /**
  * Swaps the position of two tiles in the grid.
  *
- * @param {GameObject} gameObject - The original tile to swap
- * @param {GameObject} targetTile - The target tile to swap with.
+ * @param {Phaser.GameObjects.Sprite} gameObject - The original tile to swap
+ * @param {Phaser.GameObjects.Sprite} targetTile - The target tile to swap with.
  * @param {Scene} scene - The game scene.
- * @param {Array<Array>} grid - The grid containing the tiles.
+ * @param {Array<Array<Phaser.GameObjects.Sprite>>} grid - The grid containing the tiles.
  */
 function swapTiles(tile1, tile2, scene, grid) {
   console.log(`Swapping ${tile1.texture.key} with ${tile2.texture.key}`);
@@ -214,6 +214,7 @@ function getGridPosition(x, y) {
  * Check for matches in the grid and resolve them.
  *
  * @param {Array<Array<GameObject>>} grid - The grid to check for matches.
+ * @returns {Array<Object>} - An array of match data objects.
  */
 function checkForMatches(grid) {
   const matches = [];
@@ -373,6 +374,7 @@ function dropTiles(grid, scene) {
  * Check for potential matches in the grid.
  *
  * @param {Array<Array<GameObject>>} grid - The grid containing the tiles.
+ * @returns {boolean} - True if potential matches are found, false otherwise.
  */
 function checkForPotentialMatches(grid) {
   for (let y = 0; y < numOfRows; y++) {
