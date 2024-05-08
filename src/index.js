@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { ALL_TOKENS, canvasSize } from "./utils.js";
-import { initiateGrid } from "./grid_clean.js";
+import { initiateGrid } from "./grid_management.js";
 
 // Configuration
 

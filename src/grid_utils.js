@@ -8,24 +8,12 @@ import {
   tileSpacing,
   tileScale,
 } from "./utils";
-import { enableSwap } from "./swap";
-
-/**
- * Instantiate a new grid without pre-existing matches & enable swap functionality
- * @param {Scene} scene
- * @param {any} swap_music
- */
-export function initiateGrid(scene, swap_music) {
-  let grid = createGrid(scene);
-
-  enableSwap(scene, grid, swap_music);
-}
 
 /**
  * Create a new grid and replace any pre-existing matches until there are no matches
  * @param {Scene} scene Phaser Game Scene
  */
-function createGrid(scene) {
+export function createGrid(scene) {
   const grid = [];
   for (let y = 0; y < numOfRows; y++) {
     let row = []; // Array for row

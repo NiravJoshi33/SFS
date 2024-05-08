@@ -10,6 +10,7 @@ import {
   tileScale,
 } from "./utils";
 import { userState } from "./utils";
+import { createGrid } from "./grid_utils";
 
 /**
  * Enable swapping of tiles
@@ -357,8 +358,55 @@ function dropTiles(grid, scene) {
         ease: "Power2",
         onComplete: () => {
           tap.play();
+          let isSuccessfulSwapPossible = checkForPotentialMatches(grid);
+          if (isSuccessfulSwapPossible === false || !isSuccessfulSwapPossible) {
+            console.log("No potential matches found. Reshuffling tiles.");
+            createGrid(scene);
+          }
         },
       });
+    }
+  }
+}
+
+/**
+ * Check for potential matches in the grid.
+ *
+ * @param {Array<Array<GameObject>>} grid - The grid containing the tiles.
+ */
+function checkForPotentialMatches(grid) {
+  for (let y = 0; y < numOfRows; y++) {
+    for (let x = 0; x < numOfCols; x++) {
+      // Check all four directions
+      for (let [dy, dx] of [
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+        [0, 1],
+      ]) {
+        // Index of the swap target tile
+        let ny = y + dy;
+        let nx = x + dx;
+        // Swap tiles
+        if (ny >= 0 && ny < numOfRows && nx >= 0 && nx < numOfCols) {
+          let tempTile = grid[y][x];
+          grid[y][x] = grid[ny][nx];
+          grid[ny][nx] = tempTile;
+          // Check for match
+          let matches = checkForMatches(grid);
+          // Swap back
+          tempTile = grid[y][x];
+          grid[y][x] = grid[ny][nx];
+          grid[ny][nx] = tempTile;
+          // If match found, return true
+          if (matches && matches.length > 0) {
+            console.log(
+              `Potential match found at y: ${y}, x: ${x} with tile at y: ${ny}, x: ${nx}`
+            );
+            return true;
+          }
+        }
+      }
     }
   }
 }
