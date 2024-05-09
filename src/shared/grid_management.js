@@ -12,4 +12,6 @@ export function initiateGrid(scene, swap_music) {
 
   // Enable swap functionality
   enableSwap(scene, grid, swap_music);
+
+  return grid;
 }
