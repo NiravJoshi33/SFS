@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev-next\" \"npm run start-bot\"",
+    "dev-next": "next dev",
     "start-bot": "node app/nextBot.js",
     "build": "next build",
     "start": "next start",
