@@ -1,5 +1,7 @@
 const { Telegraf } = require("telegraf");
-import 'dotenv';
+require('dotenv')
+
+// import 'dotenv';
 // const TOKEN = process.env.NEXT_PUBLIC_BOT_TOKEN;
 // console.log(TOKEN,'--------------');
 const TOKEN = "6496924480:AAHAYFmmlg1jIRjBZ4L5vRzgJowbWVaPX7w"
