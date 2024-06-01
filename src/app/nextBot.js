@@ -1,8 +1,8 @@
-import { Telegraf } from "telegraf";
+const { Telegraf } = require("telegraf");
 import 'dotenv';
 // const TOKEN = process.env.NEXT_PUBLIC_BOT_TOKEN;
 // console.log(TOKEN,'--------------');
-const TOKEN = "7434306668:AAEaS9JCRbgFGCj0l8Sa_iFyUwlwORIrP_k"
+const TOKEN = "6496924480:AAHAYFmmlg1jIRjBZ4L5vRzgJowbWVaPX7w"
 const bot = new Telegraf(TOKEN);
 
 const web_link = "https://sfs-two.vercel.app/superplay";
