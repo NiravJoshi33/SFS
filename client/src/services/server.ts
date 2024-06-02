@@ -11,5 +11,6 @@ export default class Server {
   async join() {
     const room = await this.client.joinOrCreate("game-room");
     console.log(room);
+    return room;
   }
 }

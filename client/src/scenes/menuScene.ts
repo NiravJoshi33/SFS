@@ -11,10 +11,10 @@ export default class MenuScene extends Phaser.Scene {
 
   preload() {} // assets are already loaded in BootScene
 
-  async create(data: { server: Server }) {
+  create(data: { server: Server }) {
     const { server } = data;
     console.log(server);
-    server.join();
+    server.join().then((room) => console.log(room));
 
     // add background image
     this.add.image(0, 0, "menuBGImg").setOrigin(0);
