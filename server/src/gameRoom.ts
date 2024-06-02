@@ -1,12 +1,14 @@
 import { Room, Client } from "colyseus";
+import GameState from "./utils/gameState";
+import { logger } from "./utils/logger";
 
 export default class GameRoom extends Room {
   onCreate(options: any): void | Promise<any> {
-    console.log("Game room created!", options);
+    logger.info("Game room created!");
+    this.setState(new GameState());
   }
 
   onJoin(client: Client): void | Promise<any> {
-    console.log("Client joined!");
-    console.log(client);
+    logger.info(`Client ${client.sessionId} joined the game room!`);
   }
 }
