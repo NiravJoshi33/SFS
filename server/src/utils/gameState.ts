@@ -5,7 +5,7 @@ import { Schema, type, ArraySchema } from "@colyseus/schema";
 // Reference: https://docs.colyseus.io/state/schema/#arrayschema
 
 // InnerArray: for defining inner array of the 2D array grid
-class InnerArray extends Schema {
+export class InnerArray extends Schema {
   @type(["number"]) innerArray = new ArraySchema<number>();
 }
 
@@ -17,7 +17,7 @@ class SpecialMovesInventory extends Schema {
 }
 
 // Player: for defining player object
-class Player extends Schema {
+export class Player extends Schema {
   @type("string") id: string = "";
   @type("string") username: string = "";
   @type("number") score: number = 0;
@@ -25,6 +25,7 @@ class Player extends Schema {
   @type("number") totalScore: number = 0;
   @type("boolean") isTurn: boolean = false;
   @type("boolean") isWinner: boolean = false;
+  @type("boolean") isReady: boolean = false;
   @type(SpecialMovesInventory) specialMovesInventory =
     new SpecialMovesInventory();
 }
@@ -47,6 +48,8 @@ export default class GameState extends Schema {
   @type([InnerArray]) grid = new ArraySchema<InnerArray>();
   @type([Player]) players = new ArraySchema<Player>();
   @type(LastSwappedTiles) lastSwappedTiles = new LastSwappedTiles();
+  @type("string") status: string =
+    "waiting for players" || "playing" || "game over";
 
   constructor() {
     super();
@@ -55,5 +58,6 @@ export default class GameState extends Schema {
     this.grid = new ArraySchema<InnerArray>();
     this.players = new ArraySchema<Player>();
     this.lastSwappedTiles = new LastSwappedTiles();
+    this.status = "waiting for players";
   }
 }
