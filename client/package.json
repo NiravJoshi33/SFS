@@ -24,6 +24,7 @@
     "colyseus.js": "^0.15.20",
     "dotenv": "^16.4.5",
     "phaser": "^3.55.2",
+    "phaser3-rex-plugins": "^1.80.4",
     "url": "^0.11.3"
   }
 }

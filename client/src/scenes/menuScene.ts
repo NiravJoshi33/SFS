@@ -1,36 +1,43 @@
 import Phaser from "phaser";
 import { canvasSize } from "../utils/gameConfig";
 import type Server from "../services/server";
+import UIManager from "../utils/uiManager";
+
+const { width, height } = canvasSize;
 
 export default class MenuScene extends Phaser.Scene {
+  // class properties
+  uiManager: UIManager;
+  playBtn!: Phaser.GameObjects.Image;
+
   constructor() {
     super({
       key: "MenuScene",
     });
+
+    this.uiManager = new UIManager(this);
   }
 
   preload() {} // assets are already loaded in BootScene
 
-  create(data: { server: Server }) {
+  async create(data: { server: Server }) {
     const { server } = data;
     console.log(server);
-    server.join().then((room) => console.log(room));
+    await server.join();
 
     // add background image
     this.add.image(0, 0, "menuBGImg").setOrigin(0);
 
-    // add play button
-    const playBtn = this.add.image(canvasSize.width / 2, 500, "playBtnImg");
-    playBtn.setInteractive();
-
     // add audio
     this.sound.add("playBtnClkSound");
 
-    // play button click event
-    playBtn.on("pointerdown", () => {
-      //   this.scene.start("GameScene");
-      console.log("play button clicked");
-      this.sound.play("playBtnClkSound");
-    });
+    this.playBtn = this.uiManager.addButton(
+      width / 2,
+      height / 2 + 400,
+      "playBtnImg",
+      () => {
+        this.sound.play("playBtnClkSound");
+      }
+    );
   }
 }
