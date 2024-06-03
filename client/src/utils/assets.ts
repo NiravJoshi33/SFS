@@ -1,9 +1,9 @@
-interface Asset {
+export interface Asset {
   key: string;
   path: string;
 }
 
-interface AssetMap {
+export interface AssetMap {
   [key: string]: Asset;
 }
 
@@ -26,6 +26,16 @@ export const imageAssetMap: AssetMap = {
   nukeIcon: { key: "nukeIcon", path: "/assets/ui/nuke.png" },
   itemPriceBG: { key: "itemPriceBG", path: "/assets/ui/item_price_bg.png" },
   returnBtn: { key: "returnBtn", path: "/assets/ui/return_button.png" },
+};
+
+export const profilePicMap: AssetMap = {
+  profilePic1: { key: "profilePic1", path: "/assets/ui/user_pics/1.png" },
+  profilePic2: { key: "profilePic2", path: "/assets/ui/user_pics/2.png" },
+  profilePic3: { key: "profilePic3", path: "/assets/ui/user_pics/3.png" },
+  profilePic4: { key: "profilePic4", path: "/assets/ui/user_pics/4.png" },
+  profilePic5: { key: "profilePic5", path: "/assets/ui/user_pics/5.png" },
+  profilePic6: { key: "profilePic6", path: "/assets/ui/user_pics/6.png" },
+  profilePic7: { key: "profilePic7", path: "/assets/ui/user_pics/7.png" },
 };
 
 export const audioAssetMap: AssetMap = {

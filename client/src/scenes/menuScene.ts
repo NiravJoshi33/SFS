@@ -31,12 +31,17 @@ export default class MenuScene extends Phaser.Scene {
     // add audio
     this.sound.add("playBtnClkSound");
 
+    // add play button
     this.playBtn = this.uiManager.addButton(
       width / 2,
       height / 2 + 400,
       "playBtnImg",
       () => {
         this.sound.play("playBtnClkSound");
+
+        server.room.send("ready");
+
+        this.scene.start("LobbyScene", { server });
       }
     );
   }

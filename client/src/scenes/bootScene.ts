@@ -1,6 +1,6 @@
 // importing dependencies
 import Phaser from "phaser";
-import { audioAssetMap, imageAssetMap } from "../utils/assets";
+import { audioAssetMap, imageAssetMap, profilePicMap } from "../utils/assets";
 import { ALL_TOKENS } from "../utils/gameConfig";
 import Server from "../services/server";
 
@@ -79,6 +79,10 @@ export class BootScene extends Phaser.Scene {
     ALL_TOKENS.forEach((token) => {
       this.load.image(token, `assets/tokens/${token}_coin.png`);
     });
+
+    for (let asset in profilePicMap) {
+      this.load.image(profilePicMap[asset].key, profilePicMap[asset].path);
+    }
 
     for (let asset in audioAssetMap) {
       this.load.audio(audioAssetMap[asset].key, audioAssetMap[asset].path);
