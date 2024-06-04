@@ -44,5 +44,10 @@ export default class MenuScene extends Phaser.Scene {
         this.scene.start("LobbyScene", { server });
       }
     );
+
+    server.room.onMessage("game-start", () => {
+      console.log("game-start message received");
+      this.scene.start("GameScene", { server });
+    });
   }
 }

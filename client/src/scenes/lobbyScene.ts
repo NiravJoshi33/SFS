@@ -85,10 +85,6 @@ export default class LobbyScene extends Phaser.Scene {
 
     this.opponentProfile = opponentProfilePicWithFrame.profilePic;
     this.opponentFrame = opponentProfilePicWithFrame.frame;
-
-    server.room.onMessage("game-start", () => {
-      this.scene.start("GameScene", { server });
-    });
   }
 
   update() {

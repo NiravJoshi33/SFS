@@ -3,7 +3,7 @@ import { canvasSize } from "../utils/gameConfig";
 import UIManager from "../utils/uiManager";
 import { convertGridToArray2D, renderGrid } from "../utils/gridUtils";
 import type Server from "../services/server";
-import { animateSwap, enableSwap } from "../utils/swapUtils";
+import { animateSwap, destroyTiles, enableSwap } from "../utils/swapUtils";
 
 export default class GameScene extends Phaser.Scene {
   uiManager: UIManager;
@@ -18,6 +18,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   async create(data: { server: Server }) {
+    console.log("GameScene created");
     const { server } = data;
     this.server = server;
 
@@ -41,7 +42,7 @@ export default class GameScene extends Phaser.Scene {
     this.server.room.onMessage("animate-swap", (message: any) => {
       console.log("animate-swap message received");
       const { tileA, tileB, isReverseSwap } = message;
-      animateSwap(
+      this.grid = animateSwap(
         this,
         this.grid,
         tileA,
@@ -49,6 +50,16 @@ export default class GameScene extends Phaser.Scene {
         this.server.room,
         isReverseSwap
       );
+    });
+
+    this.server.room.onMessage("tiles-removed", (message: any) => {
+      console.log("tiles-removed message received");
+      const { matches, newlyAddedTiles } = message;
+
+      console.log("matches", matches);
+      console.log("newlyAddedTiles", newlyAddedTiles);
+
+      destroyTiles(this, this.grid, matches, newlyAddedTiles, server.room);
     });
   }
 
