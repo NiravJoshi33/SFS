@@ -1,103 +1,94 @@
 import { Room, Client } from "colyseus";
-import GameState, {
-  InnerArray,
-  LastSwappedTiles,
-  Player,
-} from "./utils/gameState";
+import GameState from "./utils/gameState";
+import { InnerArray, LastSwappedTiles, Player } from "./utils/gameState";
 import { logger } from "./utils/logger";
 import { MAX_PLAYERS, numOfCols, presetScores } from "./utils/gameConfig";
-import {
-  areTilesAdjacent,
-  convertArray2DToGrid,
-  convertGridToArray2D,
-  createGrid,
-  findMatches,
-  removeMatches,
-} from "./utils/gridUtils";
+import { convertArray2DToGrid, convertGridToArray2D } from "./utils/gridUtils";
+import { createGrid, findMatches, removeMatches } from "./utils/gridUtils";
+import { areTilesAdjacent } from "./utils/gridUtils";
 
 export default class GameRoom extends Room {
   private swapAnimationComplete = new Set<string>();
+  private gameStarted = false;
 
   onCreate(options: any): void | Promise<any> {
     this.maxClients = MAX_PLAYERS;
-    logger.info("Game room created!");
+
     this.setState(new GameState());
 
-    // Initialize the grid
-    this.state.grid = createGrid();
+    this.state.grid = createGrid(); // Initialize the grid
 
-    // register message handlers
+    this.registerEventHandlers();
+  }
+
+  registerEventHandlers(): void {
     this.onMessage("ready", (client: Client) => this.handleReady(client));
+
     this.onMessage("swap-attempt", (client: Client, message: any) =>
       this.handleSwapAttempt(client, message)
     );
+
     this.onMessage("swap-animated", (client: Client, message: any) =>
       this.handleSwapAnimated(client, message)
     );
+
     this.onMessage("reverse-swap-animated", (client: Client, message: any) =>
       this.handleReverseSwapAnimated(client, message)
     );
   }
 
   onJoin(client: Client): void | Promise<any> {
-    logger.info(`Client ${client.sessionId} joined the game room!`);
     this.addPlayer(client);
 
-    if (this.clients.length === 1) {
-      // Set the first player as the current player
+    if (this.state.currentPlayer === "") {
       this.state.currentPlayer = client.sessionId;
+
+      this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
+        true;
+
+      console.log(this.state.currentPlayer);
+      console.log(
+        this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn
+      );
+      console.log(
+        this.state.players[this.findPlayerIndexById(client.sessionId)].id
+      );
     }
 
-    if (this.clients.length === MAX_PLAYERS) {
-      // Start the game
-      this.lock();
-    }
+    if (this.clients.length === MAX_PLAYERS) this.lock();
   }
 
   addPlayer(client: Client): void {
-    console.log(`Adding player ${client.sessionId} to the game room!`);
-
-    // Add player to the game room
     let player: Player = new Player();
     player.id = client.sessionId;
 
-    this.state.players.push(player);
-
-    // if player is first, enable the turn
-    if (this.clients.length === 1) {
-      console.log(`Player ${player.id} is the first player!`);
-      player.isTurn = true;
-    }
+    this.state.players.push(player); // Add the player to the game state
   }
 
   handleReady(client: Client): void {
+    this.state.players[this.findPlayerIndexById(client.sessionId)].isReady =
+      true; // Set the player as ready
+
     console.log(`Client ${client.sessionId} is ready!`);
 
-    // Find the player and update the ready status
-
-    this.state.players[this.findPlayerIndexById(client.sessionId)].isReady =
-      true;
-
-    // Check if all players are ready
     if (this.clients.length === MAX_PLAYERS) {
       let allPlayersReady: boolean = this.state.players.every(
         (player: Player) => player.isReady
       );
 
-      if (allPlayersReady) {
-        this.startGame();
-      }
+      console.log("All players ready: ", allPlayersReady);
+
+      if (allPlayersReady && this.gameStarted === false) this.startGame();
     }
   }
 
   startGame(): void {
-    logger.info("Starting the game!");
+    this.state.status = "playing"; // Set the game status to playing
 
-    // change game status
-    this.state.status = "playing";
-
-    // Send the game state to all players
+    console.log("Game has started!");
     this.broadcast("game-start", this.state);
+
+    this.gameStarted = true;
   }
 
   handleSwapAttempt(client: Client, message: any): void {
@@ -105,19 +96,18 @@ export default class GameRoom extends Room {
     const { tileA, tileB } = message;
 
     if (areTilesAdjacent(tileA, tileB) === true) {
-      console.log(
-        `Tiles at (${tileA.x},${tileA.y}) and (${tileB.x},${tileB.y}) are adjacent!`
-      );
-      // check if it's the player's turn
-      const player: Player =
-        this.state.players[this.findPlayerIndexById(client.sessionId)];
+      logger.info("Tiles are adjacent!");
 
-      if (player.isTurn === true) {
+      if (
+        this.state.players[this.findPlayerIndexById(client.sessionId)]
+          .isTurn === true
+      ) {
         this.broadcast("animate-swap", { tileA, tileB, isReverseSwap: false });
 
-        // disable the player's turn
-        this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
-          false;
+        // this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
+        //   false;
+      } else {
+        console.log("It's not the player's turn!");
       }
     }
   }
@@ -133,11 +123,8 @@ export default class GameRoom extends Room {
     tileA: { x: number; y: number },
     tileB: { x: number; y: number }
   ): number[][] {
-    console.log(
-      `Swapping tiles at (${tileA.x},${tileA.y}) and (${tileB.x},${tileB.y})`
-    );
-
     const grid: number[][] = [];
+
     const tempGrid = convertGridToArray2D(this.state.grid);
     tempGrid.forEach((row: any) => grid.push(Array.from(row.$items.values())));
 
@@ -158,6 +145,8 @@ export default class GameRoom extends Room {
   }
 
   handleSwapAnimated(client: Client, message: any): void {
+    console.log(`Client ${client.sessionId} has animated the swap!`);
+
     // swap the tiles
     const { tileA, tileB } = message;
 
@@ -166,24 +155,34 @@ export default class GameRoom extends Room {
     // check if all clients have completed the swap animation
     if (this.swapAnimationComplete.size === this.clients.length) {
       this.swapAnimationComplete.clear();
+      console.log("All clients have completed the swap animation!");
 
-      // perform server side swap
-      const grid = this.swapTiles(tileA, tileB);
+      const grid = this.swapTiles(tileA, tileB); // swap the tiles
 
-      // check for matches
-      const matchDataList = findMatches(grid);
+      const matchDataList = findMatches(grid); // find matches
+      console.log(JSON.stringify(matchDataList));
       let matches = matchDataList.flatMap((matchData) => matchData.matches);
 
       if (matches && matches.length > 0) {
         const { updatedGrid, newlyAddedTiles } = removeMatches(grid, matches);
-        // TODO: update player scores
-        // TODO: update grid
-        // TODO: broadcast updated game state
+
+        this.rewardScore(matchDataList, client);
+
+        this.state.grid = convertArray2DToGrid(updatedGrid);
+
+        this.broadcast("tiles-removed", {
+          updatedState: this.state,
+          matches,
+          newlyAddedTiles,
+        });
       } else {
         // swap back the tiles
-        this.swapTiles(tileB, tileA);
+        const updatedGrid = this.swapTiles(tileB, tileA);
+
+        this.state.grid = convertArray2DToGrid(updatedGrid); // update the grid
 
         // broadcast the reverse swap
+        console.log("Broadcasting reverse swap!");
         this.broadcast("animate-swap", { tileA, tileB, isReverseSwap: true });
       }
     }
@@ -192,9 +191,8 @@ export default class GameRoom extends Room {
   handleReverseSwapAnimated(client: Client, message: any): void {
     const { tileA, tileB } = message;
 
-    // enable the player's turn
     this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
-      true;
+      true; // re-enable the player's turn
   }
 
   rewardScore(
@@ -205,6 +203,11 @@ export default class GameRoom extends Room {
     client: Client
   ): void {
     let score = 0;
+
+    console.log(
+      "Player score before update: ",
+      this.state.players[this.findPlayerIndexById(client.sessionId)].score
+    );
 
     // Find the player and update the score
     const playerIndex = this.findPlayerIndexById(client.sessionId);
@@ -228,6 +231,20 @@ export default class GameRoom extends Room {
       }
     });
 
-    this.state.players[playerIndex].score += score;
+    // check if the player is the current player
+    console.log("Current player: ", this.state.currentPlayer);
+    console.log("Client session ID: ", client.sessionId);
+    console.log("Player turn", this.state.players[playerIndex].isTurn);
+
+    if (client.sessionId === this.state.currentPlayer) {
+      this.state.players[playerIndex].score += score;
+    } else {
+      console.log("Player is not the current player!");
+    }
+
+    console.log(
+      "Player score after update: ",
+      this.state.players[playerIndex].score
+    );
   }
 }
