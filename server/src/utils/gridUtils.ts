@@ -113,6 +113,7 @@ export function findMatches(grid: number[][]) {
   for (let y = 0; y < grid.length; y++) {
     for (let x = 0; x < grid[y].length - 2; x++) {
       if (grid[y][x] === grid[y][x + 1] && grid[y][x] === grid[y][x + 2]) {
+        console.log(`Found match at (${x},${y})`);
         matches.push({ x, y });
         matches.push({ x: x + 1, y });
         matches.push({ x: x + 2, y });
@@ -149,6 +150,7 @@ export function findMatches(grid: number[][]) {
   for (let x = 0; x < grid[0].length; x++) {
     for (let y = 0; y < grid.length - 2; y++) {
       if (grid[y][x] === grid[y + 1][x] && grid[y][x] === grid[y + 2][x]) {
+        console.log(`Found match at (${x},${y})`);
         matches.push({ x, y });
         matches.push({ x, y: y + 1 });
         matches.push({ x, y: y + 2 });
@@ -176,7 +178,7 @@ export function findMatches(grid: number[][]) {
       }
     }
   }
-
+  console.log("Match Data List: ", matchDataList);
   return matchDataList;
 }
 
