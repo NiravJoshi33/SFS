@@ -38,7 +38,7 @@ export default class LobbyScene extends Phaser.Scene {
     Phaser.Utils.Array.Shuffle(this.opponentProfileArr);
 
     // add background image
-    this.add.image(0, 0, "menuBGImg").setOrigin(0);
+    this.add.image(0, 0, "blackBG").setOrigin(0);
 
     this.add
       .text(canvasSize.width / 2, 200, "Lobby Scene", {

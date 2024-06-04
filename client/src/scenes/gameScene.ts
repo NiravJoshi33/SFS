@@ -3,7 +3,7 @@ import { canvasSize } from "../utils/gameConfig";
 import UIManager from "../utils/uiManager";
 import { convertGridToArray2D, renderGrid } from "../utils/gridUtils";
 import type Server from "../services/server";
-import { enableSwap } from "../utils/swapUtils";
+import { animateSwap, enableSwap } from "../utils/swapUtils";
 
 export default class GameScene extends Phaser.Scene {
   uiManager: UIManager;
@@ -37,6 +37,19 @@ export default class GameScene extends Phaser.Scene {
       convertGridToArray2D(this.server.room.state.grid)
     );
     enableSwap(this, this.grid, server.room);
+
+    this.server.room.onMessage("animate-swap", (message: any) => {
+      console.log("animate-swap message received");
+      const { tileA, tileB, isReverseSwap } = message;
+      animateSwap(
+        this,
+        this.grid,
+        tileA,
+        tileB,
+        this.server.room,
+        isReverseSwap
+      );
+    });
   }
 
   addUserProfileElements(): void {
@@ -47,5 +60,46 @@ export default class GameScene extends Phaser.Scene {
       "profilePic5",
       0.5
     );
+
+    // const textLabelStyle = { fontSize: "20px", fontFamily: "Arial" };
+
+    // this.uiManager.addTextLabel(
+    //   175,
+    //   125,
+    //   "player1",
+    //   textLabelStyle,
+    //   180,
+    //   35,
+    //   5,
+    //   0x000000,
+    //   0x8c52ff,
+    //   5
+    // );
+
+    // this.uiManager.addTextLabel(
+    //   175,
+    //   160,
+    //   "Score: 0",
+    //   textLabelStyle,
+    //   180,
+    //   35,
+    //   5,
+    //   0x000000,
+    //   0x8c52ff,
+    //   5
+    // );
+
+    // this.uiManager.addTextLabel(
+    //   175,
+    //   195,
+    //   "Highscore: 0",
+    //   textLabelStyle,
+    //   180,
+    //   35,
+    //   5,
+    //   0x000000,
+    //   0x8c52ff,
+    //   5
+    // );
   }
 }

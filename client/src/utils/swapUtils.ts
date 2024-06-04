@@ -139,3 +139,68 @@ function getGridPosition(x: number, y: number) {
     y: Math.floor((y - verticalMargin) / tileSpacing),
   };
 }
+
+export function animateSwap(
+  scene: Phaser.Scene,
+  grid: Phaser.GameObjects.Sprite[][],
+  tileA: { x: number; y: number },
+  tileB: { x: number; y: number },
+  room: Room,
+  isReverseSwap: boolean
+) {
+  let tweenAAnimated = false;
+  let tweenBAnimated = false;
+
+  const tileAPosition = grid[tileA.y][tileA.x];
+  const tileBPosition = grid[tileB.y][tileB.x];
+
+  scene.tweens.add({
+    targets: tileAPosition,
+    x: tileBPosition.x,
+    y: tileBPosition.y,
+    duration: 200,
+    ease: "Linear",
+    repeat: 0,
+    yoyo: false,
+    onComplete: () => {
+      tweenAAnimated = true;
+      if (tweenAAnimated && tweenBAnimated) {
+        // update the grid
+        const temp = grid[tileA.y][tileA.x];
+        grid[tileA.y][tileA.x] = grid[tileB.y][tileB.x];
+        grid[tileB.y][tileB.x] = temp;
+
+        if (isReverseSwap === false) {
+          room.send("swap-animated", { tileA, tileB });
+        } else {
+          room.send("reverse-swap-animated", { tileA, tileB });
+        }
+      }
+    },
+  });
+
+  scene.tweens.add({
+    targets: tileBPosition,
+    x: tileAPosition.x,
+    y: tileAPosition.y,
+    duration: 200,
+    ease: "Linear",
+    repeat: 0,
+    yoyo: false,
+    onComplete: () => {
+      tweenBAnimated = true;
+      if (tweenAAnimated && tweenBAnimated) {
+        // update the grid
+        const temp = grid[tileA.y][tileA.x];
+        grid[tileA.y][tileA.x] = grid[tileB.y][tileB.x];
+        grid[tileB.y][tileB.x] = temp;
+
+        if (isReverseSwap === false) {
+          room.send("swap-animated", { tileA, tileB });
+        } else {
+          room.send("reverse-swap-animated", { tileA, tileB });
+        }
+      }
+    },
+  });
+}

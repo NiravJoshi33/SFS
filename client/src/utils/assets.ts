@@ -26,6 +26,7 @@ export const imageAssetMap: AssetMap = {
   nukeIcon: { key: "nukeIcon", path: "/assets/ui/nuke.png" },
   itemPriceBG: { key: "itemPriceBG", path: "/assets/ui/item_price_bg.png" },
   returnBtn: { key: "returnBtn", path: "/assets/ui/return_button.png" },
+  blackBG: { key: "blackBG", path: "/assets/ui/black_bg_720x1280.png" },
 };
 
 export const profilePicMap: AssetMap = {
