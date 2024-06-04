@@ -1,10 +1,22 @@
 import { Room, Client } from "colyseus";
-import GameState, { Player } from "./utils/gameState";
+import GameState, {
+  InnerArray,
+  LastSwappedTiles,
+  Player,
+} from "./utils/gameState";
 import { logger } from "./utils/logger";
 import { MAX_PLAYERS } from "./utils/gameConfig";
-import { areTilesAdjacent, createGrid } from "./utils/gridUtils";
+import {
+  areTilesAdjacent,
+  convertArray2DToGrid,
+  convertGridToArray2D,
+  createGrid,
+  findMatches,
+} from "./utils/gridUtils";
 
 export default class GameRoom extends Room {
+  private swapAnimationComplete = new Set<string>();
+
   onCreate(options: any): void | Promise<any> {
     this.maxClients = MAX_PLAYERS;
     logger.info("Game room created!");
@@ -17,6 +29,12 @@ export default class GameRoom extends Room {
     this.onMessage("ready", (client: Client) => this.handleReady(client));
     this.onMessage("swap-attempt", (client: Client, message: any) =>
       this.handleSwapAttempt(client, message)
+    );
+    this.onMessage("swap-animated", (client: Client, message: any) =>
+      this.handleSwapAnimated(client, message)
+    );
+    this.onMessage("reverse-swap-animated", (client: Client, message: any) =>
+      this.handleReverseSwapAnimated(client, message)
     );
   }
 
@@ -55,11 +73,9 @@ export default class GameRoom extends Room {
     console.log(`Client ${client.sessionId} is ready!`);
 
     // Find the player and update the ready status
-    let playerIndex: number = this.state.players.findIndex(
-      (player: Player) => player.id === client.sessionId
-    );
 
-    this.state.players[playerIndex].isReady = true;
+    this.state.players[this.findPlayerIndexById(client.sessionId)].isReady =
+      true;
 
     // Check if all players are ready
     if (this.clients.length === MAX_PLAYERS) {
@@ -92,25 +108,91 @@ export default class GameRoom extends Room {
         `Tiles at (${tileA.x},${tileA.y}) and (${tileB.x},${tileB.y}) are adjacent!`
       );
       // check if it's the player's turn
-      const playerIndex: number = this.state.players.findIndex(
-        (player: Player) => player.id === client.sessionId
-      );
-      const player: Player = this.state.players[playerIndex];
-      console.log(player.isTurn);
+      const player: Player =
+        this.state.players[this.findPlayerIndexById(client.sessionId)];
 
       if (player.isTurn === true) {
-        console.log(`Player ${player.id} is valid to swap tiles!`);
-        // swap the tiles
-        this.swapTiles(tileA, tileB);
+        this.broadcast("animate-swap", { tileA, tileB, isReverseSwap: false });
+
+        // disable the player's turn
+        this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
+          false;
       }
     }
   }
 
-  swapTiles(tileA: { x: number; y: number }, tileB: { x: number; y: number }) {
+  findPlayerIndexById(id: string): number {
+    const playerIndex: number = this.state.players.findIndex(
+      (player: Player) => player.id === id
+    );
+    return playerIndex;
+  }
+
+  swapTiles(
+    tileA: { x: number; y: number },
+    tileB: { x: number; y: number }
+  ): number[][] {
     console.log(
       `Swapping tiles at (${tileA.x},${tileA.y}) and (${tileB.x},${tileB.y})`
     );
-    const grid = this.state.grid;
-    console.log(grid);
+
+    const grid: number[][] = [];
+    const tempGrid = convertGridToArray2D(this.state.grid);
+    tempGrid.forEach((row: any) => grid.push(Array.from(row.$items.values())));
+
+    const temp = grid[tileA.y][tileA.x];
+    grid[tileA.y][tileA.x] = grid[tileB.y][tileB.x];
+    grid[tileB.y][tileB.x] = temp;
+
+    // record last swapped tiles
+    const lastSwappedTiles = new LastSwappedTiles();
+    lastSwappedTiles.tileA.x = tileA.x;
+    lastSwappedTiles.tileA.y = tileA.y;
+    lastSwappedTiles.tileB.x = tileB.x;
+    lastSwappedTiles.tileB.y = tileB.y;
+
+    this.state.lastSwappedTiles = lastSwappedTiles;
+
+    return grid;
+  }
+
+  handleSwapAnimated(client: Client, message: any): void {
+    // swap the tiles
+    const { tileA, tileB } = message;
+
+    this.swapAnimationComplete.add(client.sessionId);
+
+    // check if all clients have completed the swap animation
+    if (this.swapAnimationComplete.size === this.clients.length) {
+      this.swapAnimationComplete.clear();
+
+      // perform server side swap
+      const grid = this.swapTiles(tileA, tileB);
+
+      // check for matches
+      const matchDataList = findMatches(grid);
+      let matches = matchDataList.flatMap((matchData) => matchData.matches);
+
+      if (matches && matches.length > 0) {
+        // TODO: resolve matches, add new tiles
+        // TODO: update player scores
+        // TODO: update grid
+        // TODO: broadcast updated game state
+      } else {
+        // swap back the tiles
+        this.swapTiles(tileB, tileA);
+
+        // broadcast the reverse swap
+        this.broadcast("animate-swap", { tileA, tileB, isReverseSwap: true });
+      }
+    }
+  }
+
+  handleReverseSwapAnimated(client: Client, message: any): void {
+    const { tileA, tileB } = message;
+
+    // enable the player's turn
+    this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
+      true;
   }
 }

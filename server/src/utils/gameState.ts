@@ -37,7 +37,7 @@ class Tile extends Schema {
 }
 
 // LastSwappedTiles: for defining lastSwappedTiles object
-class LastSwappedTiles extends Schema {
+export class LastSwappedTiles extends Schema {
   @type(Tile) tileA = new Tile();
   @type(Tile) tileB = new Tile();
 }
