@@ -246,33 +246,35 @@ export function destroyTiles(
   // counter to keep track of the number of tiles that have faded out
   // and to perform drop animation after all tiles have faded out
 
-  tilesToDestroy.forEach((tileToDestroy) => {
-    const { x, y } = tileToDestroy;
-    const tile = grid[y][x];
-
-    if (tile !== null) {
-      fadeOutCount++;
-
-      scene.tweens.add({
-        targets: tile,
-        alpha: 0,
-        duration: 200,
-        ease: "Power2",
-        onComplete: () => {
-          console.log(`destroying tile: ${tile.texture.key} at ${x}, ${y}`);
-
-          tile.destroy();
-          grid[y][x] = null;
-          fadeOutCount--;
-
-          if (fadeOutCount === 0) {
-            console.table(grid);
-            dropTiles(scene, grid, newlyAddedTiles, room);
-          }
-        },
-      });
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[y].length; x++) {
+      const tile = grid[y][x];
+      if (
+        tile !== null &&
+        tilesToDestroy.some(
+          (tileToDestroy) => tileToDestroy.x === x && tileToDestroy.y === y
+        )
+      ) {
+        fadeOutCount++;
+        scene.tweens.add({
+          targets: tile,
+          alpha: 0,
+          duration: 200,
+          ease: "Linear",
+          repeat: 0,
+          yoyo: false,
+          onComplete: () => {
+            tile.destroy();
+            grid[y][x] = null;
+            fadeOutCount--;
+            if (fadeOutCount === 0) {
+              dropTiles(scene, grid, newlyAddedTiles, room);
+            }
+          },
+        });
+      }
     }
-  });
+  }
 }
 
 export function dropTiles(
@@ -296,42 +298,58 @@ export function dropTiles(
 
         // animate tile drop
         if (tile !== null) {
-          scene.tweens.add({
-            targets: tile,
-            y: tile.y + emptySpaces * tileSpacing,
-            duration: 100 * emptySpaces,
-            ease: "Power2",
-          });
-        }
-      }
-
-      // refill empty spaces at the top
-      for (let i = 0; i < emptySpaces; i++) {
-        const newTileData = newlyAddedTiles.find((newTile) => {
-          return newTile.x === x && newTile.y === i;
-        });
-
-        if (newTileData) {
-          const tileKey = ALL_TOKENS[newTileData.index];
-
-          const tile = scene.add.sprite(
-            horizontalMargin + x * tileSpacing,
-            verticalMargin - tileSpacing * (emptySpaces - i),
-            tileKey
+          console.log(
+            `dropping tile: ${tile.texture.key} from ${x}, ${y} to ${x}, ${
+              y + emptySpaces
+            }`
           );
-          tile.setOrigin(0);
-          tile.setScale(tileScale);
-          tile.setInteractive();
-          scene.input.setDraggable(tile);
-          grid[i][x] = tile;
-
-          // animate tile drop
           scene.tweens.add({
             targets: tile,
             y: tile.y + emptySpaces * tileSpacing,
             duration: 100 * emptySpaces,
             ease: "Power2",
+            onComplete: () => {
+              // refill empty spaces at the top
+              for (let i = 0; i < emptySpaces; i++) {
+                const newTileData = newlyAddedTiles.find((newTile) => {
+                  return newTile.x === x && newTile.y === i;
+                });
+
+                if (newTileData) {
+                  // destroy the existing tiles at the top before adding new ones
+                  if (grid[i][x] !== null) {
+                    grid[i][x]?.destroy(); // '?' is used to avoid typescript error
+                    grid[i][x] = null;
+                  }
+
+                  const tileKey = ALL_TOKENS[newTileData.index];
+
+                  const tile = scene.add.sprite(
+                    horizontalMargin + x * tileSpacing,
+                    verticalMargin - tileSpacing * (emptySpaces - i),
+                    tileKey
+                  );
+                  tile.setOrigin(0);
+                  tile.setScale(tileScale);
+                  tile.setInteractive();
+                  scene.input.setDraggable(tile);
+                  grid[i][x] = tile;
+
+                  console.log(`adding tile: ${tileKey} at ${x}, ${i}`);
+
+                  // animate tile drop from outside the grid
+                  scene.tweens.add({
+                    targets: tile,
+                    y: verticalMargin + i * tileSpacing,
+                    duration: 100 * emptySpaces,
+                    ease: "Power2",
+                  });
+                }
+              }
+            },
           });
+        } else {
+          console.log(`tile is null at ${x}, ${y}`);
         }
       }
     }
