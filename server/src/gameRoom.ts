@@ -5,13 +5,14 @@ import GameState, {
   Player,
 } from "./utils/gameState";
 import { logger } from "./utils/logger";
-import { MAX_PLAYERS } from "./utils/gameConfig";
+import { MAX_PLAYERS, numOfCols, presetScores } from "./utils/gameConfig";
 import {
   areTilesAdjacent,
   convertArray2DToGrid,
   convertGridToArray2D,
   createGrid,
   findMatches,
+  removeMatches,
 } from "./utils/gridUtils";
 
 export default class GameRoom extends Room {
@@ -174,7 +175,7 @@ export default class GameRoom extends Room {
       let matches = matchDataList.flatMap((matchData) => matchData.matches);
 
       if (matches && matches.length > 0) {
-        // TODO: resolve matches, add new tiles
+        const { updatedGrid, newlyAddedTiles } = removeMatches(grid, matches);
         // TODO: update player scores
         // TODO: update grid
         // TODO: broadcast updated game state
@@ -194,5 +195,39 @@ export default class GameRoom extends Room {
     // enable the player's turn
     this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
       true;
+  }
+
+  rewardScore(
+    matchDataList: {
+      numOfMatches: number;
+      matches: { x: number; y: number }[];
+    }[],
+    client: Client
+  ): void {
+    let score = 0;
+
+    // Find the player and update the score
+    const playerIndex = this.findPlayerIndexById(client.sessionId);
+
+    matchDataList.forEach((matchData) => {
+      switch (matchData.numOfMatches) {
+        case 3:
+          score += presetScores.threeMatch;
+          break;
+        case 4:
+          score += presetScores.fourMatch;
+          break;
+        case 5:
+          score += presetScores.fiveMatch;
+          break;
+        case numOfCols || numOfCols + 1:
+          score += presetScores.railGun;
+          break;
+        default:
+          break;
+      }
+    });
+
+    this.state.players[playerIndex].score += score;
   }
 }

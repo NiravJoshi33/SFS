@@ -179,3 +179,31 @@ export function findMatches(grid: number[][]) {
 
   return matchDataList;
 }
+
+export function removeMatches(
+  grid: number[][],
+  tilesToRemove: { x: number; y: number }[]
+) {
+  // create a new grid to store the updated grid
+  let updatedGrid = grid;
+  let newlyAddedTiles: { x: number; y: number; index: number }[] = [];
+
+  for (let x = 0; x < grid[0].length; x++) {
+    let emptyTiles = 0;
+    for (let y = grid.length - 1; y >= 0; y--) {
+      if (tilesToRemove.find((tile) => tile.x === x && tile.y === y)) {
+        emptyTiles++;
+      } else {
+        updatedGrid[y + emptyTiles][x] = grid[y][x]; // move tile down
+      }
+    }
+
+    // add new tiles to the top of the grid
+    for (let i = 0; i < emptyTiles; i++) {
+      updatedGrid[i][x] = getRandomInt(0, ALL_TOKENS.length - 1);
+      newlyAddedTiles.push({ x, y: i, index: updatedGrid[i][x] });
+    }
+  }
+
+  return { updatedGrid, newlyAddedTiles };
+}
