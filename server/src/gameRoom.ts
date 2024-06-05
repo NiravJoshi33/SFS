@@ -262,6 +262,8 @@ export default class GameRoom extends Room {
           matches
         );
 
+        //TODO: IMPLEMENT GRID RESET ON NO POSSIBLE MATCHES
+
         this.rewardScore(matchDataList, client);
 
         this.state.grid = convertArray2DToGrid(updatedGrid);
@@ -282,21 +284,24 @@ export default class GameRoom extends Room {
           this.broadcast("reset-grid", this.state);
         }
 
-        this.endTurn(client);
+        this.nextTurn();
       }
     }
   }
 
-  endTurn(client: Client) {
-    const playerIndex = this.findPlayerIndexById(client.sessionId);
+  nextTurn() {
+    const currentPlayerIndex = this.findPlayerIndexById(
+      this.state.currentPlayer
+    );
 
-    this.state.players[playerIndex].isTurn = false;
+    this.state.players[currentPlayerIndex].isTurn = false;
 
     // get the other player
-    const otherPlayerIndex = (playerIndex + 1) % this.state.players.length;
+    const nextPlayerIndex =
+      (currentPlayerIndex + 1) % this.state.players.length;
 
-    this.state.players[otherPlayerIndex].isTurn = true;
-    this.state.currentPlayer = this.state.players[otherPlayerIndex].id;
+    this.state.players[nextPlayerIndex].isTurn = true;
+    this.state.currentPlayer = this.state.players[nextPlayerIndex].id;
   }
 
   startTurn(client: Client) {
@@ -310,8 +315,8 @@ export default class GameRoom extends Room {
     const playerIndex = this.findPlayerIndexById(client.sessionId);
     this.state.players[playerIndex].isTurn = true;
 
-    const otherPlayerIndex = (playerIndex + 1) % this.state.players.length;
-    this.state.players[otherPlayerIndex].isTurn = false;
+    const nextPlayerIndex = (playerIndex + 1) % this.state.players.length;
+    this.state.players[nextPlayerIndex].isTurn = false;
   }
 
   disableTurnForAllPlayers() {
