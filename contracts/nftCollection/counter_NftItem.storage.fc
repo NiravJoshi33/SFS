@@ -1,0 +1,186 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: Context
+;; TLB: _ bounced:bool sender:address value:int257 raw:^slice = Context
+;;
+
+_ $Context$_get_value((int, slice, int, slice) v) inline {
+    var (v'bounced, v'sender, v'value, v'raw) = v;
+    return v'value;
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline {
+    return (bounce, to, value, mode, body, code, data);
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int queryId) inline {
+    return (queryId);
+}
+
+;;
+;; Type: Transfer
+;; Header: 0x5e19f431
+;; TLB: transfer#5e19f431 query_id:uint64 new_owner:address = Transfer
+;;
+
+(slice, ((int, slice))) $Transfer$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1578759217);
+    var v'query_id = sc_0~load_uint(64);
+    var v'new_owner = sc_0~__tact_load_address();
+    return (sc_0, (v'query_id, v'new_owner));
+}
+
+;;
+;; Type: BuyItem
+;; Header: 0x9ba4031f
+;; TLB: buy_item#9ba4031f query_id:uint64 = BuyItem
+;;
+
+(slice, ((int))) $BuyItem$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2611217183);
+    var v'query_id = sc_0~load_uint(64);
+    return (sc_0, (v'query_id));
+}
+
+;;
+;; Type: ListOnSale
+;; Header: 0xc7d8059c
+;; TLB: list_on_sale#c7d8059c query_id:uint64 = ListOnSale
+;;
+
+(slice, ((int))) $ListOnSale$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3352823196);
+    var v'query_id = sc_0~load_uint(64);
+    return (sc_0, (v'query_id));
+}
+
+;;
+;; Type: SetPrice
+;; Header: 0x82c79d87
+;; TLB: set_price#82c79d87 query_id:uint64 price:int257 = SetPrice
+;;
+
+(slice, ((int, int))) $SetPrice$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2194120071);
+    var v'query_id = sc_0~load_uint(64);
+    var v'price = sc_0~load_int(257);
+    return (sc_0, (v'query_id, v'price));
+}
+
+;;
+;; Type: ItemData
+;; TLB: _ owner:address collection_address:address item_index:int257 individual_content:^string price:int257 onSale:bool = ItemData
+;;
+
+(slice, slice, int, slice, int, int) $ItemData$_to_external(((slice, slice, int, slice, int, int)) v) inline {
+    var (v'owner, v'collection_address, v'item_index, v'individual_content, v'price, v'onSale) = v; 
+    return (v'owner, v'collection_address, v'item_index, v'individual_content, v'price, v'onSale);
+}
+
+((slice, slice, int, slice, int, int)) $ItemData$_constructor_owner_collection_address_item_index_individual_content_price_onSale(slice owner, slice collection_address, int item_index, slice individual_content, int price, int onSale) inline {
+    return (owner, collection_address, item_index, individual_content, price, onSale);
+}
+
+;;
+;; Type: NftItem
+;;
+
+builder $NftItem$_store(builder build_0, (slice, slice, int, slice, int, int) v) inline {
+    var (v'owner, v'collection_address, v'item_index, v'individual_content, v'price, v'onSale) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = __tact_store_address(build_0, v'collection_address);
+    build_0 = build_0.store_int(v'item_index, 257);
+    build_0 = build_0.store_ref(begin_cell().store_slice(v'individual_content).end_cell());
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'price, 257);
+    build_1 = build_1.store_int(v'onSale, 1);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((slice, slice, int, slice, int, int))) $NftItem$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'collection_address = sc_0~__tact_load_address();
+    var v'item_index = sc_0~load_int(257);
+    var v'individual_content = sc_0~load_ref().begin_parse();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'price = sc_1~load_int(257);
+    var v'onSale = sc_1~load_int(1);
+    return (sc_0, (v'owner, v'collection_address, v'item_index, v'individual_content, v'price, v'onSale));
+}
+
+(slice, ((slice, slice, int, int))) $NftItem$init$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'collection_address = sc_0~__tact_load_address();
+    var v'item_index = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'price = sc_1~load_int(257);
+    return (sc_0, (v'owner, v'collection_address, v'item_index, v'price));
+}
+
+(slice, slice, int, slice, int, int) $NftItem$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$NftItem$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        (slice owner, slice collection_address, int item_index, int price) = $sc~$NftItem$init$_load();
+        $sc.end_parse();
+        return $NftItem$_contract_init(owner, collection_address, item_index, price);
+    }
+}
+
+() $NftItem$_contract_store((slice, slice, int, slice, int, int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $NftItem$_store(b, v);
+    set_data(b.end_cell());
+}

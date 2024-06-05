@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { IonIcon } from '@ionic/react';
@@ -8,11 +8,15 @@ import DropDown from './search/DropDown';
 import Create from './create/Create';
 // import Notifications from './notification/Notifications';
 import Message from './message/Message';
-import Profile from './user/Profile'; 
+import Profile from './user/Profile';
 import CreatePostModal from '../modals/CreatePostModal';
+import { useWallet } from '../../use-wallet';
 
-const Header = ({isSidebarOpen,toggleSidebar}) => { 
-   
+const Header = ({ isSidebarOpen, toggleSidebar }) => {
+
+    const { userAddress, connectButton, disconnectButton } = useWallet();
+
+
     return (
         <header className="z-[100] h-[--m-top] fixed top-0 left-0 w-full flex items-center bg-white/80 sky-50 backdrop-blur-xl border-b border-slate-200 dark:bg-dark2 dark:border-slate-800">
             <div className="flex items-center w-full xl:px-6 px-2 max-lg:gap-10">
@@ -24,7 +28,7 @@ const Header = ({isSidebarOpen,toggleSidebar}) => {
                         >
                             <IonIcon icon={menuOutline} className={`text-2xl ${isSidebarOpen ? 'hidden' : 'block'}`} />
                             <IonIcon icon={closeOutline} className={`text-2xl ${isSidebarOpen ? 'block' : 'hidden'}`} />
-                        </button> 
+                        </button>
                         <div id="logo">
                             <Link href="/">
                                 <Image
@@ -67,14 +71,28 @@ const Header = ({isSidebarOpen,toggleSidebar}) => {
                             <button type="button" className="sm:hidden sm:p-2 p-1 rounded-full  sm:bg-secondery dark:text-white">
                                 <IonIcon icon={search} className="sm:hidden text-2xl" />
                             </button>
-                            <Create  />
+                            <Create />
+
+                            {!userAddress && (
+                                <div className="card">
+                                    {connectButton}
+                                </div>
+                            )}
+
+                            {!!userAddress && (
+                                <div className="card">
+                                    <span>{userAddress}</span>
+                                    {disconnectButton}
+                                </div>
+                            )}
+
                             {/* <Notifications /> */}
-                            <Message />
-                            <Profile />
+                            {/* <Message /> */}
+                            {/* <Profile /> */}
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </header>
     );
 };
