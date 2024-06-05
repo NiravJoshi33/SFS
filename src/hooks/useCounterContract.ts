@@ -53,10 +53,10 @@ export function useCounterContract() {
 
     const readAddress = async () => {
         try {
-            // if (!nftCollectionContract) return;
-            // // const res = await nftCollectionContract?.getGetNftItemInit(2n, uri, price)
-            // const res = await nftCollectionContract?.getGetItemAddress(0n);
-            // console.log('item address -----', res.toString());
+            if (!nftCollectionContract) return;
+            // const res = await nftCollectionContract?.getGetNftItemInit(2n, uri, price)
+            const res = await nftCollectionContract?.getGetItemAddress(0n);
+            console.log('item address -----', res.toString());
         } catch (error) {
             console.log(error);
         }
