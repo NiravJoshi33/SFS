@@ -3,12 +3,14 @@ import { canvasSize } from "../utils/gameConfig";
 import UIManager from "../utils/uiManager";
 import { convertGridToArray2D, renderGrid } from "../utils/gridUtils";
 import type Server from "../services/server";
-import { animateSwap, destroyTiles, enableSwap } from "../utils/swapUtils";
+import { animateSwap, resolveMatches, enableSwap } from "../utils/swapUtils";
 
 export default class GameScene extends Phaser.Scene {
   uiManager: UIManager;
   grid: Phaser.GameObjects.Sprite[][] = [];
   server!: Server;
+  profilePic!: Phaser.GameObjects.Image;
+  opponentProfilePic!: Phaser.GameObjects.Image;
   constructor() {
     super({
       key: "GameScene",
@@ -59,18 +61,40 @@ export default class GameScene extends Phaser.Scene {
       console.log("matches", matches);
       console.log("newlyAddedTiles", newlyAddedTiles);
 
-      destroyTiles(this, this.grid, matches, newlyAddedTiles, server.room);
+      resolveMatches(this, this.grid, matches, newlyAddedTiles, server.room);
+    });
+
+    this.server.room.onMessage("reset-grid", () => {
+      // destroy all the tiles & all event listeners
+      this.grid.forEach((row) => {
+        row.forEach((tile) => {
+          if (tile) tile.destroy();
+        });
+      });
+
+      // render the new grid
+      this.grid = renderGrid(
+        this,
+        convertGridToArray2D(this.server.room.state.grid)
+      );
+      enableSwap(this, this.grid, server.room);
     });
   }
 
   addUserProfileElements(): void {
-    this.uiManager.addProfilePicture(100, 200, "profile_pic", 0.5);
-    this.uiManager.addProfilePicture(
+    this.profilePic = this.uiManager.addProfilePicture(
+      100,
+      200,
+      "profile_pic",
+      0.5
+    ).profilePic;
+
+    this.opponentProfilePic = this.uiManager.addProfilePicture(
       canvasSize.width - 100,
       200,
       "profilePic5",
       0.5
-    );
+    ).profilePic;
 
     // const textLabelStyle = { fontSize: "20px", fontFamily: "Arial" };
 
@@ -112,5 +136,16 @@ export default class GameScene extends Phaser.Scene {
     //   0x8c52ff,
     //   5
     // );
+  }
+
+  update() {
+    // highlight the profile picture of the current player
+    if (this.server.room.state.currentPlayer === this.server.room.sessionId) {
+      this.profilePic.setTint(0xffffff);
+      this.opponentProfilePic.setTint(0x8c52ff);
+    } else {
+      this.profilePic.setTint(0x8c52ff);
+      this.opponentProfilePic.setTint(0xffffff);
+    }
   }
 }

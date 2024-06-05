@@ -26,10 +26,13 @@ export default class MenuScene extends Phaser.Scene {
     await server.join();
 
     // add background image
-    this.add.image(0, 0, "blackBG").setOrigin(0);
+    this.add.image(0, 0, "menuBGImg").setOrigin(0);
 
     // add audio
     this.sound.add("playBtnClkSound");
+
+    // add powered by image
+    this.add.image(width / 2, height / 2 + 300, "poweredBy").setScale(0.5);
 
     // add play button
     this.playBtn = this.uiManager.addButton(

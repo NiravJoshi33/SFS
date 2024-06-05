@@ -1,12 +1,7 @@
 import Phaser from "phaser";
-import {
-  swapTriggerDistance,
-  horizontalMargin,
-  ALL_TOKENS,
-  tileScale,
-} from "./gameConfig";
+import { swapTriggerDistance, horizontalMargin } from "./gameConfig";
 import { verticalMargin, numOfCols, numOfRows } from "./gameConfig";
-import { tileSpacing } from "./gameConfig";
+import { tileSpacing, tileScale, ALL_TOKENS } from "./gameConfig";
 import { type Room } from "colyseus.js";
 
 export function enableSwap(
@@ -233,128 +228,132 @@ export function animateSwap(
   return grid;
 }
 
-export function destroyTiles(
+export function resolveMatches(
+  scene: Phaser.Scene,
+  grid: Phaser.GameObjects.Sprite[][],
+  tilesToDestroy: { x: number; y: number }[],
+  newlyAddedTiles: { x: number; y: number; index: number }[],
+  room: Room
+) {
+  // destroy the matched tiles
+  animateTileBreak(scene, grid, tilesToDestroy, newlyAddedTiles, room);
+}
+
+function animateTileBreak(
   scene: Phaser.Scene,
   grid: Phaser.GameObjects.Sprite[][] | null[][],
   tilesToDestroy: { x: number; y: number }[],
   newlyAddedTiles: { x: number; y: number; index: number }[],
   room: Room
-) {
-  console.log(newlyAddedTiles);
-  console.log(room);
-  let fadeOutCount = 0;
-  // counter to keep track of the number of tiles that have faded out
-  // and to perform drop animation after all tiles have faded out
+): void {
+  console.log("animating tile break");
+  let tweenCount = 0;
 
-  for (let y = 0; y < grid.length; y++) {
-    for (let x = 0; x < grid[y].length; x++) {
-      const tile = grid[y][x];
-      if (
-        tile !== null &&
-        tilesToDestroy.some(
-          (tileToDestroy) => tileToDestroy.x === x && tileToDestroy.y === y
-        )
-      ) {
-        fadeOutCount++;
-        scene.tweens.add({
-          targets: tile,
-          alpha: 0,
-          duration: 200,
-          ease: "Linear",
-          repeat: 0,
-          yoyo: false,
-          onComplete: () => {
-            tile.destroy();
-            grid[y][x] = null;
-            fadeOutCount--;
-            if (fadeOutCount === 0) {
-              dropTiles(scene, grid, newlyAddedTiles, room);
-            }
-          },
-        });
-      }
-    }
+  for (let tile of tilesToDestroy) {
+    scene.tweens.add({
+      targets: grid[tile.y][tile.x],
+      scaleX: 0,
+      scaleY: 0,
+      duration: 200,
+      ease: "Linear",
+      repeat: 0,
+      yoyo: false,
+      onComplete: () => {
+        grid[tile.y][tile.x] = null;
+        tweenCount++;
+        if (tweenCount === tilesToDestroy.length) {
+          animateTileDrop(scene, grid, newlyAddedTiles, tilesToDestroy, room);
+        }
+      },
+    });
   }
 }
 
-export function dropTiles(
+function animateTileDrop(
   scene: Phaser.Scene,
   grid: Phaser.GameObjects.Sprite[][] | null[][],
   newlyAddedTiles: { x: number; y: number; index: number }[],
+  tilesToDestroy: { x: number; y: number }[],
   room: Room
-) {
-  // drop animation
+): void {
+  console.log("animating tile drop");
+  const tweenTimeline = scene.tweens.createTimeline();
+  tweenTimeline.on("complete", () => {
+    spawnNewTiles(scene, grid, newlyAddedTiles, room);
+  });
 
-  for (let x = 0; x < grid[0].length; x++) {
-    let emptySpaces = 0;
-    for (let y = grid.length - 1; y >= 0; y--) {
-      if (grid[y][x] === null) {
-        emptySpaces++;
-      } else if (emptySpaces > 0) {
-        // move the tile down by emptySpaces
+  // First, remove the tiles to be destroyed
+  for (const { x, y } of tilesToDestroy) {
+    if (grid[y][x] !== null) {
+      grid[y][x]?.destroy();
+      grid[y][x] = null;
+    }
+  }
+
+  for (let x = 0; x < numOfCols; x++) {
+    let fallingTiles = 0;
+    for (let y = numOfRows - 1; y >= 0; y--) {
+      if (grid[y][x] == null) {
+        fallingTiles++;
+      } else if (fallingTiles > 0) {
+        // if a non-null tile is found after a null tile
+        // first drop the tile in grid array
         let tile = grid[y][x];
         grid[y][x] = null;
-        grid[y + emptySpaces][x] = tile;
+        grid[y + fallingTiles][x] = tile;
 
-        // animate tile drop
+        // then drop the sprite in the scene
         if (tile !== null) {
-          console.log(
-            `dropping tile: ${tile.texture.key} from ${x}, ${y} to ${x}, ${
-              y + emptySpaces
-            }`
-          );
-          scene.tweens.add({
+          let tween = {
             targets: tile,
-            y: tile.y + emptySpaces * tileSpacing,
-            duration: 100 * emptySpaces,
+            y: tile.y + fallingTiles * tileSpacing,
+            duration: 100 * fallingTiles,
             ease: "Power2",
-            onComplete: () => {
-              // refill empty spaces at the top
-              for (let i = 0; i < emptySpaces; i++) {
-                const newTileData = newlyAddedTiles.find((newTile) => {
-                  return newTile.x === x && newTile.y === i;
-                });
+          };
 
-                if (newTileData) {
-                  // destroy the existing tiles at the top before adding new ones
-                  if (grid[i][x] !== null) {
-                    grid[i][x]?.destroy(); // '?' is used to avoid typescript error
-                    grid[i][x] = null;
-                  }
-
-                  const tileKey = ALL_TOKENS[newTileData.index];
-
-                  const tile = scene.add.sprite(
-                    horizontalMargin + x * tileSpacing,
-                    verticalMargin - tileSpacing * (emptySpaces - i),
-                    tileKey
-                  );
-                  tile.setOrigin(0);
-                  tile.setScale(tileScale);
-                  tile.setInteractive();
-                  scene.input.setDraggable(tile);
-                  grid[i][x] = tile;
-
-                  console.log(`adding tile: ${tileKey} at ${x}, ${i}`);
-
-                  // animate tile drop from outside the grid
-                  scene.tweens.add({
-                    targets: tile,
-                    y: verticalMargin + i * tileSpacing,
-                    duration: 100 * emptySpaces,
-                    ease: "Power2",
-                  });
-                }
-              }
-            },
-          });
-        } else {
-          console.log(`tile is null at ${x}, ${y}`);
+          tweenTimeline.add(tween);
         }
       }
     }
   }
 
-  console.log("sending drop-animated");
-  room.send("drop-animated");
+  tweenTimeline.play();
+}
+
+function spawnNewTiles(
+  scene: Phaser.Scene,
+  grid: Phaser.GameObjects.Sprite[][] | null[][],
+  newlyAddedTiles: { x: number; y: number; index: number }[],
+  room: Room
+): void {
+  console.log("spawning new tiles");
+
+  let replenishedTiles = 0;
+
+  for (let tile of newlyAddedTiles) {
+    const newTile = scene.add.sprite(
+      horizontalMargin + tile.x * tileSpacing,
+      verticalMargin + tile.y * tileSpacing,
+      ALL_TOKENS[tile.index]
+    );
+    newTile.setOrigin(0);
+    newTile.setScale(tileScale);
+    newTile.setInteractive();
+    scene.input.setDraggable(newTile);
+
+    grid[tile.y][tile.x] = newTile;
+
+    scene.tweens.add({
+      targets: newTile,
+      y: verticalMargin + tile.y * tileSpacing,
+      duration: 100 * tile.y,
+      ease: "Power2",
+      onComplete: () => {
+        replenishedTiles++;
+        if (replenishedTiles === newlyAddedTiles.length) {
+          room.send("drop-animated");
+        }
+      },
+    });
+  }
 }
