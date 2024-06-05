@@ -6,7 +6,7 @@ import { IonIcon } from '@ionic/react';
 import { search, menuOutline, closeOutline } from 'ionicons/icons';
 import DropDown from './search/DropDown';
 import Create from './create/Create';
-import Notifications from './notification/Notifications';
+// import Notifications from './notification/Notifications';
 import Message from './message/Message';
 import Profile from './user/Profile'; 
 import CreatePostModal from '../modals/CreatePostModal';
@@ -68,7 +68,7 @@ const Header = ({isSidebarOpen,toggleSidebar}) => {
                                 <IonIcon icon={search} className="sm:hidden text-2xl" />
                             </button>
                             <Create  />
-                            <Notifications />
+                            {/* <Notifications /> */}
                             <Message />
                             <Profile />
                         </div>

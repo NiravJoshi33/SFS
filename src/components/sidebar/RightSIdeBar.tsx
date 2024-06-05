@@ -3,7 +3,7 @@ import { IonIcon } from '@ionic/react';
 import { syncOutline } from 'ionicons/icons';
 import Image from 'next/image';
 import React from 'react';
-import RecentList from '../animation/RecentList';
+// import RecentList from '../animation/RecentList';
 
 const RightSIdeBar = () => {
   return (
@@ -11,22 +11,19 @@ const RightSIdeBar = () => {
       <div className="lg:space-y-4 lg:pb-8 max-lg:grid sm:grid-cols-2 max-lg:gap-6"
         uk-sticky="media: 1024; end: #js-oversized; offset: 80">
 
-        <div className="box p-5 px-6">
-
+        {/* <div className="box p-5 px-6">
           <div className="flex items-baseline justify-between text-black dark:text-white">
             <h3 className="font-bold text-base"> Recent </h3>
             <a href="#" className="text-sm text-blue-500">See all</a>
           </div>
           <RecentList/>
-           
-        </div>
+        </div> */}
 
-        <div className="box p-5 px-6 border1 dark:bg-dark2 "> 
+        <div className="box p-5 px-6 border1 dark:bg-dark2 ">
           <div className="flex justify-between text-black dark:text-white">
             <h3 className="font-bold text-base"> Top Creators </h3>
             <button type="button"> <IonIcon name={syncOutline} className="text-xl"></IonIcon> </button>
           </div>
-
           <div className="space-y-4 capitalize text-xs font-normal mt-5 mb-2 text-gray-500 dark:text-white/80">
 
             <div className="flex items-center gap-3">
@@ -80,13 +77,10 @@ const RightSIdeBar = () => {
               <button type="button" className="text-sm rounded-full py-1.5 px-4 font-semibold bg-secondery"> Follow </button>
             </div>
           </div>
-          
-
         </div>
-
       </div>
     </div>
-    
+
   );
 };
 

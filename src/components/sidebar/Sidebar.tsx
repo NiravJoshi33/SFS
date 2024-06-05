@@ -21,6 +21,12 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar }) => {
                                     </Link>
                                 </li>
                                 <li className="">
+                                    <Link href="/entrypass">
+                                        <img src="assets/images/icons/home.png" alt="feeds" className="w-6" />
+                                        <span>Entry Pass </span>
+                                    </Link>
+                                </li>
+                                <li className="">
                                     <Link href="/questions">
                                         <img src="assets/images/icons/home.png" alt="feeds" className="w-6" />
                                         <span>Q & A </span>

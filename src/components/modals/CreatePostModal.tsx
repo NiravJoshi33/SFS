@@ -25,7 +25,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
                     </button>
                 </div>
                 <textarea
-                    placeholder="What do you have in mind?"
+                    placeholder="Create post and mint it as an NFT"
                     className="w-full p-2 border border-gray-300 rounded mb-4 resize-none"
                     rows={4}
                 />

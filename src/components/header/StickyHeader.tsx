@@ -19,8 +19,9 @@ const StickyHeader = () => {
     setShowPollModal(!showPollModal);
   };
   return (
-    <div className="flex flex-col">
-      <div className="flex items-center justify-between mt-3 border-gray-100 px-2 max-lg:flex-col dark:border-slate-700 sticky top-16 border bg-white dark:bg-gray-800 z-50 my-5">
+    <div className="flex-col container-fluid">
+
+      {/* <div className="flex items-center justify-between mt-3 border-gray-100 px-2 max-lg:flex-col dark:border-slate-700 sticky top-16 border bg-white dark:bg-gray-800 z-50 my-5">
         <nav className="flex gap-0.5 rounded-xl -mb-px text-gray-600 font-medium text-[15px] dark:text-white max-md:w-full max-md:overflow-x-auto">
           {['All', 'Memes', 'Polls'].map((tab) => (
             <button
@@ -35,10 +36,10 @@ const StickyHeader = () => {
             </button>
           ))}
         </nav>
-      </div>
+      </div> */}
       {
         activeTab === 'All' && <>
-          <CreatePost />
+          {/* <CreatePost /> */}
           <PostCards />
         </>
       }
@@ -58,7 +59,7 @@ const StickyHeader = () => {
               >
                 <div className="py-2.5 text-center dark:text-white">What do you have in mind?</div>
               </div>
-              <div
+              {/* <div
                 className="cursor-pointer hover:bg-opacity-80 p-1 px-1.5 rounded-xl transition-all bg-pink-100/60 hover:bg-pink-100 dark:bg-white/10 dark:hover:bg-white/20"
                 onClick={togglePollModal}
               >
@@ -69,7 +70,7 @@ const StickyHeader = () => {
                 onClick={togglePollModal}
               >
                 <IonIcon icon={videocamOutline} className="w-8 h-8 stroke-sky-600 fill-sky-200/70" />
-              </div>
+              </div> */}
             </div>
           </div>
           <PostCards />
