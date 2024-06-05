@@ -1,6 +1,7 @@
 import { ALL_TOKENS, numOfCols, numOfRows } from "./gameConfig";
 import { logger } from "./logger";
 import { InnerArray } from "./gameState";
+import { convertGridToArray2D } from "./dataUtils";
 
 export function createGrid(): InnerArray[] {
   const grid: InnerArray[] = [];
@@ -76,28 +77,6 @@ export function areTilesAdjacent(
   const diffX = Math.abs(tileA.x - tileB.x);
   const diffY = Math.abs(tileA.y - tileB.y);
   return diffX + diffY === 1;
-}
-
-export function convertGridToArray2D(grid: InnerArray[]): number[][] {
-  const gridArray: number[][] = [];
-
-  for (let innerArray of grid) {
-    gridArray.push(innerArray.innerArray);
-  }
-  return gridArray;
-}
-
-export function convertArray2DToGrid(gridArray: number[][]): InnerArray[] {
-  const grid: InnerArray[] = [];
-
-  for (let row of gridArray) {
-    let innerArray: InnerArray = new InnerArray();
-    for (let index of row) {
-      innerArray.innerArray.push(index);
-    }
-    grid.push(innerArray);
-  }
-  return grid;
 }
 
 export function findMatches(grid: number[][]) {
@@ -208,4 +187,61 @@ export function removeMatches(
   }
 
   return { updatedGrid, newlyAddedTiles };
+}
+
+export function isSwapPossible(grid: number[][]): boolean {
+  // check for horizontal swaps
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[y].length - 1; x++) {
+      // swap with right tile
+      let temp = grid[y][x];
+      grid[y][x] = grid[y][x + 1];
+      grid[y][x + 1] = temp;
+
+      // check if the swap results in a match
+      let matchDataList = findMatches(grid);
+      let matches = matchDataList.flatMap((matchData) => matchData.matches);
+
+      if (matches.length > 0) {
+        // swap back
+        temp = grid[y][x];
+        grid[y][x] = grid[y][x + 1];
+        grid[y][x + 1] = temp;
+        return true;
+      }
+
+      // swap back
+      temp = grid[y][x];
+      grid[y][x] = grid[y][x + 1];
+      grid[y][x + 1] = temp;
+    }
+  }
+
+  // check for vertical swaps
+  for (let x = 0; x < grid[0].length; x++) {
+    for (let y = 0; y < grid.length - 1; y++) {
+      // swap with tile below
+      let temp = grid[y][x];
+      grid[y][x] = grid[y + 1][x];
+      grid[y + 1][x] = temp;
+
+      // check if the swap results in a match
+      let matchDataList = findMatches(grid);
+      let matches = matchDataList.flatMap((matchData) => matchData.matches);
+
+      if (matches.length > 0) {
+        // swap back
+        temp = grid[y][x];
+        grid[y][x] = grid[y + 1][x];
+        grid[y + 1][x] = temp;
+        return true;
+      }
+
+      // swap back
+      temp = grid[y][x];
+      grid[y][x] = grid[y + 1][x];
+      grid[y + 1][x] = temp;
+    }
+  }
+  return false;
 }
