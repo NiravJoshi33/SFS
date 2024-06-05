@@ -1,3 +1,4 @@
+import { Room } from "colyseus.js";
 import Phaser from "phaser";
 
 export default class UIManager {
@@ -56,5 +57,19 @@ export default class UIManager {
       .setOrigin(0, 0.5);
 
     return { graphics, textLabel };
+  }
+
+  getProfilePicKeys(room: Room) {
+    const playerIndex = room.state.players.findIndex(
+      (player: any) => player.id === room.sessionId
+    );
+
+    const opponentIndex = playerIndex === 0 ? 1 : 0;
+
+    const playerProfilePicKey = room.state.players[playerIndex].profilePicKey;
+    const opponentProfilePicKey =
+      room.state.players[opponentIndex].profilePicKey;
+
+    return { playerProfilePicKey, opponentProfilePicKey };
   }
 }

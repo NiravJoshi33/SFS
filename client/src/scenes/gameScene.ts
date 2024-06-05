@@ -82,17 +82,20 @@ export default class GameScene extends Phaser.Scene {
   }
 
   addUserProfileElements(): void {
+    const { playerProfilePicKey, opponentProfilePicKey } =
+      this.uiManager.getProfilePicKeys(this.server.room);
+
     this.profilePic = this.uiManager.addProfilePicture(
       100,
       200,
-      "profile_pic",
+      playerProfilePicKey,
       0.5
     ).profilePic;
 
     this.opponentProfilePic = this.uiManager.addProfilePicture(
       canvasSize.width - 100,
       200,
-      "profilePic5",
+      opponentProfilePicKey,
       0.5
     ).profilePic;
 
