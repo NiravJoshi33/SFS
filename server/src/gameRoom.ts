@@ -163,7 +163,7 @@ export default class GameRoom extends Room {
       if (matches && matches.length > 0) {
         const { updatedGrid, newlyAddedTiles } = removeMatches(grid, matches);
 
-        this.rewardScore(matchDataList, client);
+        this.rewardScore(matchDataList);
 
         this.state.grid = convertArray2DToGrid(updatedGrid);
 
@@ -196,18 +196,18 @@ export default class GameRoom extends Room {
     matchDataList: {
       numOfMatches: number;
       matches: { x: number; y: number }[];
-    }[],
-    client: Client
+    }[]
   ): void {
     let score = 0;
+    const currentUserId = this.state.currentPlayer;
 
     console.log(
       "Player score before update: ",
-      this.state.players[this.findPlayerIndexById(client.sessionId)].score
+      this.state.players[this.findPlayerIndexById(currentUserId)].score
     );
 
     // Find the player and update the score
-    const playerIndex = this.findPlayerIndexById(client.sessionId);
+    const playerIndex = this.findPlayerIndexById(currentUserId);
 
     matchDataList.forEach((matchData) => {
       switch (matchData.numOfMatches) {
@@ -228,16 +228,7 @@ export default class GameRoom extends Room {
       }
     });
 
-    // check if the player is the current player
-    console.log("Current player: ", this.state.currentPlayer);
-    console.log("Client session ID: ", client.sessionId);
-    console.log("Player turn", this.state.players[playerIndex].isTurn);
-
-    if (client.sessionId === this.state.currentPlayer) {
-      this.state.players[playerIndex].score += score;
-    } else {
-      console.log("Player is not the current player!");
-    }
+    this.state.players[playerIndex].score += score;
 
     console.log(
       "Player score after update: ",
@@ -264,7 +255,7 @@ export default class GameRoom extends Room {
 
         //TODO: IMPLEMENT GRID RESET ON NO POSSIBLE MATCHES
 
-        this.rewardScore(matchDataList, client);
+        this.rewardScore(matchDataList);
 
         this.state.grid = convertArray2DToGrid(updatedGrid);
 
@@ -274,9 +265,13 @@ export default class GameRoom extends Room {
           newlyAddedTiles,
         });
       } else {
-        if (isSwapPossible(convertGridToArray2D(this.state.grid)) === false) {
+        if (
+          isSwapPossible(convertGridToArray2D(this.state.grid), this) === false
+        ) {
+          console.log("No possible matches! Resetting the grid!");
           while (
-            isSwapPossible(convertGridToArray2D(this.state.grid)) === false
+            isSwapPossible(convertGridToArray2D(this.state.grid), this) ===
+            false
           ) {
             this.state.grid = createGrid();
           }

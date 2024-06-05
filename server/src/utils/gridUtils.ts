@@ -2,6 +2,7 @@ import { ALL_TOKENS, numOfCols, numOfRows } from "./gameConfig";
 import { logger } from "./logger";
 import { InnerArray } from "./gameState";
 import { convertGridToArray2D } from "./dataUtils";
+import { Room } from "colyseus";
 
 export function createGrid(): InnerArray[] {
   const grid: InnerArray[] = [];
@@ -189,7 +190,7 @@ export function removeMatches(
   return { updatedGrid, newlyAddedTiles };
 }
 
-export function isSwapPossible(grid: number[][]): boolean {
+export function isSwapPossible(grid: number[][], room: Room): boolean {
   // check for horizontal swaps
   for (let y = 0; y < grid.length; y++) {
     for (let x = 0; x < grid[y].length - 1; x++) {
@@ -207,6 +208,9 @@ export function isSwapPossible(grid: number[][]): boolean {
         temp = grid[y][x];
         grid[y][x] = grid[y][x + 1];
         grid[y][x + 1] = temp;
+
+        console.log(`Horizontal swap possible at (${x},${y})`);
+        room.broadcast("swap-possible", { x, y });
         return true;
       }
 
@@ -234,6 +238,9 @@ export function isSwapPossible(grid: number[][]): boolean {
         temp = grid[y][x];
         grid[y][x] = grid[y + 1][x];
         grid[y + 1][x] = temp;
+
+        console.log(`Vertical swap possible at (${x},${y})`);
+        room.broadcast("swap-possible", { x, y });
         return true;
       }
 
