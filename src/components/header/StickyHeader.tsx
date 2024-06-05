@@ -39,7 +39,7 @@ const StickyHeader = () => {
       </div> */}
       {
         activeTab === 'All' && <>
-          {/* <CreatePost /> */}
+          <CreatePost />
           <PostCards />
         </>
       }
@@ -59,7 +59,7 @@ const StickyHeader = () => {
               >
                 <div className="py-2.5 text-center dark:text-white">What do you have in mind?</div>
               </div>
-              {/* <div
+              <div
                 className="cursor-pointer hover:bg-opacity-80 p-1 px-1.5 rounded-xl transition-all bg-pink-100/60 hover:bg-pink-100 dark:bg-white/10 dark:hover:bg-white/20"
                 onClick={togglePollModal}
               >
@@ -70,7 +70,7 @@ const StickyHeader = () => {
                 onClick={togglePollModal}
               >
                 <IonIcon icon={videocamOutline} className="w-8 h-8 stroke-sky-600 fill-sky-200/70" />
-              </div> */}
+              </div>
             </div>
           </div>
           <PostCards />
