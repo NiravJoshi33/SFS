@@ -10,11 +10,12 @@ import Create from './create/Create';
 import Message from './message/Message';
 import Profile from './user/Profile';
 import CreatePostModal from '../modals/CreatePostModal';
-import { useWallet } from '../../use-wallet';
+import { TonConnectButton } from '@tonconnect/ui-react';
+// import { useWallet } from '../../use-wallet';
 
 const Header = ({ isSidebarOpen, toggleSidebar }) => {
 
-    const { userAddress, connectButton, disconnectButton } = useWallet();
+    // const { userAddress, connectButton, disconnectButton } = useWallet();
 
 
     return (
@@ -73,7 +74,11 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
                             </button>
                             <Create />
 
-                            {!userAddress && (
+                            <div>
+                                <TonConnectButton></TonConnectButton>
+                            </div>
+
+                            {/* {!userAddress && (
                                 <div className="card">
                                     {connectButton}
                                 </div>
@@ -84,7 +89,7 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
                                     <span>{userAddress}</span>
                                     {disconnectButton}
                                 </div>
-                            )}
+                            )} */}
 
                             {/* <Notifications /> */}
                             {/* <Message /> */}
