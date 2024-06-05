@@ -26,6 +26,7 @@ export class Player extends Schema {
   @type("boolean") isTurn: boolean = false;
   @type("boolean") isWinner: boolean = false;
   @type("boolean") isReady: boolean = false;
+  @type("string") profilePicKey: string = "";
   @type(SpecialMovesInventory) specialMovesInventory =
     new SpecialMovesInventory();
 }

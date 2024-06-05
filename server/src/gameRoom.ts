@@ -6,6 +6,7 @@ import { MAX_PLAYERS, numOfCols, presetScores } from "./utils/gameConfig";
 import { createGrid, findMatches, removeMatches } from "./utils/gridUtils";
 import { areTilesAdjacent, isSwapPossible } from "./utils/gridUtils";
 import { convertArray2DToGrid, convertGridToArray2D } from "./utils/dataUtils";
+import { sampleProfilePicKeys } from "./utils/gameConfig";
 
 export default class GameRoom extends Room {
   private swapAnimationComplete = new Set<string>();
@@ -43,6 +44,7 @@ export default class GameRoom extends Room {
   }
 
   onJoin(client: Client): void | Promise<any> {
+    console.log(`Client ${client.sessionId} joined the room!`);
     this.addPlayer(client);
 
     if (this.state.currentPlayer === "") this.startTurn(client);
@@ -60,6 +62,8 @@ export default class GameRoom extends Room {
       logger.error("Cannot add more than 2 players!");
       new Error("Cannot add more than 2 players!");
     }
+
+    this.setProfilePicKey();
   }
 
   handleReady(client: Client): void {
@@ -312,5 +316,13 @@ export default class GameRoom extends Room {
 
   disableTurnForAllPlayers() {
     this.state.players.forEach((player: Player) => (player.isTurn = false));
+  }
+
+  setProfilePicKey(): void {
+    if (this.state.players.length === 1) {
+      this.state.players[0].profilePicKey = sampleProfilePicKeys[0];
+    } else {
+      this.state.players[1].profilePicKey = sampleProfilePicKeys[1];
+    }
   }
 }
