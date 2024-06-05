@@ -3,6 +3,7 @@ import { swapTriggerDistance, horizontalMargin } from "./gameConfig";
 import { verticalMargin, numOfCols, numOfRows } from "./gameConfig";
 import { tileSpacing, tileScale, ALL_TOKENS } from "./gameConfig";
 import { type Room } from "colyseus.js";
+import { validateGridState } from "./gridUtils";
 
 export function enableSwap(
   scene: Phaser.Scene,
@@ -351,6 +352,8 @@ function spawnNewTiles(
       onComplete: () => {
         replenishedTiles++;
         if (replenishedTiles === newlyAddedTiles.length) {
+          let isGridValid = validateGridState(grid, room.state.grid);
+          console.table({ isGridValid: isGridValid });
           room.send("drop-animated");
         }
       },

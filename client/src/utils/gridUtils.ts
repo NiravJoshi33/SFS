@@ -37,3 +37,26 @@ export function convertGridToArray2D(grid: any[]): number[][] {
   console.log(gridArray);
   return gridArray;
 }
+
+export function validateGridState(
+  clientGrid: Phaser.GameObjects.Sprite[][] | null[][],
+  serverGrid: any[]
+): boolean {
+  // convert the server grid to a 2D array
+  const serverGridArray: number[][] = convertGridToArray2D(serverGrid);
+
+  // iterate over the client grid and compare it with the server grid
+  for (let y = 0; y < numOfRows; y++) {
+    for (let x = 0; x < numOfCols; x++) {
+      if (clientGrid[y][x] !== null) {
+        if (
+          clientGrid[y][x]?.texture.key !== ALL_TOKENS[serverGridArray[y][x]]
+        ) {
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+}
