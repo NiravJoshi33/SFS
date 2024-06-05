@@ -3,12 +3,13 @@ import GameState from "./utils/gameState";
 import { InnerArray, LastSwappedTiles, Player } from "./utils/gameState";
 import { logger } from "./utils/logger";
 import { MAX_PLAYERS, numOfCols, presetScores } from "./utils/gameConfig";
-import { convertArray2DToGrid, convertGridToArray2D } from "./utils/gridUtils";
 import { createGrid, findMatches, removeMatches } from "./utils/gridUtils";
-import { areTilesAdjacent } from "./utils/gridUtils";
+import { areTilesAdjacent, isSwapPossible } from "./utils/gridUtils";
+import { convertArray2DToGrid, convertGridToArray2D } from "./utils/dataUtils";
 
 export default class GameRoom extends Room {
   private swapAnimationComplete = new Set<string>();
+  private dropAnimationComplete = new Set<string>();
   private gameStarted = false;
 
   onCreate(options: any): void | Promise<any> {
@@ -25,7 +26,7 @@ export default class GameRoom extends Room {
     this.onMessage("ready", (client: Client) => this.handleReady(client));
 
     this.onMessage("swap-attempt", (client: Client, message: any) =>
-      this.handleSwapAttempt(client, message)
+      this.processSwapAttempt(client, message)
     );
 
     this.onMessage("swap-animated", (client: Client, message: any) =>
@@ -35,25 +36,16 @@ export default class GameRoom extends Room {
     this.onMessage("reverse-swap-animated", (client: Client, message: any) =>
       this.handleReverseSwapAnimated(client, message)
     );
+
+    this.onMessage("drop-animated", (client: Client) =>
+      this.handleDropAnimated(client)
+    );
   }
 
   onJoin(client: Client): void | Promise<any> {
     this.addPlayer(client);
 
-    if (this.state.currentPlayer === "") {
-      this.state.currentPlayer = client.sessionId;
-
-      this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
-        true;
-
-      console.log(this.state.currentPlayer);
-      console.log(
-        this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn
-      );
-      console.log(
-        this.state.players[this.findPlayerIndexById(client.sessionId)].id
-      );
-    }
+    if (this.state.currentPlayer === "") this.startTurn(client);
 
     if (this.clients.length === MAX_PLAYERS) this.lock();
   }
@@ -62,14 +54,17 @@ export default class GameRoom extends Room {
     let player: Player = new Player();
     player.id = client.sessionId;
 
-    this.state.players.push(player); // Add the player to the game state
+    if (this.state.players.length <= 2) {
+      this.state.players.push(player); // Add the player to the game state
+    } else {
+      logger.error("Cannot add more than 2 players!");
+      new Error("Cannot add more than 2 players!");
+    }
   }
 
   handleReady(client: Client): void {
     this.state.players[this.findPlayerIndexById(client.sessionId)].isReady =
       true; // Set the player as ready
-
-    console.log(`Client ${client.sessionId} is ready!`);
 
     if (this.clients.length === MAX_PLAYERS) {
       let allPlayersReady: boolean = this.state.players.every(
@@ -85,13 +80,12 @@ export default class GameRoom extends Room {
   startGame(): void {
     this.state.status = "playing"; // Set the game status to playing
 
-    console.log("Game has started!");
     this.broadcast("game-start", this.state);
 
-    this.gameStarted = true;
+    this.gameStarted = true; // to avoid starting the game multiple times
   }
 
-  handleSwapAttempt(client: Client, message: any): void {
+  processSwapAttempt(client: Client, message: any): void {
     console.log(`Client ${client.sessionId} is attempting to swap tiles!`);
     const { tileA, tileB } = message;
 
@@ -104,8 +98,7 @@ export default class GameRoom extends Room {
       ) {
         this.broadcast("animate-swap", { tileA, tileB, isReverseSwap: false });
 
-        // this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
-        //   false;
+        this.disableTurnForAllPlayers(); // no player input while animation is playing
       } else {
         console.log("It's not the player's turn!");
       }
@@ -182,7 +175,6 @@ export default class GameRoom extends Room {
         this.state.grid = convertArray2DToGrid(updatedGrid); // update the grid
 
         // broadcast the reverse swap
-        console.log("Broadcasting reverse swap!");
         this.broadcast("animate-swap", { tileA, tileB, isReverseSwap: true });
       }
     }
@@ -191,8 +183,9 @@ export default class GameRoom extends Room {
   handleReverseSwapAnimated(client: Client, message: any): void {
     const { tileA, tileB } = message;
 
-    this.state.players[this.findPlayerIndexById(client.sessionId)].isTurn =
-      true; // re-enable the player's turn
+    if (this.state.currentPlayer === client.sessionId) {
+      this.enableTurn(client);
+    }
   }
 
   rewardScore(
@@ -246,5 +239,78 @@ export default class GameRoom extends Room {
       "Player score after update: ",
       this.state.players[playerIndex].score
     );
+  }
+
+  handleDropAnimated(client: Client): void {
+    console.log(`Client ${client.sessionId} has animated the drop!`);
+
+    this.dropAnimationComplete.add(client.sessionId);
+
+    if (this.dropAnimationComplete.size === this.clients.length) {
+      this.dropAnimationComplete.clear();
+
+      let matchDataList = findMatches(convertGridToArray2D(this.state.grid));
+      let matches = matchDataList.flatMap((matchData) => matchData.matches);
+
+      if (matches && matches.length > 0) {
+        let { updatedGrid, newlyAddedTiles } = removeMatches(
+          convertGridToArray2D(this.state.grid),
+          matches
+        );
+
+        this.rewardScore(matchDataList, client);
+
+        this.state.grid = convertArray2DToGrid(updatedGrid);
+
+        this.broadcast("tiles-removed", {
+          updatedState: this.state,
+          matches,
+          newlyAddedTiles,
+        });
+      } else {
+        if (isSwapPossible(convertGridToArray2D(this.state.grid)) === false) {
+          while (
+            isSwapPossible(convertGridToArray2D(this.state.grid)) === false
+          ) {
+            this.state.grid = createGrid();
+          }
+          // broadcast the new grid
+          this.broadcast("reset-grid", this.state);
+        }
+
+        this.endTurn(client);
+      }
+    }
+  }
+
+  endTurn(client: Client) {
+    const playerIndex = this.findPlayerIndexById(client.sessionId);
+
+    this.state.players[playerIndex].isTurn = false;
+
+    // get the other player
+    const otherPlayerIndex = (playerIndex + 1) % this.state.players.length;
+
+    this.state.players[otherPlayerIndex].isTurn = true;
+    this.state.currentPlayer = this.state.players[otherPlayerIndex].id;
+  }
+
+  startTurn(client: Client) {
+    const playerIndex = this.findPlayerIndexById(client.sessionId);
+
+    this.state.players[playerIndex].isTurn = true;
+    this.state.currentPlayer = client.sessionId;
+  }
+
+  enableTurn(client: Client) {
+    const playerIndex = this.findPlayerIndexById(client.sessionId);
+    this.state.players[playerIndex].isTurn = true;
+
+    const otherPlayerIndex = (playerIndex + 1) % this.state.players.length;
+    this.state.players[otherPlayerIndex].isTurn = false;
+  }
+
+  disableTurnForAllPlayers() {
+    this.state.players.forEach((player: Player) => (player.isTurn = false));
   }
 }
