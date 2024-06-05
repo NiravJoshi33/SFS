@@ -11,6 +11,12 @@ export default class GameScene extends Phaser.Scene {
   server!: Server;
   profilePic!: Phaser.GameObjects.Image;
   opponentProfilePic!: Phaser.GameObjects.Image;
+  playerUsername!: Phaser.GameObjects.Text;
+  opponentUsername!: Phaser.GameObjects.Text;
+  playerScore!: Phaser.GameObjects.Text;
+  opponentScore!: Phaser.GameObjects.Text;
+  playerHighscore!: Phaser.GameObjects.Text;
+  opponentHighscore!: Phaser.GameObjects.Text;
   constructor() {
     super({
       key: "GameScene",
@@ -99,46 +105,53 @@ export default class GameScene extends Phaser.Scene {
       0.5
     ).profilePic;
 
-    // const textLabelStyle = { fontSize: "20px", fontFamily: "Arial" };
+    this.add
+      .image(250, 150, "usernameBox")
+      .setOrigin(0.5)
+      .setDisplaySize(150, 25);
 
-    // this.uiManager.addTextLabel(
-    //   175,
-    //   125,
-    //   "player1",
-    //   textLabelStyle,
-    //   180,
-    //   35,
-    //   5,
-    //   0x000000,
-    //   0x8c52ff,
-    //   5
-    // );
+    this.playerUsername = this.add
+      .text(250, 150, "Player-1", { fontSize: "16px" })
+      .setOrigin(0.5);
 
-    // this.uiManager.addTextLabel(
-    //   175,
-    //   160,
-    //   "Score: 0",
-    //   textLabelStyle,
-    //   180,
-    //   35,
-    //   5,
-    //   0x000000,
-    //   0x8c52ff,
-    //   5
-    // );
+    this.add.image(250, 175, "scoreBox").setOrigin(0.5).setDisplaySize(150, 25);
+    this.playerScore = this.add
+      .text(270, 175, "0", { fontSize: "16px" })
+      .setOrigin(0.5);
 
-    // this.uiManager.addTextLabel(
-    //   175,
-    //   195,
-    //   "Highscore: 0",
-    //   textLabelStyle,
-    //   180,
-    //   35,
-    //   5,
-    //   0x000000,
-    //   0x8c52ff,
-    //   5
-    // );
+    this.add
+      .image(250, 200, "highscoreBox")
+      .setOrigin(0.5)
+      .setDisplaySize(150, 25);
+    this.playerHighscore = this.add
+      .text(270, 200, "0", { fontSize: "16px" })
+      .setOrigin(0.5);
+
+    this.add
+      .image(canvasSize.width - 250, 150, "usernameBox")
+      .setOrigin(0.5)
+      .setDisplaySize(150, 25);
+    this.opponentUsername = this.add
+      .text(canvasSize.width - 250, 150, "Player-2", {
+        fontSize: "16px",
+      })
+      .setOrigin(0.5);
+
+    this.add
+      .image(canvasSize.width - 250, 175, "scoreBox")
+      .setOrigin(0.5)
+      .setDisplaySize(150, 25);
+    this.opponentScore = this.add
+      .text(canvasSize.width - 230, 175, "0", { fontSize: "16px" })
+      .setOrigin(0.5);
+
+    this.add
+      .image(canvasSize.width - 250, 200, "highscoreBox")
+      .setOrigin(0.5)
+      .setDisplaySize(150, 25);
+    this.opponentHighscore = this.add
+      .text(canvasSize.width - 230, 200, "0", { fontSize: "16px" })
+      .setOrigin(0.5);
   }
 
   update() {
@@ -150,5 +163,28 @@ export default class GameScene extends Phaser.Scene {
       this.profilePic.setTint(0x8c52ff);
       this.opponentProfilePic.setTint(0xffffff);
     }
+
+    // update the score
+    const playerIndex = this.server.room.state.players.findIndex(
+      (player: any) => player.id === this.server.room.sessionId
+    );
+
+    const opponentIndex = playerIndex === 0 ? 1 : 0;
+
+    const playerScore = this.server.room.state.players[playerIndex].score;
+    const playerHighscore =
+      this.server.room.state.players[playerIndex].highscore;
+    const playerUsername = this.server.room.state.players[playerIndex].id;
+    const opponentScore = this.server.room.state.players[opponentIndex].score;
+    const opponentHighscore =
+      this.server.room.state.players[opponentIndex].highscore;
+    const opponentUsername = this.server.room.state.players[opponentIndex].id;
+
+    this.playerScore.setText(playerScore.toString());
+    this.opponentScore.setText(opponentScore.toString());
+    this.playerHighscore.setText(playerHighscore.toString());
+    this.opponentHighscore.setText(opponentHighscore.toString());
+    this.playerUsername.setText(playerUsername);
+    this.opponentUsername.setText(opponentUsername);
   }
 }

@@ -28,6 +28,9 @@ export const imageAssetMap: AssetMap = {
   returnBtn: { key: "returnBtn", path: "/assets/ui/return_button.png" },
   blackBG: { key: "blackBG", path: "/assets/ui/black_bg_720x1280.png" },
   poweredBy: { key: "poweredBy", path: "/assets/ui/powered.png" },
+  usernameBox: { key: "usernameBox", path: "/assets/ui/username_box.png" },
+  scoreBox: { key: "scoreBox", path: "/assets/ui/score_box.png" },
+  highscoreBox: { key: "highscoreBox", path: "/assets/ui/highscore_box.png" },
 };
 
 export const profilePicMap: AssetMap = {
