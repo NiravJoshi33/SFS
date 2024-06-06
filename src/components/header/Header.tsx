@@ -12,7 +12,6 @@ import Profile from './user/Profile';
 import CreatePostModal from '../modals/CreatePostModal';
 import { TonConnectButton } from '@tonconnect/ui-react';
 // import { useWallet } from '../../use-wallet';
-
 const Header = ({ isSidebarOpen, toggleSidebar }) => {
 
     // const { userAddress, connectButton, disconnectButton } = useWallet();

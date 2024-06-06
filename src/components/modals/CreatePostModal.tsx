@@ -3,8 +3,6 @@
 import React, { useContext, useState } from 'react';
 import { IonIcon } from '@ionic/react';
 import { closeOutline, imageOutline, videocamOutline, happyOutline, locationOutline, ellipsisHorizontal } from 'ionicons/icons';
-// import { FarcasterContext } from '@/context/farcaster';
-
 
 interface CreatePostModalProps {
     isOpen: boolean;
@@ -13,6 +11,49 @@ interface CreatePostModalProps {
 
 const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }) => {
     if (!isOpen) return null;
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [file, setFile] = useState<File | null>(null);
+    const [submittedData, setSubmittedData] = useState<{ title: string; description: string; image: string } | null>(null);
+
+
+    if (!isOpen) return null;
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setFile(e.target.files[0]);
+        }
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Create a URL for the uploaded file (for demonstration purposes)
+        const imageUrl = file ? URL.createObjectURL(file) : '';
+
+        // Store the form data in the state
+        const data = {
+            title,
+            description,
+            image: imageUrl,
+        };
+        setSubmittedData(data);
+
+        console.log(data,'----data');
+        
+
+        // Reset the form
+        setTitle('');
+        setDescription('');
+        setFile(null);
+        toggleModal();
+
+
+    };
+
+
+
+
+
 
     return (
         <div className="fixed inset-0 z-[99] flex items-center justify-center">
@@ -24,34 +65,38 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
                         <IonIcon icon={closeOutline} />
                     </button>
                 </div>
-                <textarea
-                    placeholder="Create post and mint it as an NFT"
-                    className="w-full p-2 border border-gray-300 rounded mb-4 resize-none"
-                    rows={4}
-                />
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex gap-2">
-                        <button className="flex items-center gap-1 px-3 py-1.5 rounded-full text-blue-600 bg-blue-100">
-                            <IonIcon icon={imageOutline} />
-                        </button>
-                        <button className="flex items-center gap-1 px-3 py-1.5 rounded-full text-green-600 bg-green-100">
-                            <IonIcon icon={videocamOutline} />
-                        </button>
-                        <button className="flex items-center gap-1 px-3 py-1.5 rounded-full text-orange-600 bg-orange-100">
-                            <IonIcon icon={happyOutline} />
-                        </button>
-                        <button className="flex items-center gap-1 px-3 py-1.5 rounded-full text-red-600 bg-red-100">
-                            <IonIcon icon={locationOutline} />
-                        </button>
-                        <button className="flex items-center gap-1 px-3 py-1.5 rounded-full text-gray-600 bg-gray-100">
-                            <IonIcon icon={ellipsisHorizontal} />
-                        </button>
+                <form onSubmit={handleSubmit}>
+                    <input placeholder="Title of the NFT"
+                        className="w-full p-2 border border-gray-300 rounded mb-4 resize-none bg-gray-100"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <textarea
+                        placeholder="Description of tbe NFT"
+                        className="w-full p-2 border border-gray-300 rounded mb-4 resize-none bg-gray-100"
+                        rows={4}
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                    />
+
+                    <div className="flex items-center justify-center w-full mb-4">
+                        <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                                </svg>
+                                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG </p>
+                            </div>
+                            <input id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} />
+                        </label>
                     </div>
-                </div>
-                <div className="flex items-center justify-between">
-                    <button className="text-gray-600">Everyone</button>
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded">Create</button>
-                </div>
+
+                    <div className="flex items-center justify-center">
+
+                        <button className="bg-blue-500 text-white px-4 py-2 rounded">Create</button>
+                    </div>
+                </form>
             </div>
         </div>
     );

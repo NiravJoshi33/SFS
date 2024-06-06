@@ -7,7 +7,7 @@ export const walletClient = createWalletClientUI({
     // Use TON testnet for development purposes
     chain: 'testnet',
     // Provide a link to the deployed manifest file
-    manifestUrl: 'https://counter.foton.sh/tonconnect-manifest.json',
+    manifestUrl: 'https://sfs-manifest.vercel.app/tonconnect-manifest.json',
     restoreConnection: true,
 });
 

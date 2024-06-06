@@ -39,7 +39,7 @@ const StickyHeader = () => {
       </div> */}
       {
         activeTab === 'All' && <>
-          {/* <CreatePost /> */}
+          <CreatePost />
           <PostCards />
         </>
       }

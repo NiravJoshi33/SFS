@@ -15,7 +15,13 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "preserve", // Changed to work with Vite
+    "baseUrl": ".", // Added base URL for path aliases
+    "paths": {
+      "@/*": [
+        "src/*"
+      ] // Example path alias, adjust as needed
+    },
     "plugins": [
       {
         "name": "next"
