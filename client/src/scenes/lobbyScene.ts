@@ -105,8 +105,6 @@ export default class LobbyScene extends Phaser.Scene {
         );
         this.isChangingImage = false;
       });
-    } else if (this.server.room.state.status === "playing") {
-      console.log("Game is starting...");
     }
   }
 }
