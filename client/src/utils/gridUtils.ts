@@ -60,3 +60,21 @@ export function validateGridState(
 
   return true;
 }
+
+export function spriteGridToindexGrid(
+  grid: Phaser.GameObjects.Sprite[][] | null[][]
+) {
+  const indexGrid: number[][] = [];
+
+  for (let y = 0; y < numOfRows; y++) {
+    let row: number[] = [];
+    for (let x = 0; x < numOfCols; x++) {
+      if (grid[y][x] !== null) {
+        row.push(ALL_TOKENS.indexOf(grid[y][x]?.texture.key as string));
+      }
+    }
+    indexGrid.push(row);
+  }
+
+  return indexGrid;
+}

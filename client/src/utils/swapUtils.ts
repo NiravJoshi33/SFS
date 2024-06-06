@@ -3,7 +3,7 @@ import { swapTriggerDistance, horizontalMargin } from "./gameConfig";
 import { verticalMargin, numOfCols, numOfRows } from "./gameConfig";
 import { tileSpacing, tileScale, ALL_TOKENS } from "./gameConfig";
 import { type Room } from "colyseus.js";
-import { validateGridState } from "./gridUtils";
+import { spriteGridToindexGrid, validateGridState } from "./gridUtils";
 
 export function enableSwap(
   scene: Phaser.Scene,
@@ -149,11 +149,9 @@ export function animateSwap(
   room: Room,
   isReverseSwap: boolean
 ) {
-  console.log(
-    `animating swap between ${tileA.x}, ${tileA.y}, type: ${
-      grid[tileA.y][tileA.x].texture.key
-    } and ${tileB.x}, ${tileB.y}, type: ${grid[tileB.y][tileB.x].texture.key}`
-  );
+  isReverseSwap === false
+    ? console.log("animating swap")
+    : console.log("animating reverse swap");
   let tweenAAnimated = false;
   let tweenBAnimated = false;
 
@@ -187,6 +185,12 @@ export function animateSwap(
         if (isReverseSwap === false) {
           room.send("swap-animated", { tileA, tileB });
         } else {
+          console.log(
+            "Are Client & Server Grids in Sync?",
+            validateGridState(grid, room.state.grid)
+          );
+          console.log("Grid After Animating Reverse Swap:");
+          console.table(spriteGridToindexGrid(grid));
           room.send("reverse-swap-animated", { tileA, tileB });
         }
       }
@@ -220,6 +224,12 @@ export function animateSwap(
         if (isReverseSwap === false) {
           room.send("swap-animated", { tileA, tileB });
         } else {
+          console.log(
+            "Are Client & Server Grids in Sync?",
+            validateGridState(grid, room.state.grid)
+          );
+          console.log("Grid After Animating Reverse Swap:");
+          console.table(spriteGridToindexGrid(grid));
           room.send("reverse-swap-animated", { tileA, tileB });
         }
       }
@@ -355,6 +365,8 @@ function spawnNewTiles(
           let isGridValid = validateGridState(grid, room.state.grid);
           console.table({ isGridValid: isGridValid });
           room.send("drop-animated");
+
+          console.table(spriteGridToindexGrid(grid));
         }
       },
     });

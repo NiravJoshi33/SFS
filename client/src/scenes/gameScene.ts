@@ -70,7 +70,7 @@ export default class GameScene extends Phaser.Scene {
       resolveMatches(this, this.grid, matches, newlyAddedTiles, server.room);
     });
 
-    this.server.room.onMessage("reset-grid", () => {
+    this.server.room.onMessage("reset-grid", (state) => {
       // destroy all the tiles & all event listeners
       console.log("reset-grid message received");
       this.grid.forEach((row) => {
@@ -79,11 +79,13 @@ export default class GameScene extends Phaser.Scene {
         });
       });
 
+      console.log("Client Grid After Destroying");
+      console.table(this.grid);
+
+      const newServerGrid = state.grid;
+
       // render the new grid
-      this.grid = renderGrid(
-        this,
-        convertGridToArray2D(this.server.room.state.grid)
-      );
+      this.grid = renderGrid(this, convertGridToArray2D(newServerGrid));
       enableSwap(this, this.grid, server.room);
     });
 
