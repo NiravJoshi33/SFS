@@ -156,6 +156,11 @@ export default class GameRoom extends Room {
 
       const grid = this.swapTiles(tileA, tileB); // swap the tiles
 
+      this.state.grid = convertArray2DToGrid(grid); // update the grid
+
+      console.log("Grid After Swap on Server Side:");
+      console.table(grid);
+
       const matchDataList = findMatches(grid); // find matches
       console.log(JSON.stringify(matchDataList));
       let matches = matchDataList.flatMap((matchData) => matchData.matches);
@@ -167,6 +172,8 @@ export default class GameRoom extends Room {
 
         this.state.grid = convertArray2DToGrid(updatedGrid);
 
+        console.table(updatedGrid);
+
         this.broadcast("tiles-removed", {
           updatedState: this.state,
           matches,
@@ -175,6 +182,8 @@ export default class GameRoom extends Room {
       } else {
         // swap back the tiles
         const updatedGrid = this.swapTiles(tileB, tileA);
+        console.log("Grid After Reverse Swap on Server Side:");
+        console.table(updatedGrid);
 
         this.state.grid = convertArray2DToGrid(updatedGrid); // update the grid
 
