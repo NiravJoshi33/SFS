@@ -60,26 +60,66 @@
             font-size: 12px;
             margin-bottom: 5px;
         }
-        .btn-primary {
-            width: 95%;
-            padding: 5px 10px;
-            border-radius: 15px;
-            background-color: #4CAF50;
-            border: none;
-            font-weight: bold;
+    .btn-primary {
+    display: inline-flex;  /* This makes the content of the button flex items */
+    align-items: center;   /* This aligns the items vertically in the center */
+    justify-content: center; /* This centers the items horizontally */
+    padding: 5px 10px;     /* Adjust padding to fit your design */
+    border-radius: 20px;   /* Rounded corners for the button */
+    background-color: #007BFF;
+    border: none;          /* No border */
+    color: white;          /* Text color */
+    font-weight: bold;     /* Bold text */
+    font-size: 16px;       /* Text size */
+}
 
+.btn-primary img {
+    height: 20px;         /* Set image height */
+    margin-right: 5px;    /* Space between the image and the text */
+}
+
+        .btn-connect {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #007BFF;
+            color: white;
+            padding: 8px 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        .btn-primary img {
+            height: 20px;
+            /* margin-right: 10px; */
+        }
+
+
+   
     </style>
 </head>
 <body>
     <div class="container-fluid">
+
+        <button id="connectButton" class="btn btn-connect">
+            <!-- <span>
+                <img src="../../public/ton_symbol.png" alt="Ton Icon" >
+
+            </span> -->
+            Connect Wallet
+        </button>       
+        
         <div class="row gx-0">
             <!-- First row of items -->
             <div class="col-4 p-1">
                 <div class="card">
                     <img src="../../public/output-onlinepngtools.png" class="card-img-top" alt="Power Item 1">
                     <div class="card-body">
-                        <button class="btn btn-primary">Buy</button>
+                        <button class="btn btn-primary" data-price="0.01">
+                            <span> <img src="../../public/ton_symbol.svg"  alt="ton logo"> </span>   
+                            0.01</button>
                     </div>
                 </div>
             </div>
@@ -88,7 +128,10 @@
                 <div class="card">
                     <img src="../../public/icon2.png" class="card-img-top" alt="Power Item 2">
                     <div class="card-body">
-                        <button class="btn btn-primary">Buy</button>
+                        <button class="btn btn-primary" data-price="0.001">
+                        <span> <img src="../../public/ton_symbol.svg"  alt="ton logo"> </span>   
+                        0.001
+                                            </button>
                     </div>
                 </div>
             </div>
@@ -96,7 +139,10 @@
                 <div class="card">
                     <img src="../../public/img.png" class="card-img-top" alt="Power Item 3">
                     <div class="card-body">
-                        <button class="btn btn-primary">Buy</button>
+                        <button class="btn btn-primary" data-price="0.1">
+                            <span> <img src="../../public/ton_symbol.svg"  alt="ton logo"> </span>   
+
+                            0.1</button>
                     </div>
                 </div>
             </div>
@@ -106,7 +152,10 @@
                 <div class="card">
                     <img src="../../public/output-onlinepngtools.png" class="card-img-top" alt="Power Item 1">
                     <div class="card-body">
-                        <button class="btn btn-primary">Buy</button>
+                        <button class="btn btn-primary" data-price="0.1">
+                            <span> <img src="../../public/ton_symbol.svg"  alt="ton logo"> </span>   
+
+                            0.1</button>
                     </div>
                 </div>
             </div>
@@ -115,7 +164,9 @@
                 <div class="card">
                     <img src="../../public/icon2.png" class="card-img-top" alt="Power Item 2">
                     <div class="card-body">
-                        <button class="btn btn-primary">Buy</button>
+                        <button class="btn btn-primary" data-price="0.001">
+                            <span> <img src="../../public/ton_symbol.svg"  alt="ton logo"> </span>   
+                            0.001</button>
                     </div>
                 </div>
             </div>
@@ -123,7 +174,9 @@
                 <div class="card">
                     <img src="../../public/img.png" class="card-img-top" alt="Power Item 3">
                     <div class="card-body">
-                        <button class="btn btn-primary">Buy</button>
+                        <button class="btn btn-primary" data-price="0.001">
+                            <span> <img src="../../public/ton_symbol.svg"  alt="ton logo"> </span>   
+                            0.001</button>
                     </div>
                 </div>
             </div>
@@ -132,7 +185,9 @@
                         <div class="card">
                             <img src="../../public/output-onlinepngtools.png" class="card-img-top" alt="Power Item 1">
                             <div class="card-body">
-                                <button class="btn btn-primary">Buy</button>
+                                <button class="btn btn-primary" data-price="0.1">
+                                    <span> <img src="../../public/ton_symbol.svg"  alt="ton logo"> </span>   
+                                    0.1</button>
                             </div>
                         </div>
                     </div>
@@ -141,7 +196,10 @@
                         <div class="card">
                             <img src="../../public/icon2.png" class="card-img-top" alt="Power Item 2">
                             <div class="card-body">
-                                <button class="btn btn-primary">Buy</button>
+                                <button class="btn btn-primary" data-price="0.001">
+                                    <span> <img src="../../public/ton_symbol.svg"  alt="ton logo"> </span>   
+
+                                    0.001</button>
                             </div>
                         </div>
                     </div>
@@ -149,11 +207,17 @@
                         <div class="card">
                             <img src="../../public/img.png" class="card-img-top" alt="Power Item 3">
                             <div class="card-body">
-                                <button class="btn btn-primary">Buy</button>
+                                <button class="btn btn-primary" data-price="0.001">
+                                    <span> <img src="../../public/ton_symbol.svg"  alt="ton logo"> </span>   
+                                    0.001</button>
                             </div>
                         </div>
                     </div>
         </div>
+
     </div>
+   
+   
+<script type="module" src="../../dist/wallet.js"></script>
 </body>
 </html>
