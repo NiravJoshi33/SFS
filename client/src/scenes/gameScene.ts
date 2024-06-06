@@ -124,51 +124,51 @@ export default class GameScene extends Phaser.Scene {
     ).profilePic;
 
     this.add
-      .image(250, 150, "usernameBox")
+      .image(260, 150, "usernameBox")
       .setOrigin(0.5)
-      .setDisplaySize(150, 25);
+      .setDisplaySize(170, 25);
 
     this.playerUsername = this.add
-      .text(250, 150, "Player-1", { fontSize: "16px" })
+      .text(260, 150, "Player-1", { fontSize: "16px" })
       .setOrigin(0.5);
 
-    this.add.image(250, 175, "scoreBox").setOrigin(0.5).setDisplaySize(150, 25);
+    this.add.image(260, 175, "scoreBox").setOrigin(0.5).setDisplaySize(170, 25);
     this.playerScore = this.add
-      .text(270, 175, "0", { fontSize: "16px" })
+      .text(280, 175, "0", { fontSize: "16px" })
       .setOrigin(0.5);
 
     this.add
-      .image(250, 200, "highscoreBox")
+      .image(260, 200, "highscoreBox")
       .setOrigin(0.5)
-      .setDisplaySize(150, 25);
+      .setDisplaySize(170, 25);
     this.playerHighscore = this.add
-      .text(270, 200, "0", { fontSize: "16px" })
+      .text(295, 200, "0", { fontSize: "16px" })
       .setOrigin(0.5);
 
     this.add
-      .image(canvasSize.width - 250, 150, "usernameBox")
+      .image(canvasSize.width - 260, 150, "usernameBox")
       .setOrigin(0.5)
-      .setDisplaySize(150, 25);
+      .setDisplaySize(170, 25);
     this.opponentUsername = this.add
-      .text(canvasSize.width - 250, 150, "Player-2", {
+      .text(canvasSize.width - 260, 150, "Player-2", {
         fontSize: "16px",
       })
       .setOrigin(0.5);
 
     this.add
-      .image(canvasSize.width - 250, 175, "scoreBox")
+      .image(canvasSize.width - 260, 175, "scoreBox")
       .setOrigin(0.5)
-      .setDisplaySize(150, 25);
+      .setDisplaySize(170, 25);
     this.opponentScore = this.add
-      .text(canvasSize.width - 230, 175, "0", { fontSize: "16px" })
+      .text(canvasSize.width - 235, 175, "0", { fontSize: "16px" })
       .setOrigin(0.5);
 
     this.add
-      .image(canvasSize.width - 250, 200, "highscoreBox")
+      .image(canvasSize.width - 260, 200, "highscoreBox")
       .setOrigin(0.5)
-      .setDisplaySize(150, 25);
+      .setDisplaySize(170, 25);
     this.opponentHighscore = this.add
-      .text(canvasSize.width - 230, 200, "0", { fontSize: "16px" })
+      .text(canvasSize.width - 220, 200, "0", { fontSize: "16px" })
       .setOrigin(0.5);
       const storeButton = this.add.text(100, 100, 'Open Game Store', { color: '#FFF'})
        // Set background to see it clearly
