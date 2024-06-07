@@ -170,13 +170,14 @@ export default class GameScene extends Phaser.Scene {
     this.opponentHighscore = this.add
       .text(canvasSize.width - 220, 200, "0", { fontSize: "16px" })
       .setOrigin(0.5);
-      const storeButton = this.add.text(100, 100, 'Open Game Store', { color: '#FFF'})
-       // Set background to see it clearly
-      
-    .setInteractive()
+
+    const storeButton = this.add
+      .image(canvasSize.width - 100, 50, "storeIcon")
+      .setScale(0.1)
+      .setInteractive();
     storeButton.setDepth(1000);
-    storeButton.setBackgroundColor('#ff0000');
-    storeButton.on('pointerdown', () => this.scene.launch('GameStoreScene'));
+
+    storeButton.on("pointerdown", () => this.scene.launch("GameStoreScene"));
   }
 
   update() {

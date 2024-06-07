@@ -19,7 +19,7 @@ export const imageAssetMap: AssetMap = {
   profilePic: { key: "profile_pic", path: "/assets/ui/user_pics/1.png" },
   opponentPic: { key: "opponent_pic", path: "/assets/ui/user_pics/2.png" },
   superFunCoin: { key: "superFunCoin", path: "/assets/ui/sf_demo_coin.png" },
-  storeIcon: { key: "storeIcon", path: "/assets/ui/store_icon_256px.png" },
+  storeIcon: { key: "storeIcon", path: "/assets/ui/store_icon.png" },
   storeItemBG: { key: "storeItemBG", path: "/assets/ui/storeitem_bg.png" },
   missileIcon: { key: "missileIcon", path: "/assets/ui/missile.png" },
   railGunIcon: { key: "railGunIcon", path: "/assets/ui/railgun.png" },
