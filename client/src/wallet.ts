@@ -87,5 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   const destinationAddress = '0QBZSLwTlJQ87Eb8Ts0REVRo3Z7xZx09yEh0bgLqtvsIyC2d'; // Replace with the actual contract address
           handlePurchase(itemPrice, destinationAddress);
       });
-  });
+  }); 
+
+
 });

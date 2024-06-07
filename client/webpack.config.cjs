@@ -4,7 +4,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { default: test } = require("node:test");
 
 module.exports = {
-  entry: "./src/wallet.ts", // Your main Phaser game file
+  entry: "./src/main.ts", // Your main Phaser game file
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
@@ -25,7 +25,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "src/BuyItems/index.html", // Your HTML template      
+      template: "src/index.html", // Your HTML template      
     }),
     new CopyWebpackPlugin({
       patterns: [
