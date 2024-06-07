@@ -7,7 +7,7 @@ export default class Server {
   private events: Phaser.Events.EventEmitter;
 
   constructor() {
-    this.client = new Client("ws://localhost:2567");
+    this.client = new Client("ws://64.227.151.65:2567");
     this.events = new Phaser.Events.EventEmitter();
   }
 
