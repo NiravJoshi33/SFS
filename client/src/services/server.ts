@@ -14,9 +14,9 @@ export default class Server {
   async join(): Promise<void> {
     this.room = await this.client.joinOrCreate("game-room");
 
-    this.room.onStateChange.once((state) => {
+    this.room.onStateChange.once(() => {
       // get initial room state
-      console.log("initial room state:", state);
+      console.log("initial room state Received");
     });
   }
 

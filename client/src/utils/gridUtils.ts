@@ -29,12 +29,12 @@ export function renderGrid(scene: Phaser.Scene, gridArrangement: number[][]) {
 
 export function convertGridToArray2D(grid: any[]): number[][] {
   const gridArray: number[][] = [];
-  console.log(grid);
+  // console.log(grid);
 
   for (let innerArray of grid) {
     gridArray.push(innerArray.innerArray);
   }
-  console.log(gridArray);
+  // console.log(gridArray);
   return gridArray;
 }
 

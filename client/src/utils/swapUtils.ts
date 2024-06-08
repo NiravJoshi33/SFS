@@ -174,13 +174,13 @@ export function animateSwap(
         grid[tileA.y][tileA.x] = grid[tileB.y][tileB.x];
         grid[tileB.y][tileB.x] = temp;
 
-        console.log(
-          `animated swap between ${tileA.x}, ${tileA.y}, type: ${
-            grid[tileA.y][tileA.x].texture.key
-          } and ${tileB.x}, ${tileB.y}, type: ${
-            grid[tileB.y][tileB.x].texture.key
-          }`
-        );
+        // console.log(
+        //   `animated swap between ${tileA.x}, ${tileA.y}, type: ${
+        //     grid[tileA.y][tileA.x].texture.key
+        //   } and ${tileB.x}, ${tileB.y}, type: ${
+        //     grid[tileB.y][tileB.x].texture.key
+        //   }`
+        // );
 
         if (isReverseSwap === false) {
           room.send("swap-animated", { tileA, tileB });
@@ -189,8 +189,8 @@ export function animateSwap(
             "Are Client & Server Grids in Sync?",
             validateGridState(grid, room.state.grid)
           );
-          console.log("Grid After Animating Reverse Swap:");
-          console.table(spriteGridToindexGrid(grid));
+          // console.log("Grid After Animating Reverse Swap:");
+          // console.table(spriteGridToindexGrid(grid));
           room.send("reverse-swap-animated", { tileA, tileB });
         }
       }
@@ -213,13 +213,13 @@ export function animateSwap(
         grid[tileA.y][tileA.x] = grid[tileB.y][tileB.x];
         grid[tileB.y][tileB.x] = temp;
 
-        console.log(
-          `animated swap between ${tileA.x}, ${tileA.y}, type: ${
-            grid[tileA.y][tileA.x].texture.key
-          } and ${tileB.x}, ${tileB.y}, type: ${
-            grid[tileB.y][tileB.x].texture.key
-          }`
-        );
+        // console.log(
+        //   `animated swap between ${tileA.x}, ${tileA.y}, type: ${
+        //     grid[tileA.y][tileA.x].texture.key
+        //   } and ${tileB.x}, ${tileB.y}, type: ${
+        //     grid[tileB.y][tileB.x].texture.key
+        //   }`
+        // );
 
         if (isReverseSwap === false) {
           room.send("swap-animated", { tileA, tileB });
@@ -228,8 +228,8 @@ export function animateSwap(
             "Are Client & Server Grids in Sync?",
             validateGridState(grid, room.state.grid)
           );
-          console.log("Grid After Animating Reverse Swap:");
-          console.table(spriteGridToindexGrid(grid));
+          // console.log("Grid After Animating Reverse Swap:");
+          // console.table(spriteGridToindexGrid(grid));
           room.send("reverse-swap-animated", { tileA, tileB });
         }
       }
@@ -366,7 +366,7 @@ function spawnNewTiles(
           console.table({ isGridValid: isGridValid });
           room.send("drop-animated");
 
-          console.table(spriteGridToindexGrid(grid));
+          // console.table(spriteGridToindexGrid(grid));
         }
       },
     });

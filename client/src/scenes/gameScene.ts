@@ -40,7 +40,7 @@ export default class GameScene extends Phaser.Scene {
     this.addUserProfileElements();
 
     // render the grid
-    console.log(this.server.room.state.grid);
+    // console.log(this.server.room.state.grid);
     this.grid = renderGrid(
       this,
       convertGridToArray2D(this.server.room.state.grid)
@@ -64,8 +64,8 @@ export default class GameScene extends Phaser.Scene {
       console.log("tiles-removed message received");
       const { matches, newlyAddedTiles } = message;
 
-      console.log("matches", matches);
-      console.log("newlyAddedTiles", newlyAddedTiles);
+      // console.log("matches", matches);
+      // console.log("newlyAddedTiles", newlyAddedTiles);
 
       resolveMatches(this, this.grid, matches, newlyAddedTiles, server.room);
     });
@@ -79,8 +79,8 @@ export default class GameScene extends Phaser.Scene {
         });
       });
 
-      console.log("Client Grid After Destroying");
-      console.table(this.grid);
+      // console.log("Client Grid After Destroying");
+      // console.table(this.grid);
 
       const newServerGrid = state.grid;
 
