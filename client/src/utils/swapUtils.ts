@@ -366,7 +366,7 @@ function spawnNewTiles(
           console.table({ isGridValid: isGridValid });
           room.send("drop-animated");
 
-          // console.table(spriteGridToindexGrid(grid));
+          console.table(spriteGridToindexGrid(grid));
         }
       },
     });
