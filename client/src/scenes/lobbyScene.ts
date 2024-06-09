@@ -17,6 +17,7 @@ export default class LobbyScene extends Phaser.Scene {
   shuffledOpponentProfileArr: string[] = [];
   imageIndex: number = 0;
   isChangingImage: boolean = false;
+  lobbyTitle!: Phaser.GameObjects.Image;
 
   constructor() {
     super({
@@ -40,12 +41,10 @@ export default class LobbyScene extends Phaser.Scene {
     // add background image
     this.add.image(0, 0, "blackBG").setOrigin(0);
 
-    this.add
-      .text(canvasSize.width / 2, 200, "Lobby Scene", {
-        color: "#0f0",
-        fontSize: "64px",
-      })
+    this.lobbyTitle = this.add
+      .image(canvasSize.width / 2, 300, "lobbyTitle")
       .setOrigin(0.5);
+    this.lobbyTitle.setOrigin(0.5);
 
     const playerProfilePicKey = this.uiManager.getProfilePicKeys(
       this.server.room
@@ -74,18 +73,22 @@ export default class LobbyScene extends Phaser.Scene {
       .text(canvasSize.width / 2, canvasSize.height / 2, "VS", {
         color: "#0f0",
         fontSize: "64px",
+        fontFamily: "Arial",
       })
       .setOrigin(0.5);
 
-    this.add.text(
-      canvasSize.width / 2 - 200,
-      canvasSize.height / 2 + 200,
-      "Waiting for players...",
-      {
-        color: "#0f0",
-        fontSize: "32px",
-      }
-    );
+    this.add
+      .text(
+        canvasSize.width / 2,
+        canvasSize.height / 2 + 300,
+        "Waiting for players...",
+        {
+          color: "#0f0",
+          fontSize: "32px",
+          fontFamily: "Arial",
+        }
+      )
+      .setOrigin(0.5);
 
     this.opponentProfile = opponentProfilePicWithFrame.profilePic;
     this.opponentFrame = opponentProfilePicWithFrame.frame;

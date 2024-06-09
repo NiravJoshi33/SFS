@@ -31,6 +31,7 @@ export const imageAssetMap: AssetMap = {
   usernameBox: { key: "usernameBox", path: "/assets/ui/username_box.png" },
   scoreBox: { key: "scoreBox", path: "/assets/ui/score_box.png" },
   highscoreBox: { key: "highscoreBox", path: "/assets/ui/highscore_box.png" },
+  lobbyTitle: { key: "lobbyTitle", path: "/assets/ui/lobby_title.png" },
 };
 
 export const profilePicMap: AssetMap = {
