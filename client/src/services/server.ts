@@ -5,9 +5,12 @@ export default class Server {
   private client: Client;
   public room!: Room;
   private events: Phaser.Events.EventEmitter;
+  private serverURL!: string;
 
   constructor() {
-    this.client = new Client("ws://64.227.151.65:2567");
+    this.serverURL = "wss://api.superplay.superfun.social";
+    if (this.serverURL === "") this.serverURL = "wss://localhost:2567";
+    this.client = new Client(this.serverURL);
     this.events = new Phaser.Events.EventEmitter();
   }
 
