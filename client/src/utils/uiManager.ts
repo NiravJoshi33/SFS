@@ -59,7 +59,10 @@ export default class UIManager {
     return { graphics, textLabel };
   }
 
-  getProfilePicKeys(room: Room) {
+  getProfilePicKeys(room: Room): {
+    playerProfilePicKey: string;
+    opponentProfilePicKey: string;
+  } {
     const playerIndex = room.state.players.findIndex(
       (player: any) => player.id === room.sessionId
     );
@@ -67,9 +70,15 @@ export default class UIManager {
     const opponentIndex = playerIndex === 0 ? 1 : 0;
 
     const playerProfilePicKey = room.state.players[playerIndex].profilePicKey;
-    const opponentProfilePicKey =
-      room.state.players[opponentIndex].profilePicKey;
 
+    if (room.state.players.length === 2) {
+      const opponentProfilePicKey =
+        room.state.players[opponentIndex].profilePicKey;
+
+      return { playerProfilePicKey, opponentProfilePicKey };
+    }
+
+    const opponentProfilePicKey = "";
     return { playerProfilePicKey, opponentProfilePicKey };
   }
 }

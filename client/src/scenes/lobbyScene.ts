@@ -47,9 +47,9 @@ export default class LobbyScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    const { playerProfilePicKey } = this.uiManager.getProfilePicKeys(
+    const playerProfilePicKey = this.uiManager.getProfilePicKeys(
       this.server.room
-    );
+    )?.playerProfilePicKey;
 
     let { profilePic, frame } = this.uiManager.addProfilePicture(
       200,
