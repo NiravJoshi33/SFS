@@ -17,6 +17,11 @@ export class BootScene extends Phaser.Scene {
 
   init() {
     this.server = new Server();
+
+    // Initialize Telegram Web App
+    if (window.Telegram) {
+      window.Telegram.WebApp.ready();
+    }
   }
 
   preload() {
@@ -86,6 +91,18 @@ export class BootScene extends Phaser.Scene {
 
     for (let asset in audioAssetMap) {
       this.load.audio(audioAssetMap[asset].key, audioAssetMap[asset].path);
+    }
+  }
+
+  create() {
+    // Handle theme change event
+    if (window.Telegram) {
+      window.Telegram.WebApp.onEvent("themeChanged", () => {
+        document.body.setAttribute(
+          "style",
+          "--bg-color:" + window.Telegram.WebApp.backgroundColor
+        );
+      });
     }
   }
 }

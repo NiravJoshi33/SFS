@@ -22,6 +22,19 @@ const config = {
   },
 };
 
+// Telegram Web App Integration
+declare global {
+  interface Window {
+    Telegram: any;
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (window.Telegram) {
+    window.Telegram.WebApp.ready();
+  }
+});
+
 // creating a new game instance
 export const game = new Phaser.Game(config);
 
