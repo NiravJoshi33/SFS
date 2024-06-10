@@ -5,6 +5,8 @@ import MenuScene from "./scenes/menuScene";
 import LobbyScene from "./scenes/lobbyScene";
 import GameScene from "./scenes/gameScene";
 import GameStoreScene from "./scenes/gameStoreScene";
+import TonConnect, { Wallet } from '@tonconnect/sdk';
+import { toUserFriendlyAddress } from '@tonconnect/sdk';
 // defining game configuration
 const config = {
   type: Phaser.AUTO, // Phaser will decide how to render our game (WebGL or Canvas)
@@ -22,8 +24,7 @@ const config = {
 
 // creating a new game instance
 export const game = new Phaser.Game(config);
-import TonConnect, { Wallet } from '@tonconnect/sdk';
-import { toUserFriendlyAddress } from '@tonconnect/sdk';
+
 
 const connector = new TonConnect({
     manifestUrl: 'https://sfs-manifest.vercel.app/tonconnect-manifest.json'

@@ -15,12 +15,7 @@ import type Server from "../services/server";
             console.error('Close button not found!');
         }
     }
-
-  
-
-
-
-
+    
 export default class GameStoreScene extends Phaser.Scene {
     server!: Server;
     
