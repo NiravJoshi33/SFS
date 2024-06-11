@@ -22,11 +22,7 @@ export default class MenuScene extends Phaser.Scene {
 
   async create(data: { server: Server }) {
     const { server } = data;
-    // console.log(server);
     await server.join();
-
-    // console.log(server.room.sessionId);
-
     // add background image
     this.add.image(0, 0, "menuBGImg").setOrigin(0);
 

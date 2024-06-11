@@ -5,6 +5,8 @@ import UIManager from "../utils/uiManager";
 import type Server from "../services/server";
 import { profilePicMap } from "../utils/assets";
 
+const { width, height } = canvasSize;
+
 export default class LobbyScene extends Phaser.Scene {
   // class properties
   uiManager: UIManager;
@@ -33,40 +35,32 @@ export default class LobbyScene extends Phaser.Scene {
     const { server } = data;
     this.server = server;
 
-    for (let asset in profilePicMap) {
-      this.opponentProfileArr.push(asset);
-    }
-    Phaser.Utils.Array.Shuffle(this.opponentProfileArr);
+    this.prepareRandomOpponentProfilePicArr(); // prepare array of random opponent profile pics
 
     // add background image
     this.add.image(0, 0, "blackBG").setOrigin(0);
 
-    this.lobbyTitle = this.add
-      .image(canvasSize.width / 2, 300, "lobbyTitle")
-      .setOrigin(0.5);
+    this.lobbyTitle = this.add.image(canvasSize.width / 2, 300, "lobbyTitle");
     this.lobbyTitle.setOrigin(0.5);
 
     const playerProfilePicKey = this.uiManager.getProfilePicKeys(
       this.server.room
     )?.playerProfilePicKey;
 
-    let { profilePic, frame } = this.uiManager.addProfilePicture(
+    this.userProfile = this.uiManager.addProfilePicture(
       200,
-      canvasSize.height / 2,
+      height / 2,
       playerProfilePicKey,
       0.5
-    );
-
-    this.userProfile = profilePic;
-    this.userFrame = frame;
+    ).profilePic;
 
     // add opponent profile picture
-    let opponentProfilePicWithFrame = this.uiManager.addProfilePicture(
-      canvasSize.width - 200,
-      canvasSize.height / 2,
+    this.opponentProfile = this.uiManager.addProfilePicture(
+      width - 200,
+      height / 2,
       this.opponentProfileArr[this.imageIndex],
       0.5
-    );
+    ).profilePic;
 
     // add VS text
     this.add
@@ -78,20 +72,12 @@ export default class LobbyScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(
-        canvasSize.width / 2,
-        canvasSize.height / 2 + 300,
-        "Waiting for players...",
-        {
-          color: "#0f0",
-          fontSize: "32px",
-          fontFamily: "Arial",
-        }
-      )
+      .text(width / 2, height / 2 + 300, "Waiting for players...", {
+        color: "#0f0",
+        fontSize: "32px",
+        fontFamily: "Arial",
+      })
       .setOrigin(0.5);
-
-    this.opponentProfile = opponentProfilePicWithFrame.profilePic;
-    this.opponentFrame = opponentProfilePicWithFrame.frame;
   }
 
   update() {
@@ -109,5 +95,12 @@ export default class LobbyScene extends Phaser.Scene {
         this.isChangingImage = false;
       });
     }
+  }
+
+  prepareRandomOpponentProfilePicArr() {
+    for (let asset in profilePicMap) {
+      this.opponentProfileArr.push(asset);
+    }
+    Phaser.Utils.Array.Shuffle(this.opponentProfileArr);
   }
 }
