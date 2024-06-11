@@ -6,6 +6,7 @@ import type Server from "../services/server";
 import { animateSwap, resolveMatches, enableSwap } from "../utils/swapUtils";
 
 export default class GameScene extends Phaser.Scene {
+  // class variables
   uiManager: UIManager;
   grid: Phaser.GameObjects.Sprite[][] = [];
   server!: Server;
@@ -184,9 +185,9 @@ export default class GameScene extends Phaser.Scene {
     // highlight the profile picture of the current player
     if (this.server.room.state.currentPlayer === this.server.room.sessionId) {
       this.profilePic.setTint(0xffffff);
-      this.opponentProfilePic.setTint(0x8c52ff);
+      this.opponentProfilePic.setTint(0x808080);
     } else {
-      this.profilePic.setTint(0x8c52ff);
+      this.profilePic.setTint(0x808080);
       this.opponentProfilePic.setTint(0xffffff);
     }
 
