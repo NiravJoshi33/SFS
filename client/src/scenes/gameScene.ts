@@ -205,16 +205,20 @@ export default class GameScene extends Phaser.Scene {
     const playerHighscore =
       this.server.room.state.players[playerIndex].highscore;
     const playerUsername = this.server.room.state.players[playerIndex].id;
-    const opponentScore = this.server.room.state.players[opponentIndex].score;
-    const opponentHighscore =
-      this.server.room.state.players[opponentIndex].highscore;
-    const opponentUsername = this.server.room.state.players[opponentIndex].id;
+
+    if (this.server.room.state.players.length === 2) {
+      const opponentScore = this.server.room.state.players[opponentIndex].score;
+      const opponentHighscore =
+        this.server.room.state.players[opponentIndex].highscore;
+      const opponentUsername = this.server.room.state.players[opponentIndex].id;
+
+      this.opponentScore.setText(opponentScore.toString());
+      this.opponentHighscore.setText(opponentHighscore.toString());
+      this.opponentUsername.setText(opponentUsername);
+    }
 
     this.playerScore.setText(playerScore.toString());
-    this.opponentScore.setText(opponentScore.toString());
     this.playerHighscore.setText(playerHighscore.toString());
-    this.opponentHighscore.setText(opponentHighscore.toString());
     this.playerUsername.setText(playerUsername);
-    this.opponentUsername.setText(opponentUsername);
   }
 }
