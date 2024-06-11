@@ -68,12 +68,9 @@ export default class LobbyScene extends Phaser.Scene {
 
     // add VS text
     this.add
-      .text(canvasSize.width / 2, canvasSize.height / 2, "VS", {
-        color: "#0f0",
-        fontSize: "64px",
-        fontFamily: "Arial",
-      })
-      .setOrigin(0.5);
+      .image(width / 2, height / 2, "vsText")
+      .setOrigin(0.5)
+      .setScale(0.8);
 
     this.add
       .text(width / 2, height / 2 + 300, "Waiting for players...", {
