@@ -34,6 +34,14 @@ export const imageAssetMap: AssetMap = {
   lobbyTitle: { key: "lobbyTitle", path: "/assets/ui/lobby_title.png" },
   botProfilePic: { key: "botProfilePic", path: "/assets/ui/bot_pfp.png" },
   vsText: { key: "vsText", path: "/assets/ui/vs_text.png" },
+  playerInfoBox: {
+    key: "playerInfoBox",
+    path: "/assets/ui/main_player_info.png",
+  },
+  opponentInfoBox: {
+    key: "opponentInfoBox",
+    path: "/assets/ui/opp_player_info.png",
+  },
 };
 
 export const profilePicMap: AssetMap = {

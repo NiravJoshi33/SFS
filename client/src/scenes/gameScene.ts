@@ -7,6 +7,7 @@ import { animateSwap, resolveMatches, enableSwap } from "../utils/swapUtils";
 import { colors } from "../utils/colors";
 
 const { white, gray } = colors;
+const { width } = canvasSize;
 
 export default class GameScene extends Phaser.Scene {
   // class variables
@@ -110,69 +111,59 @@ export default class GameScene extends Phaser.Scene {
   }
 
   addUserProfileElements(): void {
-    const { playerProfilePicKey, opponentProfilePicKey } =
-      this.uiManager.getProfilePicKeys(this.server.room);
+    let playerProfilePicKey;
+    let opponentProfilePicKey;
 
-    this.profilePic = this.uiManager.addProfilePicture(
-      100,
-      200,
-      playerProfilePicKey,
-      0.5
-    ).profilePic;
+    playerProfilePicKey = this.uiManager.getProfilePicKeys(
+      this.server.room
+    ).playerProfilePicKey;
+    opponentProfilePicKey = this.uiManager.getProfilePicKeys(
+      this.server.room
+    ).opponentProfilePicKey;
 
-    this.opponentProfilePic = this.uiManager.addProfilePicture(
-      canvasSize.width - 100,
-      200,
-      opponentProfilePicKey,
-      0.5
-    ).profilePic;
-
-    this.add
-      .image(260, 150, "usernameBox")
+    // add user & opponent profile info box
+    this.add.image(170, 200, "playerInfoBox").setOrigin(0.5);
+    this.profilePic = this.add
+      .image(70, 200, playerProfilePicKey)
       .setOrigin(0.5)
-      .setDisplaySize(170, 25);
+      .setScale(0.3);
+    this.add.image(width - 170, 200, "opponentInfoBox").setOrigin(0.5);
+    this.opponentProfilePic = this.add
+      .image(width - 70, 200, opponentProfilePicKey)
+      .setOrigin(0.5)
+      .setScale(0.3);
 
     this.playerUsername = this.add
-      .text(260, 150, "Player-1", { fontSize: "16px" })
+      .text(210, 163, "Player-1", {
+        font: "16px Arial",
+      })
       .setOrigin(0.5);
-
-    this.add.image(260, 175, "scoreBox").setOrigin(0.5).setDisplaySize(170, 25);
-    this.playerScore = this.add
-      .text(280, 175, "0", { fontSize: "16px" })
-      .setOrigin(0.5);
-
-    this.add
-      .image(260, 200, "highscoreBox")
-      .setOrigin(0.5)
-      .setDisplaySize(170, 25);
-    this.playerHighscore = this.add
-      .text(295, 200, "0", { fontSize: "16px" })
-      .setOrigin(0.5);
-
-    this.add
-      .image(canvasSize.width - 260, 150, "usernameBox")
-      .setOrigin(0.5)
-      .setDisplaySize(170, 25);
     this.opponentUsername = this.add
-      .text(canvasSize.width - 260, 150, "Player-2", {
-        fontSize: "16px",
+      .text(width - 210, 163, "Player-2", {
+        font: "16px Arial",
       })
       .setOrigin(0.5);
 
-    this.add
-      .image(canvasSize.width - 260, 175, "scoreBox")
-      .setOrigin(0.5)
-      .setDisplaySize(170, 25);
+    this.playerScore = this.add
+      .text(240, 185, "0", {
+        font: "16px Arial",
+      })
+      .setOrigin(0.5);
     this.opponentScore = this.add
-      .text(canvasSize.width - 235, 175, "0", { fontSize: "16px" })
+      .text(width - 190, 185, "0", {
+        font: "16px Arial",
+      })
       .setOrigin(0.5);
 
-    this.add
-      .image(canvasSize.width - 260, 200, "highscoreBox")
-      .setOrigin(0.5)
-      .setDisplaySize(170, 25);
+    this.playerHighscore = this.add
+      .text(265, 207, "0", {
+        font: "16px Arial",
+      })
+      .setOrigin(0.5);
     this.opponentHighscore = this.add
-      .text(canvasSize.width - 220, 200, "0", { fontSize: "16px" })
+      .text(width - 175, 207, "0", {
+        font: "16px Arial",
+      })
       .setOrigin(0.5);
 
     const storeButton = this.add
