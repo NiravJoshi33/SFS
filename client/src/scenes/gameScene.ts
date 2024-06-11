@@ -4,6 +4,9 @@ import UIManager from "../utils/uiManager";
 import { convertGridToArray2D, renderGrid } from "../utils/gridUtils";
 import type Server from "../services/server";
 import { animateSwap, resolveMatches, enableSwap } from "../utils/swapUtils";
+import { colors } from "../utils/colors";
+
+const { white, gray } = colors;
 
 export default class GameScene extends Phaser.Scene {
   // class variables
@@ -184,11 +187,11 @@ export default class GameScene extends Phaser.Scene {
   update() {
     // highlight the profile picture of the current player
     if (this.server.room.state.currentPlayer === this.server.room.sessionId) {
-      this.profilePic.setTint(0xffffff);
-      this.opponentProfilePic.setTint(0x808080);
+      this.profilePic.setTint(white);
+      this.opponentProfilePic.setTint(gray);
     } else {
-      this.profilePic.setTint(0x808080);
-      this.opponentProfilePic.setTint(0xffffff);
+      this.profilePic.setTint(gray);
+      this.opponentProfilePic.setTint(white);
     }
 
     // update the score
