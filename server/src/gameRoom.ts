@@ -176,10 +176,12 @@ export default class GameRoom extends Room {
     // wait for all human clients to complete the swap animation
 
     if (this.isBotGame === true) {
+      console.log("Bot game");
       this.swapAnimationComplete.add("bot");
+      console.log(this.swapAnimationComplete.size);
     }
 
-    if (this.swapAnimationComplete.size === this.clients.length) {
+    if (this.swapAnimationComplete.size === MAX_PLAYERS) {
       this.swapAnimationComplete.clear();
       console.log("All clients have completed the swap animation!");
 
@@ -374,7 +376,14 @@ export default class GameRoom extends Room {
 
       // add the bot player to the game state
       this.state.players.push(botPlayer.getPlayer());
+      console.log("Bot is added");
+      console.log(this.state.players.length);
       this.setProfilePicKey();
+      console.log(this.state.players[1].score);
+      console.log(this.state.players[1].id);
+      console.log(this.state.players[1].profilePicKey);
+      console.log(this.state.players[1].isTurn);
+      console.log(this.state.players[1].isReady);
 
       // start the game
       this.startGame();
