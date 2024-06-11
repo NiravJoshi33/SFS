@@ -4,6 +4,7 @@ import { canvasSize } from "../utils/gameConfig";
 import UIManager from "../utils/uiManager";
 import type Server from "../services/server";
 import { profilePicMap } from "../utils/assets";
+import { CountdownController } from "../utils/countdownController";
 
 const { width, height } = canvasSize;
 
@@ -20,6 +21,9 @@ export default class LobbyScene extends Phaser.Scene {
   imageIndex: number = 0;
   isChangingImage: boolean = false;
   lobbyTitle!: Phaser.GameObjects.Image;
+  counter!: CountdownController;
+  timerText!: Phaser.GameObjects.Text;
+  loadingBar!: Phaser.GameObjects.Graphics;
 
   constructor() {
     super({
@@ -78,6 +82,32 @@ export default class LobbyScene extends Phaser.Scene {
         fontFamily: "Arial",
       })
       .setOrigin(0.5);
+
+    // add timer label
+    this.timerText = this.add.text(width / 2, height - 200, "00", {
+      font: "32px Arial",
+      color: "#0f0",
+    });
+    this.timerText.setOrigin(0.5);
+
+    // loading bar
+    const loadingBarWidth = width - 200;
+    const loadingBar = this.add.graphics();
+    loadingBar.fillStyle(0xffffff, 0.5);
+    loadingBar.fillRect(
+      (width - loadingBarWidth) / 2,
+      height - 100,
+      width - 200,
+      20
+    );
+
+    // add countdown timer
+    this.counter = new CountdownController(this, this.timerText);
+    this.counter.start(15000, loadingBar, () => {
+      this.scene.start("GameScene", { server: this.server });
+    });
+
+    server.room.onMessage("game-start", () => this.counter.stop());
   }
 
   update() {
@@ -95,6 +125,8 @@ export default class LobbyScene extends Phaser.Scene {
         this.isChangingImage = false;
       });
     }
+
+    this.counter.update();
   }
 
   prepareRandomOpponentProfilePicArr() {

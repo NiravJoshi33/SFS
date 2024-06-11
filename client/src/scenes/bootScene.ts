@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import { audioAssetMap, imageAssetMap, profilePicMap } from "../utils/assets";
 import { ALL_TOKENS } from "../utils/gameConfig";
 import Server from "../services/server";
+import { colors } from "../utils/colors";
 
 export class BootScene extends Phaser.Scene {
   server!: Server;
@@ -43,12 +44,12 @@ export class BootScene extends Phaser.Scene {
 
     // loading bar background
     this.loadBar = this.add.graphics();
-    this.loadBar.fillStyle(0x0088aa, 0.8);
+    this.loadBar.fillStyle(colors.gray, 0.8);
     this.loadBar.fillRect(
-      this.cameras.main.width / 4 - 2,
+      this.cameras.main.width / 4,
       this.cameras.main.height / 2 + 300,
       this.cameras.main.width / 2 + 4,
-      20
+      16
     );
 
     // create a loading bar
@@ -62,7 +63,7 @@ export class BootScene extends Phaser.Scene {
 
   onFileProgress(value: number) {
     this.progressBar.clear();
-    this.progressBar.fillStyle(0xd40000, 1);
+    this.progressBar.fillStyle(colors.violet, 1);
     this.progressBar.fillRect(
       this.cameras.main.width / 4,
       this.cameras.main.height / 2 + 300,
