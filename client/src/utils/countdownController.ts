@@ -3,15 +3,13 @@ import { canvasSize } from "./gameConfig";
 
 export class CountdownController {
   private scene: Phaser.Scene;
-  private label: Phaser.GameObjects.Text;
   private duration!: number;
   private timerEvent?: Phaser.Time.TimerEvent;
   private finishedCallback?: () => void;
   private loadingBar!: Phaser.GameObjects.Graphics;
 
-  constructor(scene: Phaser.Scene, label: Phaser.GameObjects.Text) {
+  constructor(scene: Phaser.Scene) {
     this.scene = scene;
-    this.label = label;
   }
 
   start(
@@ -49,20 +47,17 @@ export class CountdownController {
   }
 
   update() {
-    console.log("update");
     // if timer is not running, do nothing
     if (!this.timerEvent || this.duration <= 0) {
-      console.log("timer is not running");
       return;
     }
 
     // calculate the remaining time & update the label
     const elapsedTime = this.timerEvent?.getElapsed();
-    const remainingTime = this.duration - elapsedTime;
-    const timeInSeconds = remainingTime / 1000;
-    console.log(timeInSeconds);
+    // const remainingTime = this.duration - elapsedTime;
+    // const timeInSeconds = remainingTime / 1000;
 
-    this.label.setText(`${timeInSeconds.toFixed(1)} seconds`); // display remaining time
+    // this.label.setText(`${timeInSeconds.toFixed(1)} seconds`); // display remaining time
 
     // update the loading bar
     this.loadingBar.clear();

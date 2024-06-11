@@ -24,6 +24,7 @@ export default class LobbyScene extends Phaser.Scene {
   counter!: CountdownController;
   timerText!: Phaser.GameObjects.Text;
   loadingBar!: Phaser.GameObjects.Graphics;
+  waitText!: Phaser.GameObjects.Text;
 
   constructor() {
     super({
@@ -72,20 +73,13 @@ export default class LobbyScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setScale(0.8);
 
-    this.add
-      .text(width / 2, height / 2 + 300, "Waiting for players...", {
-        color: "#0f0",
+    this.waitText = this.add
+      .text(width / 2, height / 2 + 300, "Waiting For Opponent", {
+        color: "#FFFFFF",
         fontSize: "32px",
         fontFamily: "Arial",
       })
       .setOrigin(0.5);
-
-    // add timer label
-    this.timerText = this.add.text(width / 2, height - 200, "00", {
-      font: "32px Arial",
-      color: "#0f0",
-    });
-    this.timerText.setOrigin(0.5);
 
     // loading bar
     const loadingBarWidth = width - 200;
@@ -99,7 +93,7 @@ export default class LobbyScene extends Phaser.Scene {
     );
 
     // add countdown timer
-    this.counter = new CountdownController(this, this.timerText);
+    this.counter = new CountdownController(this);
     this.counter.start(15000, loadingBar, () => {
       this.scene.start("GameScene", { server: this.server });
     });
