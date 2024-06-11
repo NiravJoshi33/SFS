@@ -94,8 +94,10 @@ export default class LobbyScene extends Phaser.Scene {
 
     // add countdown timer
     this.counter = new CountdownController(this);
-    this.counter.start(15000, loadingBar, () => {
-      this.scene.start("GameScene", { server: this.server });
+    this.counter.start(5000, loadingBar, () => {
+      // communicate to server that no human opponent is present
+      // and that bot should start playing
+      this.server.room.send("initiate-bot-game");
     });
 
     server.room.onMessage("game-start", () => this.counter.stop());
