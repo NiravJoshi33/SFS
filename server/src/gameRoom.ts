@@ -281,7 +281,11 @@ export default class GameRoom extends Room {
 
     this.dropAnimationComplete.add(client.sessionId);
 
-    if (this.dropAnimationComplete.size === this.clients.length) {
+    if (this.isBotGame === true) {
+      this.dropAnimationComplete.add("bot");
+    }
+
+    if (this.dropAnimationComplete.size === MAX_PLAYERS) {
       this.dropAnimationComplete.clear();
 
       let matchDataList = findMatches(convertGridToArray2D(this.state.grid));
@@ -293,8 +297,6 @@ export default class GameRoom extends Room {
           matches
         );
 
-        //TODO: IMPLEMENT GRID RESET ON NO POSSIBLE MATCHES
-
         this.rewardScore(matchDataList);
 
         this.state.grid = convertArray2DToGrid(updatedGrid);
@@ -305,15 +307,18 @@ export default class GameRoom extends Room {
           newlyAddedTiles,
         });
       } else {
-        if (
-          isSwapPossible(convertGridToArray2D(this.state.grid), this) === false
-        ) {
+        let swapPossible = isSwapPossible(
+          convertGridToArray2D(this.state.grid),
+          this
+        ).swapPossible;
+        if (swapPossible === false) {
           console.log("No possible matches! Resetting the grid!");
-          while (
-            isSwapPossible(convertGridToArray2D(this.state.grid), this) ===
-            false
-          ) {
+          while (swapPossible === false) {
             this.state.grid = createGrid();
+            swapPossible = isSwapPossible(
+              convertGridToArray2D(this.state.grid),
+              this
+            ).swapPossible;
           }
           // broadcast the new grid
           this.broadcast("reset-grid", this.state);
@@ -337,6 +342,26 @@ export default class GameRoom extends Room {
 
     this.state.players[nextPlayerIndex].isTurn = true;
     this.state.currentPlayer = this.state.players[nextPlayerIndex].id;
+
+    // in case the next player is a bot, perform bot turn on server side
+    if (this.state.currentPlayer === "bot") {
+      setTimeout(async () => {
+        // first get the candidate tiles where swap is possible
+        const swapCandidates = isSwapPossible(
+          convertGridToArray2D(this.state.grid),
+          this
+        ).swapCandidates;
+
+        if (swapCandidates !== null) {
+          const { tileA, tileB } = swapCandidates;
+          this.broadcast("animate-swap", {
+            tileA,
+            tileB,
+            isReverseSwap: false,
+          });
+        }
+      }, 500);
+    }
   }
 
   startTurn(client: Client) {

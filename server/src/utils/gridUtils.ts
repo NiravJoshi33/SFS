@@ -190,7 +190,7 @@ export function removeMatches(
   return { updatedGrid, newlyAddedTiles };
 }
 
-export function isSwapPossible(grid: number[][], room: Room): boolean {
+export function isSwapPossible(grid: number[][], room: Room) {
   // check for horizontal swaps
   for (let y = 0; y < grid.length; y++) {
     for (let x = 0; x < grid[y].length - 1; x++) {
@@ -211,7 +211,10 @@ export function isSwapPossible(grid: number[][], room: Room): boolean {
 
         console.log(`Horizontal swap possible at (${x},${y})`);
         room.broadcast("swap-possible", { x, y });
-        return true;
+        return {
+          swapPossible: true,
+          swapCandidates: { tileA: { x, y }, tileB: { x: x + 1, y } },
+        };
       }
 
       // swap back
@@ -241,7 +244,10 @@ export function isSwapPossible(grid: number[][], room: Room): boolean {
 
         console.log(`Vertical swap possible at (${x},${y})`);
         room.broadcast("swap-possible", { x, y });
-        return true;
+        return {
+          swapPossible: true,
+          swapCandidates: { tileA: { x, y }, tileB: { x, y: y + 1 } },
+        };
       }
 
       // swap back
@@ -250,5 +256,8 @@ export function isSwapPossible(grid: number[][], room: Room): boolean {
       grid[y + 1][x] = temp;
     }
   }
-  return false;
+  return {
+    swapPossible: false,
+    swapCandidates: null,
+  };
 }
