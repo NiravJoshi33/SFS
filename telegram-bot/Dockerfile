@@ -8,4 +8,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+EXPOSE 6060
+
 CMD ["python", "ts_tma_bot.py"]
