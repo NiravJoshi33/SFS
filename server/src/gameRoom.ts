@@ -7,11 +7,13 @@ import { createGrid, findMatches, removeMatches } from "./utils/gridUtils";
 import { areTilesAdjacent, isSwapPossible } from "./utils/gridUtils";
 import { convertArray2DToGrid, convertGridToArray2D } from "./utils/dataUtils";
 import { sampleProfilePicKeys } from "./utils/gameConfig";
+import { BotPlayer } from "./utils/botPlayer";
 
 export default class GameRoom extends Room {
   private swapAnimationComplete = new Set<string>();
   private dropAnimationComplete = new Set<string>();
   private gameStarted = false;
+  private isBotGame = false;
 
   onCreate(options: any): void | Promise<any> {
     this.maxClients = MAX_PLAYERS;
@@ -41,10 +43,16 @@ export default class GameRoom extends Room {
     this.onMessage("drop-animated", (client: Client) =>
       this.handleDropAnimated(client)
     );
+
+    this.onMessage("initiate-bot-game", (client: Client) =>
+      this.startBotGame(client)
+    );
   }
 
   onJoin(client: Client): void | Promise<any> {
     console.log(`Client ${client.sessionId} joined the room!`);
+    console.log(this.state.players.length);
+
     this.addPlayer(client);
 
     if (this.state.currentPlayer === "") this.startTurn(client);
@@ -52,7 +60,14 @@ export default class GameRoom extends Room {
     if (this.clients.length === MAX_PLAYERS) this.lock();
   }
 
-  addPlayer(client: Client): void {
+  onLeave(client: Client): void | Promise<any> {
+    console.log(`Client ${client.sessionId} left the room!`);
+
+    this.removePlayer(client);
+  }
+
+  addPlayer(client: Client, isBot: boolean = false): void {
+    console.log("Add Player is called");
     let player: Player = new Player();
     player.id = client.sessionId;
 
@@ -64,6 +79,13 @@ export default class GameRoom extends Room {
     }
 
     this.setProfilePicKey();
+  }
+
+  removePlayer(client: Client): void {
+    // remove player from the game state
+    this.state.players = this.state.players.filter(
+      (player: Player) => player.id !== client.sessionId
+    );
   }
 
   handleReady(client: Client): void {
@@ -150,6 +172,13 @@ export default class GameRoom extends Room {
     this.swapAnimationComplete.add(client.sessionId);
 
     // check if all clients have completed the swap animation
+
+    // wait for all human clients to complete the swap animation
+
+    if (this.isBotGame === true) {
+      this.swapAnimationComplete.add("bot");
+    }
+
     if (this.swapAnimationComplete.size === this.clients.length) {
       this.swapAnimationComplete.clear();
       console.log("All clients have completed the swap animation!");
@@ -330,8 +359,25 @@ export default class GameRoom extends Room {
   setProfilePicKey(): void {
     if (this.state.players.length === 1) {
       this.state.players[0].profilePicKey = sampleProfilePicKeys[0];
+      console.log(sampleProfilePicKeys[0]);
     } else {
       this.state.players[1].profilePicKey = sampleProfilePicKeys[1];
+    }
+  }
+
+  startBotGame(client: Client): void {
+    if (this.state.players.length === 1) {
+      this.isBotGame = true;
+
+      // initiate the bot player
+      const botPlayer = new BotPlayer();
+
+      // add the bot player to the game state
+      this.state.players.push(botPlayer.getPlayer());
+      this.setProfilePicKey();
+
+      // start the game
+      this.startGame();
     }
   }
 }
