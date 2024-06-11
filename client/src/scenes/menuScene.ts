@@ -30,7 +30,7 @@ export default class MenuScene extends Phaser.Scene {
     this.sound.add("playBtnClkSound");
 
     // add powered by image
-    this.add.image(width / 2, height / 2 + 300, "poweredBy").setScale(0.5);
+    this.add.image(width / 2, height / 2 + 300, "poweredBy").setScale(0.75);
 
     // add play button
     this.playBtn = this.uiManager.addButton(
