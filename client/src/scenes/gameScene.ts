@@ -5,9 +5,10 @@ import { convertGridToArray2D, renderGrid } from "../utils/gridUtils";
 import type Server from "../services/server";
 import { animateSwap, resolveMatches, enableSwap } from "../utils/swapUtils";
 import { colors } from "../utils/colors";
+import { AnimationManager } from "../utils/animationManager";
 
 const { white, gray } = colors;
-const { width } = canvasSize;
+const { width, height } = canvasSize;
 
 export default class GameScene extends Phaser.Scene {
   // class variables
@@ -22,12 +23,17 @@ export default class GameScene extends Phaser.Scene {
   opponentScore!: Phaser.GameObjects.Text;
   playerHighscore!: Phaser.GameObjects.Text;
   opponentHighscore!: Phaser.GameObjects.Text;
+  botMatchNote!: Phaser.GameObjects.Image;
+  isBotMatchNoteAnimated: boolean = false;
+  gridResetNote!: Phaser.GameObjects.Image;
+  animationManager: AnimationManager;
   constructor() {
     super({
       key: "GameScene",
     });
 
     this.uiManager = new UIManager(this);
+    this.animationManager = new AnimationManager(this);
   }
 
   async create(data: { server: Server }) {
@@ -43,6 +49,23 @@ export default class GameScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.addUserProfileElements();
+
+    this.botMatchNote = this.add
+      .image(
+        width + 200, // width - 180
+        height - 100,
+        "botMatchNote"
+      )
+      .setDepth(1000)
+      .setScale(1.5)
+      .setOrigin(0.5);
+
+    this.gridResetNote = this.add.image(
+      width + 300, // width - 180
+      height - 100,
+      "gridResetNote"
+    );
+    this.gridResetNote.setDepth(1000).setScale(1.5).setOrigin(0.5);
 
     // render the grid
     // console.log(this.server.room.state.grid);
@@ -92,6 +115,25 @@ export default class GameScene extends Phaser.Scene {
       // render the new grid
       this.grid = renderGrid(this, convertGridToArray2D(newServerGrid));
       enableSwap(this, this.grid, server.room);
+
+      this.animationManager.animateNotification(
+        this.gridResetNote,
+        width - 250,
+        800,
+        "Power2",
+        0,
+        () => {
+          this.isBotMatchNoteAnimated = true;
+
+          this.animationManager.animateNotification(
+            this.gridResetNote,
+            width + 300,
+            800,
+            "Power2",
+            1000
+          );
+        }
+      );
     });
 
     this.server.room.onMessage("swap-possible", (message: any) => {
@@ -211,5 +253,34 @@ export default class GameScene extends Phaser.Scene {
     this.playerScore.setText(playerScore.toString());
     this.playerHighscore.setText(playerHighscore.toString());
     this.playerUsername.setText(playerUsername);
+
+    // slid and show the bot match notification
+    if (
+      this.server.room.state.isBotGame === true &&
+      this.isBotMatchNoteAnimated === false
+    ) {
+      // animate the slide of the bot match notification
+
+      this.animationManager.animateNotification(
+        this.botMatchNote,
+        width - 180,
+        800,
+        "Power2",
+        0,
+        () => {
+          this.isBotMatchNoteAnimated = true;
+
+          setTimeout(() => {
+            this.animationManager.animateNotification(
+              this.botMatchNote,
+              width + 200,
+              800,
+              "Power2",
+              1000
+            );
+          }, 1000);
+        }
+      );
+    }
   }
 }

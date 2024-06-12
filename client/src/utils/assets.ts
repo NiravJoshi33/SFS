@@ -42,6 +42,14 @@ export const imageAssetMap: AssetMap = {
     key: "opponentInfoBox",
     path: "/assets/ui/opp_player_info.png",
   },
+  gridResetNote: {
+    key: "gridResetNote",
+    path: "/assets/ui/notifications/grid_reset.png",
+  },
+  botMatchNote: {
+    key: "botMatchNote",
+    path: "/assets/ui/notifications/bot_match.png",
+  },
 };
 
 export const profilePicMap: AssetMap = {
