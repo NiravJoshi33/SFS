@@ -13,7 +13,6 @@ export default class GameRoom extends Room {
   private swapAnimationComplete = new Set<string>();
   private dropAnimationComplete = new Set<string>();
   private gameStarted = false;
-  private isBotGame = false;
 
   onCreate(options: any): void | Promise<any> {
     this.maxClients = MAX_PLAYERS;
@@ -174,7 +173,7 @@ export default class GameRoom extends Room {
 
     // wait for all human clients to complete the swap animation
 
-    if (this.isBotGame === true) {
+    if (this.state.isBotGame === true) {
       console.log("Bot game");
       this.swapAnimationComplete.add("bot");
       console.log(this.swapAnimationComplete.size);
@@ -280,7 +279,7 @@ export default class GameRoom extends Room {
 
     this.dropAnimationComplete.add(client.sessionId);
 
-    if (this.isBotGame === true) {
+    if (this.state.isBotGame === true) {
       this.dropAnimationComplete.add("bot");
     }
 
@@ -387,7 +386,7 @@ export default class GameRoom extends Room {
       this.state.players[0].profilePicKey = sampleProfilePicKeys[0];
       console.log(sampleProfilePicKeys[0]);
     } else {
-      if (this.isBotGame === true) {
+      if (this.state.isBotGame === true) {
         this.state.players[1].profilePicKey = "botProfilePic";
       } else {
         this.state.players[1].profilePicKey = sampleProfilePicKeys[1];
@@ -397,7 +396,7 @@ export default class GameRoom extends Room {
 
   startBotGame(client: Client): void {
     if (this.state.players.length === 1) {
-      this.isBotGame = true;
+      this.state.isBotGame = true;
 
       // initiate the bot player
       const botPlayer = new BotPlayer();

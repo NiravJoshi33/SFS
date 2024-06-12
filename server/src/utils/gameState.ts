@@ -55,6 +55,7 @@ export default class GameState extends Schema {
     "waiting for players" || "playing" || "game over";
   @type("number") lobbyTimeOut: number = timerConfig.lobbyTimeOut;
   @type("number") turnTimeOut: number = timerConfig.turnTimeOut;
+  @type("boolean") isBotGame: boolean = false;
 
   constructor() {
     super();
