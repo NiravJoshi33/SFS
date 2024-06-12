@@ -51,7 +51,6 @@ export default class GameRoom extends Room {
 
   onJoin(client: Client): void | Promise<any> {
     console.log(`Client ${client.sessionId} joined the room!`);
-    console.log(this.state.players.length);
 
     this.addPlayer(client);
 
@@ -360,7 +359,7 @@ export default class GameRoom extends Room {
             isReverseSwap: false,
           });
         }
-      }, 500);
+      }, 5);
     }
   }
 
@@ -388,7 +387,11 @@ export default class GameRoom extends Room {
       this.state.players[0].profilePicKey = sampleProfilePicKeys[0];
       console.log(sampleProfilePicKeys[0]);
     } else {
-      this.state.players[1].profilePicKey = sampleProfilePicKeys[1];
+      if (this.isBotGame === true) {
+        this.state.players[1].profilePicKey = "botProfilePic";
+      } else {
+        this.state.players[1].profilePicKey = sampleProfilePicKeys[1];
+      }
     }
   }
 
