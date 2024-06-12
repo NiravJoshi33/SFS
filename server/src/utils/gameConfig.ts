@@ -43,6 +43,11 @@ export const presetScores = {
   railGunBomb: 200, // when 'railGun' tile is matched with 'bomb' tile
 };
 
+export const timerConfig = {
+  lobbyTimeOut: 5000, // 10 seconds
+  turnTimeOut: 10000, // 10 seconds
+};
+
 export const sampleProfilePicKeys = ["profilePic1", "profilePic2"];
 
 export const MAX_PLAYERS = 2;

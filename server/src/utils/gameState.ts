@@ -1,4 +1,5 @@
 import { Schema, type, ArraySchema } from "@colyseus/schema";
+import { timerConfig } from "./gameConfig";
 
 // beyond the usual types, colyseus doesn't support complex/composite types directly
 // so we have to define these composite types as classes that extend Schema and use them in our schema
@@ -52,6 +53,8 @@ export default class GameState extends Schema {
   @type(LastSwappedTiles) lastSwappedTiles = new LastSwappedTiles();
   @type("string") status: string =
     "waiting for players" || "playing" || "game over";
+  @type("number") lobbyTimeOut: number = timerConfig.lobbyTimeOut;
+  @type("number") turnTimeOut: number = timerConfig.turnTimeOut;
 
   constructor() {
     super();
@@ -61,5 +64,7 @@ export default class GameState extends Schema {
     this.players = new ArraySchema<Player>();
     this.lastSwappedTiles = new LastSwappedTiles();
     this.status = "waiting for players";
+    this.lobbyTimeOut = timerConfig.lobbyTimeOut;
+    this.turnTimeOut = timerConfig.turnTimeOut;
   }
 }
