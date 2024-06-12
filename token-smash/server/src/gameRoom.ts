@@ -358,7 +358,7 @@ export default class GameRoom extends Room {
             isReverseSwap: false,
           });
         }
-      }, 5);
+      }, 500);
     }
   }
 
