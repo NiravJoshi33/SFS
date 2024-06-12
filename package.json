@@ -10,11 +10,9 @@
     "start": "next start",
     "lint": "next lint",
     "compile": "tact --config ./tact.config.json",
-      "vite:dev": "vite",
-      "vite:build": "vite build",
-      "vite:start": "vite preview"
-
-    
+    "vite:dev": "vite",
+    "vite:build": "vite build",
+    "vite:start": "vite preview"
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "^5.2.0",
@@ -30,11 +28,13 @@
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "ionicons": "^7.4.0",
+    "ipfs-http-client": "^60.0.1",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
+    "react-icons": "^5.2.1",
     "telegraf": "^4.16.3",
-    "vite": "^5.2.12",  
+    "vite": "^5.2.12",
     "vite-tsconfig-paths": "^4.3.2"
   },
   "devDependencies": {

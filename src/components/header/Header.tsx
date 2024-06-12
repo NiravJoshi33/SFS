@@ -10,7 +10,7 @@ import Create from './create/Create';
 import Message from './message/Message';
 import Profile from './user/Profile';
 import CreatePostModal from '../modals/CreatePostModal';
-import { TonConnectButton } from '@tonconnect/ui-react';
+// import { TonConnectButton } from '@tonconnect/ui-react';
 // import { useWallet } from '../../use-wallet';
 const Header = ({ isSidebarOpen, toggleSidebar }) => {
 
@@ -22,38 +22,38 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
             <div className="flex items-center w-full xl:px-6 px-2 max-lg:gap-10">
                 <div className="2xl:w-[--w-side] lg:w-[--w-side-sm]">
                     <div className="flex items-center gap-1">
-                        <button
+                        {/* <button
                             onClick={toggleSidebar}
                             className="flex items-center justify-center w-8 h-8 text-xl rounded-full hover:bg-gray-100 xl:hidden dark:hover:bg-slate-600 group"
                         >
                             <IonIcon icon={menuOutline} className={`text-2xl ${isSidebarOpen ? 'hidden' : 'block'}`} />
                             <IonIcon icon={closeOutline} className={`text-2xl ${isSidebarOpen ? 'block' : 'hidden'}`} />
-                        </button>
+                        </button> */}
                         <div id="logo">
                             <Link href="/">
                                 <Image
-                                    src="/assets/images/logo.png"
+                                    src="/assets/images/sfslogo/sfslogo.png"
                                     alt="Logo"
                                     width={112}
                                     height={28}
                                     className="w-28 md:block hidden dark:!hidden"
                                 />
                                 <Image
-                                    src="/assets/images/logo-light.png"
+                                    src="/assets/images/sfslogo/sfslogo.png"
                                     alt="Logo"
                                     width={112}
                                     height={28}
                                     className="dark:md:block hidden"
                                 />
                                 <Image
-                                    src="/assets/images/logo-mobile.png"
+                                    src="/assets/images/sfslogo/sfslogo.png"
                                     alt="Logo"
                                     width={80}
                                     height={20}
                                     className="hidden max-md:block w-20 dark:!hidden"
                                 />
                                 <Image
-                                    src="/assets/images/logo-mobile-light.png"
+                                    src="/assets/images/sfslogo/sfslogo.png"
                                     alt="Logo"
                                     width={80}
                                     height={20}
@@ -69,12 +69,16 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
                         <DropDown />
                         <div className="flex items-center sm:gap-4 gap-2 absolute right-5 top-1/2 -translate-y-1/2 text-black">
                             <button type="button" className="sm:hidden sm:p-2 p-1 rounded-full  sm:bg-secondery dark:text-white">
-                                <IonIcon icon={search} className="sm:hidden text-2xl" />
+                                {/* <IonIcon icon={search} className="sm:hidden text-2xl" /> */}
                             </button>
                             <Create />
 
                             <div>
-                                <TonConnectButton></TonConnectButton>
+                                <h4>
+                                    <button className='bg-gray-100 p-2 rounded-xl'>
+                                        oQAa...eDRk
+                                    </button></h4>
+                                {/* <TonConnectButton></TonConnectButton> */}
                             </div>
 
                             {/* {!userAddress && (
