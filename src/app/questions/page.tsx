@@ -14,11 +14,12 @@ const page = () => {
                 <div className="lg:flex 2xl:gap-12 gap-8 max-w-[1065px] mx-auto" id="js-oversized">
                     <div className="max-w-[1080px]  mx-auto ">
                         <div className="md:max-w-[580px] mx-auto flex-1 xl:space-y-6 space-y-3">
+                            <h1>Coming soon....</h1>
                             {/* <QuestionForm/> */}
-                            <PostCards/>
+                            {/* <PostCards/> */}
                         </div>
                     </div>
-                    <RightSIdeBar />
+                    {/* <RightSIdeBar /> */}
                 </div>
             </main>
         </Layout>

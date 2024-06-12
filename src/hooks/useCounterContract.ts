@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
-// import Counter from '../contracts/counter';
 import { useTonClient } from './useTonClient';
 import { useAsyncInitialize } from './useAsyncInitialize';
 import { Address, OpenedContract } from '@ton/core';
 // import { nftCollection, NftItem } from '../../contracts';
 import { NftItem, nftCollection } from '../../contracts';
 import { useContract } from '../use-contract';
-import { useWallet } from '../use-wallet';
-import { useTonConnect } from './useTonConnect';
+// import { useWallet } from '../use-wallet';
+// import { useTonConnect } from './useTonConnect';
 
 export function useCounterContract() {
-    const { userAddress } = useWallet();
+    // const { userAddress } = useWallet();
     const [nftItems, setNftItems] = useState<Item[]>([]);
     console.log(nftItems);
 
@@ -53,10 +52,10 @@ export function useCounterContract() {
 
     const readAddress = async () => {
         try {
-            if (!nftCollectionContract) return;
-            // const res = await nftCollectionContract?.getGetNftItemInit(2n, uri, price)
-            const res = await nftCollectionContract?.getGetItemAddress(0n);
-            console.log('item address -----', res.toString());
+            // if (!nftCollectionContract) return;
+            // // const res = await nftCollectionContract?.getGetNftItemInit(2n, uri, price)
+            // const res = await nftCollectionContract?.getGetItemAddress(0n);
+            // console.log('item address -----', res.toString());
         } catch (error) {
             console.log(error);
         }

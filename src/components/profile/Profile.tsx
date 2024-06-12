@@ -15,7 +15,7 @@ const Profile = () => {
             <div className="max-w-[1065px] mx-auto max-lg:-m-2.5">
                 <div className="relative bg-white shadow lg:rounded-b-2xl lg:-mt-10 dark:bg-dark2">
                     <div className="relative overflow-hidden w-full lg:h-72 h-48">
-                        <img src="assets/images/avatars/profile-cover.jpg" alt="" className="h-full w-full object-cover inset-0" />
+                        <img src="assets/images/avatars/bgprofile.jpg" alt="" className="h-full w-full object-cover inset-0" />
 
                         <div className="w-full bottom-0 absolute left-0 bg-gradient-to-t from-black/60 pt-20 z-10"></div>
 
@@ -32,7 +32,7 @@ const Profile = () => {
 
                             <div className="relative lg:h-48 lg:w-48 w-28 h-28 mb-4 z-10">
                                 <div className="relative overflow-hidden rounded-full md:border-[6px] border-gray-100 shrink-0 dark:border-slate-900 shadow">
-                                    <img src="assets/images/avatars/avatar-6.jpg" alt="" className="h-full w-full object-cover inset-0" />
+                                    <img src="assets/images/meme/memeprofile3.png" alt="" className="h-full w-full object-cover inset-0" />
                                 </div>
                                 <button type="button" className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white shadow p-1.5 rounded-full sm:flex hidden"> <IonIcon icon={camera} className="text-2xl md hydrated" role="img" aria-label="camera"></IonIcon></button>
                             </div>

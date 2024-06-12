@@ -1,8 +1,7 @@
 {
-    "url": "https://sfs-two.vercel.app/",                        
-    "name": "SuperFunSocial",                      
-    "iconUrl": "https://sfs-two.vercel.app/logo.png",               
-    "termsOfUseUrl": "<terms-of-use-url>",     
+    "url": "https://sfs-two.vercel.app/",
+    "name": "SuperFunSocial",
+    "iconUrl": "https://sfs-two.vercel.app/logo.png",
+    "termsOfUseUrl": "<terms-of-use-url>",
     "privacyPolicyUrl": "<privacy-policy-url>"
 }
-
