@@ -136,20 +136,20 @@ export default class GameScene extends Phaser.Scene {
       );
     });
 
-    this.server.room.onMessage("swap-possible", (message: any) => {
-      const { x, y } = message;
+    // this.server.room.onMessage("swap-possible", (message: any) => {
+    //   const { x, y } = message;
 
-      this.grid.forEach((row) => {
-        row.forEach((tile) => {
-          if (tile) {
-            tile.clearTint();
-          }
-        });
-      });
+    //   this.grid.forEach((row) => {
+    //     row.forEach((tile) => {
+    //       if (tile) {
+    //         tile.clearTint();
+    //       }
+    //     });
+    //   });
 
-      const tile = this.grid[y][x];
-      tile.setTint(0x8c52ff);
-    });
+    //   const tile = this.grid[y][x];
+    //   tile.setTint(0x8c52ff);
+    // });
   }
 
   addUserProfileElements(): void {
