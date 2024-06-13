@@ -646,7 +646,7 @@ const PostCards = () => {
                             <button type="button" className="button-icon text-red-500 bg-red-100 dark:bg-slate-700" onClick={toggleReaction}>
                                 <IonIcon className="text-lg" icon={heart}></IonIcon>
                             </button>
-                            <a href="#">1,300</a>
+                            <a href="#">0</a>
                         </div>
                         {isReactionOpen && (
                             <div className="absolute top-full left-0 mt-2 bg-white p-2 rounded-lg shadow-lg z-10 dark:bg-slate-700 text-2xl">
@@ -664,7 +664,7 @@ const PostCards = () => {
                         <button type="button" className="button-icon bg-slate-200/70 dark:bg-slate-700">
                             <IonIcon className="text-lg" icon={chatbubbleEllipses}></IonIcon>
                         </button>
-                        <span>260</span>
+                        <span>0</span>
                     </div>
                     <button type="button" className=" ml-auto">
                     </button>
