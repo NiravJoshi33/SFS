@@ -128,13 +128,13 @@ const PostCards = () => {
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div className="bg-white p-4 rounded-md">
-                                <h2 className="text-lg font-semibold mb-2">Send a Tip</h2>
+                                <h2 className="text-lg font-semibold mb-2">Send a Reward</h2>
                                 <input
                                     type="number"
                                     value={tipAmount}
                                     onChange={handleTipChange}
                                     className="border p-2 rounded-md mb-4 w-full"
-                                    placeholder="Award 1 TON"
+                                    placeholder="Reward 1 TON"
                                 />
                                 <button
                                     // onClick={() => tonConnectUI.sendTransaction(myTransaction)}
@@ -272,13 +272,13 @@ const PostCards = () => {
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div className="bg-white p-4 rounded-md">
-                                <h2 className="text-lg font-semibold mb-2">Send a Tip</h2>
+                                <h2 className="text-lg font-semibold mb-2">Send a Reward</h2>
                                 <input
                                     type="number"
                                     value={tipAmount}
                                     onChange={handleTipChange}
                                     className="border p-2 rounded-md mb-4 w-full"
-                                    placeholder="Award 1 TON"
+                                    placeholder="Reward 1 TON"
                                 />
                                 <button
                                     onClick={() => tonConnectUI.sendTransaction(myTransaction)}
@@ -407,13 +407,13 @@ const PostCards = () => {
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div className="bg-white p-4 rounded-md">
-                                <h2 className="text-lg font-semibold mb-2">Send a Tip</h2>
+                                <h2 className="text-lg font-semibold mb-2">Send a Reward</h2>
                                 <input
                                     type="number"
                                     value={tipAmount}
                                     onChange={handleTipChange}
                                     className="border p-2 rounded-md mb-4 w-full"
-                                    placeholder="Award 1 TON"
+                                    placeholder="Reward 1 TON"
                                 />
                                 <button
                                     onClick={() => tonConnectUI.sendTransaction(myTransaction)}
@@ -540,13 +540,13 @@ const PostCards = () => {
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div className="bg-white p-4 rounded-md">
-                                <h2 className="text-lg font-semibold mb-2">Send a Tip</h2>
+                                <h2 className="text-lg font-semibold mb-2">Send a Reward</h2>
                                 <input
                                     type="number"
                                     value={tipAmount}
                                     onChange={handleTipChange}
                                     className="border p-2 rounded-md mb-4 w-full"
-                                    placeholder="Award 1 TON"
+                                    placeholder="Reward 1 TON"
                                 />
                                 <button
 
