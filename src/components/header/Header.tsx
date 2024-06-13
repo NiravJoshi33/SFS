@@ -10,6 +10,7 @@ import Create from './create/Create';
 import Message from './message/Message';
 import Profile from './user/Profile';
 import CreatePostModal from '../modals/CreatePostModal';
+import { TonConnectButton } from '@tonconnect/ui-react';
 // import { TonConnectButton } from '@tonconnect/ui-react';
 // import { useWallet } from '../../use-wallet';
 const Header = ({ isSidebarOpen, toggleSidebar }) => {
@@ -74,11 +75,11 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
                             <Create />
 
                             <div>
-                                <h4>
+                                {/* <h4>
                                     <button className='bg-gray-100 p-2 rounded-xl'>
                                         oQAa...eDRk
-                                    </button></h4>
-                                {/* <TonConnectButton></TonConnectButton> */}
+                                    </button></h4> */}
+                                <TonConnectButton />
                             </div>
 
                             {/* {!userAddress && (
