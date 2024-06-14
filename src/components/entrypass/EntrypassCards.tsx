@@ -30,7 +30,7 @@ const EntryPassCards = () => {
                             <img src={item.image} alt={item.description} className="object-cover w-full h-full inset-0" />
                         </div>
                         <div className="mt-2 line-clamp-1 flex justify-center">
-                            <button onClick={() => buyFunPass(item?.itemAddress, item?.price)} type="button" className="relative py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-2 border-transparent bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 bg-clip-border w-full max-w-xs">
+                            <button onClick={() => buyFunPass(item?.itemAddress, item?.price)} type="button" className="relative py-2.5 px-5 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border-2 border-color2 w-full max-w-xs">
                                 <span className="absolute inset-0 bg-white rounded-lg p-1.5"></span>
                                 <span className="relative">Fun Pass {Number(item?.price) / 1000000000} TON</span>
                             </button>
