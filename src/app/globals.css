@@ -52,7 +52,7 @@
 
     /* Basic */
     body {
-        @apply text-gray-600 font-normal bg-bgbody dark:text-white 
+        @apply text-gray-600 font-normal bg-white dark:text-white 
     }
     
      /* Basic */ 
@@ -93,7 +93,7 @@
     input[type='radio'],
     input[type='checkbox']                 {  @apply !text-sky-600 bg-slate-100 focus:ring-sky-600}
 
-    .switch-button                         { @apply bg-slate-200 dark:bg-slate-800}
+    .switch-button                         { @apply bg-color1 dark:bg-slate-800}
     .switch-button:before                  { @apply bg-white dark:bg-sky-600}
     input:checked + .switch-button         { @apply bg-sky-600 dark:bg-blue-300}
     input:checked + .switch-button:before  { @apply dark:bg-sky-600}
@@ -183,7 +183,7 @@
     #side a.active svg , 
     #side a.uk-active svg ,
     #side .active  a , 
-    #side a.uk-active               { @apply text-primary bg-secondery dark:text-white}
+    #side a.uk-active               { @apply text-black bg-activeSidebar dark:text-white}
       
     #site__sidebar .simplebar-scrollbar {   @apply w-[7px] }
 

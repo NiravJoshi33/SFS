@@ -12,16 +12,7 @@ const CreatePost = () => {
     const { toggleModal, isModalOpen } = farcasterContext;
 
     return (
-        <div className="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1 dark:bg-dark2">
-            <div className="flex items-center md:gap-3 gap-1">
-                <div
-                    className="flex-1 bg-slate-100 hover:bg-opacity-80 transition-all rounded-lg cursor-pointer dark:bg-dark3"
-                    onClick={toggleModal}
-                >
-                    <div className="py-2.5 text-center dark:text-white">Create Feed</div>
-                </div>
-                
-            </div>
+        <div>
             <CreatePostModal isOpen={isModalOpen} toggleModal={toggleModal} />
         </div>
     );

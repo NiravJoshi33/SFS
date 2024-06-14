@@ -140,7 +140,7 @@ const PostCards = () => {
                                     // onClick={() => tonConnectUI.sendTransaction(myTransaction)}
 
                                     onClick={handleSendTransaction}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                                    className="bg-createFeed text-white px-4 py-2 rounded-md mr-2"
                                 >
                                     Send
                                 </button>
