@@ -38,8 +38,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
         };
         setSubmittedData(data);
 
-        console.log(data,'----data');
-        
+        console.log(data, '----data');
+
 
         // Reset the form
         setTitle('');
@@ -72,7 +72,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
                         onChange={(e) => setTitle(e.target.value)}
                     />
                     <textarea
-                        placeholder="Description of tbe NFT"
+                        placeholder="Description of the NFT"
                         className="w-full p-2 border border-gray-300 rounded mb-4 resize-none bg-gray-100"
                         rows={4}
                         value={description}

@@ -106,6 +106,6 @@ Argument: item_index
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
-20615: sorry, nft is not on sale!
-38112: send enough TON to buy!
-62742: non-sequential NFTs
+44223: Not enough amount sended! Try again!
+48242: Fun Pass is not on the sale!!
+48582: items are not in sequal!

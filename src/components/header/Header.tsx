@@ -2,20 +2,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { IonIcon } from '@ionic/react';
-import { search, menuOutline, closeOutline } from 'ionicons/icons';
 import DropDown from './search/DropDown';
 import Create from './create/Create';
-// import Notifications from './notification/Notifications';
-import Message from './message/Message';
-import Profile from './user/Profile';
-import CreatePostModal from '../modals/CreatePostModal';
-// import { TonConnectButton } from '@tonconnect/ui-react';
-// import { useWallet } from '../../use-wallet';
+import { TonConnectButton } from '@tonconnect/ui-react';
+
 const Header = ({ isSidebarOpen, toggleSidebar }) => {
-
-    // const { userAddress, connectButton, disconnectButton } = useWallet();
-
 
     return (
         <header className="z-[100] h-[--m-top] fixed top-0 left-0 w-full flex items-center bg-white/80 sky-50 backdrop-blur-xl border-b border-slate-200 dark:bg-dark2 dark:border-slate-800">
@@ -74,25 +65,8 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
                             <Create />
 
                             <div>
-                                <h4>
-                                    <button className='bg-gray-100 p-2 rounded-xl'>
-                                        oQAa...eDRk
-                                    </button></h4>
-                                {/* <TonConnectButton></TonConnectButton> */}
+                                <TonConnectButton></TonConnectButton>
                             </div>
-
-                            {/* {!userAddress && (
-                                <div className="card">
-                                    {connectButton}
-                                </div>
-                            )}
-
-                            {!!userAddress && (
-                                <div className="card">
-                                    <span>{userAddress}</span>
-                                    {disconnectButton}
-                                </div>
-                            )} */}
 
                             {/* <Notifications /> */}
                             {/* <Message /> */}

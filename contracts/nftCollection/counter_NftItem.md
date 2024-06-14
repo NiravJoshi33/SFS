@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: NftItem
-BOC Size: 1263 bytes
+BOC Size: 1282 bytes
 
 # Types
 Total Types: 15
@@ -66,9 +66,11 @@ TLB: `_ next_item_index:int257 collection_content:^cell owner_address:address = 
 Signature: `CollectionData{next_item_index:int257,collection_content:^cell,owner_address:address}`
 
 # Get Methods
-Total Get Methods: 2
+Total Get Methods: 3
 
 ## getItemData
+
+## readOwner
 
 ## owner
 
@@ -97,6 +99,6 @@ Total Get Methods: 2
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
-20615: sorry, nft is not on sale!
-38112: send enough TON to buy!
-62742: non-sequential NFTs
+44223: Not enough amount sended! Try again!
+48242: Fun Pass is not on the sale!!
+48582: items are not in sequal!

@@ -3,13 +3,12 @@ import React, { useContext, useState } from 'react';
 import { IonIcon } from '@ionic/react';
 import { imageOutline, videocamOutline } from 'ionicons/icons';
 import CreatePostModal from '../modals/CreatePostModal';
-// import { FarcasterContext } from '@/context/farcaster';
-import { FarcasterContext } from '../../context/farcaster';
+import { TONContext } from '../../context/tonContext';
 
 
 const CreatePost = () => {
-    const farcasterContext = useContext(FarcasterContext);
-    const { toggleModal, isModalOpen } = farcasterContext;
+    const tonContext = useContext(TONContext);
+    const { toggleModal, isModalOpen } = tonContext;
 
     return (
         <div className="bg-white rounded-xl shadow-sm md:p-4 p-2 space-y-4 text-sm font-medium border1 dark:bg-dark2">
@@ -20,7 +19,7 @@ const CreatePost = () => {
                 >
                     <div className="py-2.5 text-center dark:text-white">Create Feed</div>
                 </div>
-                
+
             </div>
             <CreatePostModal isOpen={isModalOpen} toggleModal={toggleModal} />
         </div>

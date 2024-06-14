@@ -36,7 +36,7 @@ const toKey = (key: string) => {
     return BigInt(`0x${sha256_sync(key).toString('hex')}`);
 };
 
-export function buildOnchainMetadata(data: {
+export default function buildOnchainMetadata(data: {
     name: string;
     description: string;
     image: string;

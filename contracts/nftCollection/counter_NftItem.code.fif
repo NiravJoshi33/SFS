@@ -27,6 +27,7 @@ PROGRAM{
   DECLPROC $global_send
   DECLPROC $ItemData$_constructor_owner_collection_address_item_index_individual_content_price_onSale
   DECLPROC $NftItem$_fun_getItemData
+  DECLPROC $NftItem$_fun_readOwner
   DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
   DECLPROC $NftItem$_fun_forward
   DECLPROC $NftItem$_fun_notify
@@ -39,6 +40,7 @@ PROGRAM{
   DECLPROC $NftItem$_internal_binary_ListOnSale
   DECLPROC $NftItem$_internal_binary_Deploy
   67500 DECLMETHOD %getItemData
+  112593 DECLMETHOD %readOwner
   83229 DECLMETHOD %owner
   113617 DECLMETHOD supported_interfaces
   121275 DECLMETHOD get_abi_ipfs
@@ -231,7 +233,7 @@ PROGRAM{
     s3 s3 s0 XCHG3
   }>
   $NftItem$_contract_init PROCREF:<{
-    B{b5ee9c724101010100680000cc68747470733a2f2f6d61726f6f6e2d616e6e6f7965642d64696e6f736175722d3132302e6d7970696e6174612e636c6f75642f697066732f516d576f746b3833596572687151416173793171517a336b754152377a62466b4a46324e367871685137504c32728f2caa3f} B>boc <s PUSHSLICE
+    B{b5ee9c724101010100680000cc68747470733a2f2f6d61726f6f6e2d616e6e6f7965642d64696e6f736175722d3132302e6d7970696e6174612e636c6f75642f697066732f516d596a72356941726d4c714d31534b36457256745271556a43313237323171374e5a6b585a63426a724236655179c85aff} B>boc <s PUSHSLICE
     SWAP
     TRUE
   }>
@@ -380,6 +382,9 @@ PROGRAM{
     s5 s4 s3 PUSH3
     $ItemData$_constructor_owner_collection_address_item_index_individual_content_price_onSale INLINECALLDICT
   }>
+  $NftItem$_fun_readOwner PROCREF:<{
+    s5 PUSH
+  }>
   $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
   }>
   $NftItem$_fun_forward PROCREF:<{
@@ -430,14 +435,14 @@ PROGRAM{
   }>
   $NftItem$_internal_binary_BuyItem PROCINLINE:<{
     DROP
-    20615 PUSHINT
+    48242 PUSHINT
     s6 POP
     -1 EQINT
     s1 s5 XCHG
     THROWANYIFNOT
     __tact_context_get INLINECALLDICT
     $Context$_get_value INLINECALLDICT
-    38112 PUSHINT
+    44223 PUSHINT
     s1 s5 XCPU
     GEQ
     THROWANYIFNOT
@@ -471,6 +476,11 @@ PROGRAM{
     6 6 BLKDROP2
     $ItemData$_to_external INLINECALLDICT
   }>
+  %readOwner PROC:<{
+    $NftItem$_contract_load INLINECALLDICT
+    $NftItem$_fun_readOwner INLINECALLDICT
+    6 1 BLKDROP2
+  }>
   %owner PROC:<{
     $NftItem$_contract_load INLINECALLDICT
     $NftItem$_fun_owner INLINECALLDICT
@@ -484,7 +494,7 @@ PROGRAM{
     86142586315491086060343270784266291122 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d5a6a5a334a597a34536e7365664d363242513467725a5a63705a4b556859385343564670595871434d696b32} PUSHSLICE
+    x{697066733a2f2f516d517164634d7353766f326a434757783856687537323362576b6162366e654643344b58364556664a46393162} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH

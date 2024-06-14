@@ -12,7 +12,7 @@
 ;;
 
 (slice, slice, int, slice, int, int) $NftItem$_contract_init(slice $owner, slice $collection_address, int $item_index, int $price) impure inline_ref {
-    var (($self'owner, $self'collection_address, $self'item_index, $self'individual_content, $self'price, $self'onSale)) = (null(), null(), null(), __gen_slice_string_7809ebd559876c11a93ecb1886af3f3f074e682edb81a7f1bfeba66b490b2ddd(), null(), null());
+    var (($self'owner, $self'collection_address, $self'item_index, $self'individual_content, $self'price, $self'onSale)) = (null(), null(), null(), __gen_slice_string_f2d58d1312341fdedc89b418a69f80d4c0c269f5665ad12da1deb2e801742b7b(), null(), null());
     $self'owner = $owner;
     $self'collection_address = $collection_address;
     $self'item_index = $item_index;
@@ -24,6 +24,11 @@
 ((slice, slice, int, slice, int, int), (slice, slice, int, slice, int, int)) $NftItem$_fun_getItemData((slice, slice, int, slice, int, int) $self) impure inline_ref {
     var (($self'owner, $self'collection_address, $self'item_index, $self'individual_content, $self'price, $self'onSale)) = $self;
     return (($self'owner, $self'collection_address, $self'item_index, $self'individual_content, $self'price, $self'onSale), $ItemData$_constructor_owner_collection_address_item_index_individual_content_price_onSale($self'owner, $self'collection_address, $self'item_index, $self'individual_content, $self'price, $self'onSale));
+}
+
+((slice, slice, int, slice, int, int), slice) $NftItem$_fun_readOwner((slice, slice, int, slice, int, int) $self) impure inline_ref {
+    var (($self'owner, $self'collection_address, $self'item_index, $self'individual_content, $self'price, $self'onSale)) = $self;
+    return (($self'owner, $self'collection_address, $self'item_index, $self'individual_content, $self'price, $self'onSale), $self'owner);
 }
 
 ((slice, slice, int, slice, int, int), ()) $NftItem$_fun_requireOwner((slice, slice, int, slice, int, int) $self) impure inline_ref {
@@ -52,9 +57,9 @@
 (((slice, slice, int, slice, int, int)), ()) $NftItem$_internal_binary_BuyItem((slice, slice, int, slice, int, int) $self, (int) $msg) impure inline {
     var ($self'owner, $self'collection_address, $self'item_index, $self'individual_content, $self'price, $self'onSale) = $self;
     var ($msg'query_id) = $msg;
-    throw_unless(20615, ($self'onSale == true));
+    throw_unless(48242, ($self'onSale == true));
     int $msgValue = $Context$_get_value(__tact_context_get());
-    throw_unless(38112, ($msgValue >= $self'price));
+    throw_unless(44223, ($msgValue >= $self'price));
     $self'owner = __tact_context_get_sender();
     $self'onSale = false;
     return (($self'owner, $self'collection_address, $self'item_index, $self'individual_content, $self'price, $self'onSale), ());
@@ -93,6 +98,12 @@ _ %getItemData() method_id(67500) {
     return $ItemData$_to_external(res);
 }
 
+_ %readOwner() method_id(112593) {
+    var self = $NftItem$_contract_load();
+    var res = self~$NftItem$_fun_readOwner();
+    return res;
+}
+
 _ %owner() method_id(83229) {
     var self = $NftItem$_contract_load();
     var res = self~$NftItem$_fun_owner();
@@ -110,7 +121,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmZjZ3JYz4SnsefM62BQ4grZZcpZKUhY8SCVFpYXqCMik2";
+    return "ipfs://QmQqdcMsSvo2jCGWx8Vhu723bWkab6neFC4KX6EVfJF91b";
 }
 
 _ lazy_deployment_completed() method_id {
