@@ -38,8 +38,8 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
         };
         setSubmittedData(data);
 
-        console.log(data,'----data');
-        
+        console.log(data, '----data');
+
 
         // Reset the form
         setTitle('');
