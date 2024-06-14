@@ -9,7 +9,6 @@ import EntryPass from "./entrypass/page";
 
 import RightSIdeBar from "../components/sidebar/RightSIdeBar";
 
-const manifestUrl = 'https://sfs-manifest.vercel.app/tonconnect-manifest.json';
 
 export default function Home() {
 

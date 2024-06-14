@@ -3,6 +3,8 @@
 import React, { useContext, useState } from 'react';
 import { IonIcon } from '@ionic/react';
 import { closeOutline, imageOutline, videocamOutline, happyOutline, locationOutline, ellipsisHorizontal } from 'ionicons/icons';
+import { useTonConnectUI } from '@tonconnect/ui-react';
+
 
 interface CreatePostModalProps {
     isOpen: boolean;
@@ -39,17 +41,44 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
         setSubmittedData(data);
 
         console.log(data, '----data');
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> funpass
         // Reset the form
         setTitle('');
         setDescription('');
         setFile(null);
         toggleModal();
-
-
     };
 
+    const [tonConnectUI] = useTonConnectUI();
+
+
+    async function handlePost() {
+        if (!tonConnectUI.connected) {
+            alert("Please connect your wallet first.");
+            return;
+        }
+        let destinationAddress = "0QDc7k2UluUJpa_So9sRpxZjE7WZVXUt1XD67AjQPlW31hD_";
+        const transaction = {
+            validUntil: Math.floor(Date.now() / 1000) + 360,
+            messages: [
+                {
+                    address: destinationAddress,
+                    amount: (0.0011 * 1e9).toString(),
+                },
+            ],
+        };
+
+        try {
+            await tonConnectUI.sendTransaction(transaction);
+            alert("Post created successfully!");
+        } catch (error) {
+            console.error("Transaction failed:", error);
+        }
+    }
 
 
 
@@ -72,7 +101,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
                         onChange={(e) => setTitle(e.target.value)}
                     />
                     <textarea
-                        placeholder="Description of tbe NFT"
+                        placeholder="Description of the NFT"
                         className="w-full p-2 border border-gray-300 rounded mb-4 resize-none bg-gray-100"
                         rows={4}
                         value={description}
@@ -94,7 +123,11 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
 
                     <div className="flex items-center justify-center">
 
+<<<<<<< HEAD
                         <button className="bg-createFeed text-white px-4 py-2 rounded">Create</button>
+=======
+                        <button onClick={handlePost} className="bg-blue-500 text-white px-4 py-2 rounded">Create</button>
+>>>>>>> funpass
                     </div>
                 </form>
             </div>

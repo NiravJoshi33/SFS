@@ -1,13 +1,12 @@
 'use client';
-// import { FarcasterContext } from '@/context/farcaster';
-import { FarcasterContext } from '../../../context/farcaster'
+import { TONContext } from '../../../context/tonContext'
 import { IonIcon } from '@ionic/react';
 import { addCircleOutline, chevronBack, chevronForward } from 'ionicons/icons';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 const Create = () => {
-    const farcasterContext = useContext(FarcasterContext);
-    const { toggleModal } = farcasterContext;
+    const tonContext = useContext(TONContext);
+    const { toggleModal } = tonContext;
     return (
         <>
             <button onClick={toggleModal} type="button" className="flex items-center px-4 py-2 rounded-full bg-yellow-500 text-black">

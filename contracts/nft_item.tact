@@ -30,7 +30,7 @@ contract NftItem with Deployable, Ownable {
   owner: Address;
   collection_address: Address;
   item_index: Int;
-  individual_content: String = "https://maroon-annoyed-dinosaur-120.mypinata.cloud/ipfs/QmWotk83YerhqQAasy1qQz3kuAR7zbFkJF2N6xqhQ7PL2r";
+  individual_content: String = "https://maroon-annoyed-dinosaur-120.mypinata.cloud/ipfs/QmYjr5iArmLqM1SK6ErVtRqUjC12721q7NZkXZcBjrB6eQ";
   price: Int;
   onSale: Bool;
 
@@ -51,9 +51,9 @@ contract NftItem with Deployable, Ownable {
   }
 
   receive(msg: BuyItem){
-    require(self.onSale == true, "sorry, nft is not on sale!");
+    require(self.onSale == true, "Fun Pass is not on the sale!!");
     let msgValue: Int = context().value;
-    require(msgValue >= self.price, "send enough TON to buy!");
+    require(msgValue >= self.price, "Not enough amount sended! Try again!");
     self.owner = sender();
     self.onSale = false;
   }
@@ -78,5 +78,9 @@ contract NftItem with Deployable, Ownable {
         price: self.price,
         onSale: self.onSale
       };
+  }
+
+  get fun readOwner(): Address {
+    return self.owner;
   }
 }

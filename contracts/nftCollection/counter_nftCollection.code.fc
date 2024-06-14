@@ -24,7 +24,7 @@
 
 ((slice, int, cell, cell), ()) $nftCollection$_fun_mint((slice, int, cell, cell) $self, slice $receiver, int $price) impure inline_ref {
     var (($self'owner, $self'next_item_index, $self'collection_content, $self'itemRecord)) = $self;
-    throw_unless(62742, ($self'next_item_index >= 0));
+    throw_unless(48582, ($self'next_item_index >= 0));
     var ($nft_init'code, $nft_init'data) = ($self'owner, $self'next_item_index, $self'collection_content, $self'itemRecord)~$nftCollection$_fun_getNftItemInit($self'next_item_index, $price);
     int $msgValue = $Context$_get_value(__tact_context_get());
     int $tonBalanceBeforeMsg = (__tact_my_balance() - $msgValue);
@@ -130,7 +130,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmfAHbsBcVBEFS84Au3vZxU2ZjFCknE2bWC8PzyULyRcQK";
+    return "ipfs://Qmbb3SRuqXNV4avGbi1tQ8ZKrV6nekYPEkxvSo8eoYWdWJ";
 }
 
 _ lazy_deployment_completed() method_id {

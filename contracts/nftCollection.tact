@@ -21,7 +21,6 @@ contract nftCollection with Deployable, Ownable {
   init(collection_content: Cell){
     self.owner = sender();
     self.collection_content = collection_content;
-    // " this one is different ..";
   }
 
   receive(msg: Mint){
@@ -30,7 +29,7 @@ contract nftCollection with Deployable, Ownable {
   }
 
   fun mint(receiver: Address, price: Int) {
-    require(self.next_item_index >= 0, "non-sequential NFTs");
+    require(self.next_item_index >= 0, "items are not in sequal!");
     let nft_init: StateInit = self.getNftItemInit(self.next_item_index, price);
     let msgValue: Int = context().value;
     let tonBalanceBeforeMsg: Int = (myBalance() - msgValue);
@@ -54,11 +53,6 @@ contract nftCollection with Deployable, Ownable {
   get fun getNftItemInit(item_index: Int, price: Int): StateInit {
     return initOf NftItem(self.owner, myAddress(), item_index, price);
   }
-
-  // get fun getNftAddressByIndex (item_index: Int): Address {
-  //     let initCode: StateInit = self.getNftItemInit(item_index);
-  //     return contractAddress(initCode);
-  // }
 
   get fun getItemAddress(item_index: Int): Address {
     let item: Address = self.itemRecord.get(item_index)!!;

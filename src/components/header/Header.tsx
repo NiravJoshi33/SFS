@@ -2,21 +2,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { IonIcon } from '@ionic/react';
-import { search, menuOutline, closeOutline } from 'ionicons/icons';
 import DropDown from './search/DropDown';
 import Create from './create/Create';
-// import Notifications from './notification/Notifications';
-import Message from './message/Message';
-import Profile from './user/Profile';
-import CreatePostModal from '../modals/CreatePostModal';
 import { TonConnectButton } from '@tonconnect/ui-react';
-// import { TonConnectButton } from '@tonconnect/ui-react';
-// import { useWallet } from '../../use-wallet';
+
 const Header = ({ isSidebarOpen, toggleSidebar }) => {
-
-    // const { userAddress, connectButton, disconnectButton } = useWallet();
-
 
     return (
         <header className=" z-[100] h-[--m-top] fixed top-0 left-0 w-full flex items-center bg-color2 backdrop-blur-xl border-b border-slate-200 dark:bg-dark2 dark:border-slate-800 ">
@@ -69,31 +59,14 @@ const Header = ({ isSidebarOpen, toggleSidebar }) => {
                     <div className="max-w-[1220px] mx-auto flex items-center">
                         <DropDown />
                         <div className="flex items-center sm:gap-4 gap-2 absolute right-5 top-1/2 -translate-y-1/2 text-black">
-                            <button type="button" className="sm:hidden sm:p-2 p-1 rounded-full  sm:bg-secondery dark:text-white"> 
+                            <button type="button" className="sm:hidden sm:p-2 p-1 rounded-full  sm:bg-secondery dark:text-white">
                                 {/* <IonIcon icon={search} className="sm:hidden text-2xl" /> */}
                             </button>
                             <Create />
 
                             <div>
-                                {/* <h4>
-                                    <button className='bg-gray-100 p-2 rounded-xl'>
-                                        oQAa...eDRk
-                                    </button></h4> */}
-                                <TonConnectButton />
+                                <TonConnectButton></TonConnectButton>
                             </div>
-
-                            {/* {!userAddress && (
-                                <div className="card">
-                                    {connectButton}
-                                </div>
-                            )}
-
-                            {!!userAddress && (
-                                <div className="card">
-                                    <span>{userAddress}</span>
-                                    {disconnectButton}
-                                </div>
-                            )} */}
 
                             {/* <Notifications /> */}
                             {/* <Message /> */}

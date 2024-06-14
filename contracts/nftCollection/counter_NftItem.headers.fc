@@ -87,6 +87,9 @@ _ $Context$_get_value((int, slice, int, slice) v) inline;
 ;; $NftItem$_fun_getItemData
 ((slice, slice, int, slice, int, int), (slice, slice, int, slice, int, int)) $NftItem$_fun_getItemData((slice, slice, int, slice, int, int) $self) impure inline_ref;
 
+;; $NftItem$_fun_readOwner
+((slice, slice, int, slice, int, int), slice) $NftItem$_fun_readOwner((slice, slice, int, slice, int, int) $self) impure inline_ref;
+
 ;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
 ((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int bounce, slice to, int value, int mode, cell body, cell code, cell data) inline;
 
