@@ -3,6 +3,7 @@ import { parseTon } from '@fotonjs/core';
 import { buildOnchainMetadata } from './utils/helper.js';
 import { nftCollectionClient, publicClient, nftItemClient } from './ton-clients.js';
 import { beginCell } from '@ton/core';
+import React from 'react';
 const LS_KEY = 'counter-contract-address';
 
 export const useContract = () => {

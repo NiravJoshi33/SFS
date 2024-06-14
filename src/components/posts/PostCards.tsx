@@ -2,24 +2,20 @@
 import React, { useState } from 'react';
 import { IonIcon } from '@ionic/react';
 import { ellipsisHorizontal, heart, chatbubbleEllipses, paperPlaneOutline, shareOutline, bookmarkOutline, notificationsOffOutline, flagOutline, stopCircleOutline, chevronDownOutline, cashOutline } from 'ionicons/icons';
-
-
+import { TonConnect, useTonConnectUI } from '@tonconnect/ui-react';
+import { Settings } from './demo';
 
 const PostCards = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isReactionOpen, setIsReactionOpen] = useState(false);
+    const [tonConnectUI, setOptions] = useTonConnectUI();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [tipAmount, setTipAmount] = useState('');
-
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
+    const [tipAmount, setTipAmount] = useState(Number);
 
     const toggleReaction = () => {
         setIsReactionOpen(!isReactionOpen);
     };
-
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -29,15 +25,29 @@ const PostCards = () => {
         setIsModalOpen(false);
     };
 
+
+
+
+    // ------------ Tipping TON --------
+
     const handleTipChange = (event) => {
-        setTipAmount(event.target.value);
+        console.log(event.target.value);
+        setTipAmount(event.target.value)
+    };
+    const myTransaction = {
+        validUntil: Math.floor(Date.now() / 1000) + 60, // 60 sec
+        messages: [
+            {
+                address: "0QBF5lqK_67lQmJ93njbs4RmyDvkGiRW7zPcBIzE4hxlTOLI",
+                amount: (tipAmount * 1e9).toString()
+
+            }
+        ]
+    }
+    const handleSendTransaction = () => {
+        tonConnectUI.sendTransaction(myTransaction);
     };
 
-    const handleSendTip = () => {
-        // Add logic to send the tip
-        console.log('Tip sent:', tipAmount);
-        setIsModalOpen(false);
-    };
 
     return (
         <div className="container-fluid mx-auto px-4">
@@ -53,9 +63,7 @@ const PostCards = () => {
                         <div className="text-xs text-gray-500 dark:text-white/80"> Drake dislikes posting on Reddit because upvotes have no money value. He loves posting on SFS, where he can earn real money from tips, competitions, and games.</div>
                     </div>
                     <div className="-mr-1 relative">
-                        {/* <button type="button" className="button-icon w-8 h-8" onClick={toggleDropdown}>
-                            <IonIcon className="text-xl" icon={ellipsisHorizontal}></IonIcon>
-                        </button> */}
+
                         {isDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-[245px] bg-white rounded-lg shadow-lg z-10 dark:bg-slate-700">
                                 <nav>
@@ -120,17 +128,19 @@ const PostCards = () => {
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div className="bg-white p-4 rounded-md">
-                                <h2 className="text-lg font-semibold mb-2">Send a Tip</h2>
+                                <h2 className="text-lg font-semibold mb-2">Send a Reward</h2>
                                 <input
                                     type="number"
                                     value={tipAmount}
                                     onChange={handleTipChange}
                                     className="border p-2 rounded-md mb-4 w-full"
-                                    placeholder="Award 1 TON"
+                                    placeholder="Reward 1 TON"
                                 />
                                 <button
-                                    onClick={handleSendTip}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
+                                    // onClick={() => tonConnectUI.sendTransaction(myTransaction)}
+
+                                    onClick={handleSendTransaction}
+                                    className="bg-createFeed text-white px-4 py-2 rounded-md mr-2"
                                 >
                                     Send
                                 </button>
@@ -180,6 +190,7 @@ const PostCards = () => {
                     <button type="submit" className="text-sm rounded-full py-1.5 px-3.5 bg-secondery">Reply</button>
                 </div>
 
+
             </div>
 
             {/* -------------------- ------Second meme----------- -----------------  */}
@@ -196,9 +207,7 @@ const PostCards = () => {
                         <div className="text-xs text-gray-500 dark:text-white/80">In this meme, a person tells their boss that they have started posting memes on SuperFun.Social. The boss asks if they will still come to the office, to which the person gives a hesitant look, implying that their focus has shifted to enjoying and earning from meme posting.</div>
                     </div>
                     <div className="-mr-1 relative">
-                        {/* <button type="button" className="button-icon w-8 h-8" onClick={toggleDropdown}>
-                            <IonIcon className="text-xl" icon={ellipsisHorizontal}></IonIcon>
-                        </button> */}
+
                         {isDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-[245px] bg-white rounded-lg shadow-lg z-10 dark:bg-slate-700">
                                 <nav>
@@ -263,16 +272,16 @@ const PostCards = () => {
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div className="bg-white p-4 rounded-md">
-                                <h2 className="text-lg font-semibold mb-2">Send a Tip</h2>
+                                <h2 className="text-lg font-semibold mb-2">Send a Reward</h2>
                                 <input
                                     type="number"
                                     value={tipAmount}
                                     onChange={handleTipChange}
                                     className="border p-2 rounded-md mb-4 w-full"
-                                    placeholder="Award 1 TON"
+                                    placeholder="Reward 1 TON"
                                 />
                                 <button
-                                    onClick={handleSendTip}
+                                    onClick={() => tonConnectUI.sendTransaction(myTransaction)}
                                     className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
                                 >
                                     Send
@@ -297,15 +306,6 @@ const PostCards = () => {
                             <p className="mt-0.5">When your side hustle becomes more exciting than your 9-to-5! 😂 #SuperFunSocial #MemeLife</p>
                         </div>
                     </div>
-                    {/* <div className="flex items-start gap-3 relative">
-                        <a href="timeline.html">
-                            <img src="/assets/images/avatars/avatar-3.jpg" alt="" className="w-6 h-6 mt-1 rounded-full" />
-                        </a>
-                        <div className="flex-1">
-                            <a href="timeline.html" className="text-black font-medium inline-block dark:text-white"> Monroe </a>
-                            <p className="mt-0.5">Reddit upvotes are cool, but real money from SFS is next level! 🤑</p>
-                        </div>
-                    </div> */}
                     <button type="button" className="flex items-center gap-1.5 text-gray-500 hover:text-blue-500 mt-2">
                         <IonIcon className="ml-auto duration-200 group-aria-expanded:rotate-180" icon={chevronDownOutline}></IonIcon>
                         More Comment
@@ -342,9 +342,7 @@ const PostCards = () => {
                         <div className="text-xs text-gray-500 dark:text-white/80">This meme depicts a futuristic society where people can earn money sustainably by making others laugh. It imagines a world where humor and creativity are highly valued and financially rewarding.</div>
                     </div>
                     <div className="-mr-1 relative">
-                        {/* <button type="button" className="button-icon w-8 h-8" onClick={toggleDropdown}>
-                            <IonIcon className="text-xl" icon={ellipsisHorizontal}></IonIcon>
-                        </button> */}
+
                         {isDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-[245px] bg-white rounded-lg shadow-lg z-10 dark:bg-slate-700">
                                 <nav>
@@ -409,16 +407,16 @@ const PostCards = () => {
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div className="bg-white p-4 rounded-md">
-                                <h2 className="text-lg font-semibold mb-2">Send a Tip</h2>
+                                <h2 className="text-lg font-semibold mb-2">Send a Reward</h2>
                                 <input
                                     type="number"
                                     value={tipAmount}
                                     onChange={handleTipChange}
                                     className="border p-2 rounded-md mb-4 w-full"
-                                    placeholder="Award 1 TON"
+                                    placeholder="Reward 1 TON"
                                 />
                                 <button
-                                    onClick={handleSendTip}
+                                    onClick={() => tonConnectUI.sendTransaction(myTransaction)}
                                     className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
                                 >
                                     Send
@@ -443,15 +441,6 @@ const PostCards = () => {
                             <p className="mt-0.5">Imagine a world where your humor pays the bills! 😂🌐</p>
                         </div>
                     </div>
-                    {/* <div className="flex items-start gap-3 relative">
-                        <a href="timeline.html">
-                            <img src="/assets/images/avatars/avatar-3.jpg" alt="" className="w-6 h-6 mt-1 rounded-full" />
-                        </a>
-                        <div className="flex-1">
-                            <a href="timeline.html" className="text-black font-medium inline-block dark:text-white"> Monroe </a>
-                            <p className="mt-0.5">Reddit upvotes are cool, but real money from SFS is next level! 🤑</p>
-                        </div>
-                    </div> */}
                     <button type="button" className="flex items-center gap-1.5 text-gray-500 hover:text-blue-500 mt-2">
                         <IonIcon className="ml-auto duration-200 group-aria-expanded:rotate-180" icon={chevronDownOutline}></IonIcon>
                         More Comment
@@ -486,9 +475,7 @@ const PostCards = () => {
                         <div className="text-xs text-gray-500 dark:text-white/80"> This meme humorously depicts a blockchain developer's tough choice between using the TON Connect React library or the TON Connect JS SDK. The developer is shown sweating and anxious, unable to decide which button to press.</div>
                     </div>
                     <div className="-mr-1 relative">
-                        {/* <button type="button" className="button-icon w-8 h-8" onClick={toggleDropdown}>
-                            <IonIcon className="text-xl" icon={ellipsisHorizontal}></IonIcon>
-                        </button> */}
+
                         {isDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-[245px] bg-white rounded-lg shadow-lg z-10 dark:bg-slate-700">
                                 <nav>
@@ -553,16 +540,17 @@ const PostCards = () => {
                     {isModalOpen && (
                         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
                             <div className="bg-white p-4 rounded-md">
-                                <h2 className="text-lg font-semibold mb-2">Send a Tip</h2>
+                                <h2 className="text-lg font-semibold mb-2">Send a Reward</h2>
                                 <input
                                     type="number"
                                     value={tipAmount}
                                     onChange={handleTipChange}
                                     className="border p-2 rounded-md mb-4 w-full"
-                                    placeholder="Award 1 TON"
+                                    placeholder="Reward 1 TON"
                                 />
                                 <button
-                                    onClick={handleSendTip}
+
+                                    onClick={() => tonConnectUI.sendTransaction(myTransaction)}
                                     className="bg-blue-500 text-white px-4 py-2 rounded-md mr-2"
                                 >
                                     Send
@@ -587,15 +575,6 @@ const PostCards = () => {
                             <p className="mt-0.5">When both options are great, but you can only choose one! 😅  #DeveloperStruggles</p>
                         </div>
                     </div>
-                    {/* <div className="flex items-start gap-3 relative">
-                        <a href="timeline.html">
-                            <img src="/assets/images/avatars/avatar-3.jpg" alt="" className="w-6 h-6 mt-1 rounded-full" />
-                        </a>
-                        <div className="flex-1">
-                            <a href="timeline.html" className="text-black font-medium inline-block dark:text-white"> Monroe </a>
-                            <p className="mt-0.5">Reddit upvotes are cool, but real money from SFS is next level! 🤑</p>
-                        </div>
-                    </div> */}
                     <button type="button" className="flex items-center gap-1.5 text-gray-500 hover:text-blue-500 mt-2">
                         <IonIcon className="ml-auto duration-200 group-aria-expanded:rotate-180" icon={chevronDownOutline}></IonIcon>
                         More Comment
@@ -630,9 +609,7 @@ const PostCards = () => {
                         <div className="text-xs text-gray-500 dark:text-white/80"> This meme contrasts two types of gamers: those who play just for fun and those who know they can earn money by playing. The left side shows a happy gamer enjoying the game, while the right side shows a serious gamer focused on earning money through gaming.</div>
                     </div>
                     <div className="-mr-1 relative">
-                        {/* <button type="button" className="button-icon w-8 h-8" onClick={toggleDropdown}>
-                            <IonIcon className="text-xl" icon={ellipsisHorizontal}></IonIcon>
-                        </button> */}
+
                         {isDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-[245px] bg-white rounded-lg shadow-lg z-10 dark:bg-slate-700">
                                 <nav>
@@ -669,7 +646,7 @@ const PostCards = () => {
                             <button type="button" className="button-icon text-red-500 bg-red-100 dark:bg-slate-700" onClick={toggleReaction}>
                                 <IonIcon className="text-lg" icon={heart}></IonIcon>
                             </button>
-                            <a href="#">1,300</a>
+                            <a href="#">0</a>
                         </div>
                         {isReactionOpen && (
                             <div className="absolute top-full left-0 mt-2 bg-white p-2 rounded-lg shadow-lg z-10 dark:bg-slate-700 text-2xl">
@@ -687,7 +664,7 @@ const PostCards = () => {
                         <button type="button" className="button-icon bg-slate-200/70 dark:bg-slate-700">
                             <IonIcon className="text-lg" icon={chatbubbleEllipses}></IonIcon>
                         </button>
-                        <span>260</span>
+                        <span>0</span>
                     </div>
                     <button type="button" className=" ml-auto">
                     </button>
@@ -705,15 +682,6 @@ const PostCards = () => {
                             <p className="mt-0.5"> 🎮 💰</p>
                         </div>
                     </div>
-                    {/* <div className="flex items-start gap-3 relative">
-                        <a href="timeline.html">
-                            <img src="/assets/images/avatars/avatar-3.jpg" alt="" className="w-6 h-6 mt-1 rounded-full" />
-                        </a>
-                        <div className="flex-1">
-                            <a href="timeline.html" className="text-black font-medium inline-block dark:text-white"> Monroe </a>
-                            <p className="mt-0.5">Reddit upvotes are cool, but real money from SFS is next level! 🤑</p>
-                        </div>
-                    </div> */}
                     <button type="button" className="flex items-center gap-1.5 text-gray-500 hover:text-blue-500 mt-2">
                         <IonIcon className="ml-auto duration-200 group-aria-expanded:rotate-180" icon={chevronDownOutline}></IonIcon>
                         More Comment
