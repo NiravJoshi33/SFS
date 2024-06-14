@@ -41,11 +41,6 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
         setSubmittedData(data);
 
         console.log(data, '----data');
-<<<<<<< HEAD
-
-
-=======
->>>>>>> funpass
         // Reset the form
         setTitle('');
         setDescription('');
@@ -123,11 +118,7 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, toggleModal }
 
                     <div className="flex items-center justify-center">
 
-<<<<<<< HEAD
-                        <button className="bg-createFeed text-white px-4 py-2 rounded">Create</button>
-=======
-                        <button onClick={handlePost} className="bg-blue-500 text-white px-4 py-2 rounded">Create</button>
->>>>>>> funpass
+                        <button onClick={handlePost} className="bg-createFeed text-white px-4 py-2 rounded">Create</button>
                     </div>
                 </form>
             </div>
