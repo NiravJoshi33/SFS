@@ -1,5 +1,5 @@
 import { toNano, beginCell, contractAddress, Address} from '@ton/core';
-import { NftCollection, RoyaltyParams, loadLogEventMintRecord } from '../wrappers/NftCollection';
+// import { NftCollection, RoyaltyParams, loadLogEventMintRecord } from '../wrappers/NftCollection';
 import { NetworkProvider } from '@ton/blueprint';
 
 export async function run(provider: NetworkProvider) {
@@ -10,19 +10,19 @@ export async function run(provider: NetworkProvider) {
     // ===== Parameters =====
     // Replace owner with your address
     let owner = Address.parse("0QD3WvwxcwziTNcvdhfGLrw6XPv3BfuNe67DTxwpbMErl-FE"); 
-    let royaltiesParam: RoyaltyParams = {
-        $$type: "RoyaltyParams",
-        numerator: 350n, // 350n = 35%
-        denominator: 1000n,
-        destination: owner,
-    };
+    // let royaltiesParam: RoyaltyParams = {
+    //     $$type: "RoyaltyParams",
+    //     numerator: 350n, // 350n = 35%
+    //     denominator: 1000n,
+    //     destination: owner,
+    // };
     // let address = contractAddress(0, init);
     // let deployAmount = toNano("0.15");
     // let testnet = true;
 
-    const nftCollection = provider.open( await NftCollection.fromInit(owner, newContent, royaltiesParam));
+    // const nftCollection = provider.open( await NftCollection.fromInit(owner, newContent, royaltiesParam));
 
-    await nftCollection.send(provider.sender(), { value: toNano(0.2) }, "Mint");
+    // await nftCollection.send(provider.sender(), { value: toNano(0.2) }, "Mint");
 
     // let current_index = (await nftCollection.getGetCollectionData()).next_item_index;
     // console.log(current_index, "current index");
@@ -39,10 +39,10 @@ export async function run(provider: NetworkProvider) {
     //     }
     // );
   
-  await provider.waitForDeploy(nftCollection.address);
+//   await provider.waitForDeploy(nftCollection.address);
 
     // Check if the transaction was successful and log the result
-        console.log("Transaction confirmed. nftCollection - ", nftCollection.address);
+        // console.log("Transaction confirmed. nftCollection - ", nftCollection.address);
         
 
 
@@ -69,7 +69,7 @@ export async function run(provider: NetworkProvider) {
         // console.log("ItemId: " + loadEvent.item_id);
         // console.log("The Random Number: " + loadEvent.generate_number);
 
-        const nftItemAddress = await nftCollection.getGetNftAddressByIndex(0n);
-        console.log("nftItemAddress - ", nftItemAddress)
+        // const nftItemAddress = await nftCollection.getGetNftAddressByIndex(0n);
+        // console.log("nftItemAddress - ", nftItemAddress)
     // run methods on `nftCollection`
 }
